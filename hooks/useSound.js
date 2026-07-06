@@ -2,15 +2,33 @@ import { useRef, useCallback } from 'react';
 
 export default function useSound() {
   const audioCtxRef = useRef(null);
+  const masterGainRef = useRef(null);
+  const volumeRef = useRef(1.0);
+
   const getCtx = () => {
-    if (!audioCtxRef.current) audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtxRef.current) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGainRef.current = ctx.createGain();
+      masterGainRef.current.gain.setValueAtTime(volumeRef.current, ctx.currentTime);
+      masterGainRef.current.connect(ctx.destination);
+      audioCtxRef.current = ctx;
+    }
+    if (audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume();
+    }
     return audioCtxRef.current;
   };
+
+  const setVolume = useCallback((vol) => {
+    volumeRef.current = Math.max(0, Math.min(1, vol));
+    if (masterGainRef.current && audioCtxRef.current) {
+      masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
+    }
+  }, []);
 
   const playTone = useCallback((freq, duration, type = 'square', gain = 0.15) => {
     try {
       const ctx = getCtx();
-      if (ctx.state === 'suspended') ctx.resume();
       const osc = ctx.createOscillator();
       const g = ctx.createGain();
       osc.type = type;
@@ -18,7 +36,7 @@ export default function useSound() {
       g.gain.setValueAtTime(gain, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
       osc.connect(g);
-      g.connect(ctx.destination);
+      g.connect(masterGainRef.current || ctx.destination);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + duration);
     } catch (_) {}
@@ -29,7 +47,6 @@ export default function useSound() {
   const playBuy = useCallback(() => {
     const ctx = getCtx();
     try {
-      if (ctx.state === 'suspended') ctx.resume();
       [523, 659].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
@@ -38,7 +55,7 @@ export default function useSound() {
         g.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.1);
         g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.15);
         osc.connect(g);
-        g.connect(ctx.destination);
+        g.connect(masterGainRef.current || ctx.destination);
         osc.start(ctx.currentTime + i * 0.1);
         osc.stop(ctx.currentTime + i * 0.1 + 0.15);
       });
@@ -48,7 +65,6 @@ export default function useSound() {
   const playUpgrade = useCallback(() => {
     const ctx = getCtx();
     try {
-      if (ctx.state === 'suspended') ctx.resume();
       [440, 554, 659].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
@@ -57,7 +73,7 @@ export default function useSound() {
         g.gain.setValueAtTime(0.13, ctx.currentTime + i * 0.08);
         g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.2);
         osc.connect(g);
-        g.connect(ctx.destination);
+        g.connect(masterGainRef.current || ctx.destination);
         osc.start(ctx.currentTime + i * 0.08);
         osc.stop(ctx.currentTime + i * 0.08 + 0.2);
       });
@@ -67,7 +83,6 @@ export default function useSound() {
   const playSlotUpgrade = useCallback(() => {
     const ctx = getCtx();
     try {
-      if (ctx.state === 'suspended') ctx.resume();
       [1200, 900, 1200].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const g = ctx.createGain();
@@ -76,7 +91,7 @@ export default function useSound() {
         g.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.06);
         g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.06 + 0.12);
         osc.connect(g);
-        g.connect(ctx.destination);
+        g.connect(masterGainRef.current || ctx.destination);
         osc.start(ctx.currentTime + i * 0.06);
         osc.stop(ctx.currentTime + i * 0.06 + 0.12);
       });
@@ -86,7 +101,6 @@ export default function useSound() {
   const playLocationChange = useCallback(() => {
     const ctx = getCtx();
     try {
-      if (ctx.state === 'suspended') ctx.resume();
       const osc = ctx.createOscillator();
       const g = ctx.createGain();
       osc.type = 'square';
@@ -95,11 +109,11 @@ export default function useSound() {
       g.gain.setValueAtTime(0.12, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
       osc.connect(g);
-      g.connect(ctx.destination);
+      g.connect(masterGainRef.current || ctx.destination);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.4);
     } catch (_) {}
   }, []);
 
-  return { playClick, playBuy, playUpgrade, playSlotUpgrade, playLocationChange };
+  return { playClick, playBuy, playUpgrade, playSlotUpgrade, playLocationChange, setVolume };
 }

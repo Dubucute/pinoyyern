@@ -24,7 +24,7 @@ const SAVE_VERSION = 3; // Bumped — new upgrade/package IDs
 const LOCATION_ICONS = ['📍', '🏀', '🛺', '🛒', '🏫', '🏖️'];
 
 export default function Home() {
-  const { playClick, playBuy, playUpgrade, playSlotUpgrade, playLocationChange } = useSound();
+  const { playClick, playBuy, playUpgrade, playSlotUpgrade, playLocationChange, setVolume: setSfxVolume } = useSound();
   const bgMusic = useBackgroundMusic();
   const [musicOn, setMusicOn] = useState(false);
   const firstInteractionRef = useRef(true);
@@ -75,7 +75,13 @@ export default function Home() {
   const [showProfile, setShowProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [cloudStatus, setCloudStatus] = useState('');
+  const [masterVolume, setMasterVolume] = useState(0.7);
+  const [cloudToast, setCloudToast] = useState('');
+
+  const showToast = useCallback((msg, duration = 3000) => {
+    setCloudToast(msg);
+    setTimeout(() => setCloudToast(''), duration);
+  }, []);
   const [saving, setSaving] = useState(false);
   const { user, token, logout, saveToCloud, loadFromCloud } = useAuth();
 
@@ -158,11 +164,9 @@ export default function Home() {
       if (!state) return;
       try {
         await saveToCloud(state);
-        setCloudStatus('☁️');
-        setTimeout(() => setCloudStatus(''), 3000);
+        showToast('☁️ Auto-saved!');
       } catch (err) {
-        setCloudStatus(`☁️ Auto-save failed: ${err.message}`);
-        setTimeout(() => setCloudStatus(''), 5000);
+        showToast(`☁️ Auto-save failed: ${err.message}`, 5000);
       }
     }, 30000);
     return () => clearInterval(id);
@@ -177,8 +181,7 @@ export default function Home() {
         const cloudState = await loadFromCloud();
         if (!mounted) return;
         if (!cloudState || cloudState.version !== SAVE_VERSION) {
-          setCloudStatus('☁️ Save version mismatch, starting fresh');
-          setTimeout(() => setCloudStatus(''), 3000);
+          showToast('☁️ Save version mismatch, starting fresh');
           return;
         }
         // Merge cloud state into current game
@@ -196,12 +199,10 @@ export default function Home() {
         setPlayTime(cloudState.playTime || 0);
         setPrestigePoints(cloudState.prestigePoints || 0);
         setPrestigeUpgrades(cloudState.prestigeUpgrades || {});
-        setCloudStatus('☁️ Loaded!');
-        setTimeout(() => setCloudStatus(''), 3000);
+        showToast('☁️ Loaded!');
       } catch (_) {
         if (!mounted) return;
-        setCloudStatus('☁️ Load failed');
-        setTimeout(() => setCloudStatus(''), 2000);
+        showToast('☁️ Load failed', 2000);
       }
     };
     loadCloud();
@@ -242,6 +243,12 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(id);
   }, []);
+
+  // ===== Sync Volume =====
+  useEffect(() => {
+    bgMusic.setVolume(masterVolume);
+    setSfxVolume(masterVolume);
+  }, [masterVolume, bgMusic, setSfxVolume]);
 
   // ===== Achievement Check =====
   useEffect(() => {
@@ -368,11 +375,9 @@ export default function Home() {
         totalEarned, totalClicks, playTime, prestigePoints, prestigeUpgrades,
       };
       await saveToCloud(state);
-      setCloudStatus('☁️ Saved!');
-      setTimeout(() => setCloudStatus(''), 3000);
+      showToast('☁️ Saved!');
     } catch (err) {
-      setCloudStatus(`☁️ Save failed: ${err.message}`);
-      setTimeout(() => setCloudStatus(''), 5000);
+      showToast(`☁️ Save failed: ${err.message}`, 5000);
     } finally {
       setSaving(false);
     }
@@ -488,14 +493,12 @@ export default function Home() {
         <meta name="theme-color" content="#2a3d2b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
       </Head>
       <main className="game-container">
         {/* ===== HEADER ===== */}
         <header className="game-header">
           <h1 className="game-title">PISO WIFI IDLE</h1>
-          <span className="cloud-status">{cloudStatus}</span>
-          <span style={{marginLeft:'auto', minWidth:'2rem'}} />
+          <span style={{flex:1, minWidth:'0.5rem'}} />
           <div style={{display:'flex', alignItems:'center', gap:'1px'}}>
             <button className="auth-header-button" onClick={() => setShowLeaderboard(!showLeaderboard)}>
               LEADERBOARD
@@ -515,6 +518,9 @@ export default function Home() {
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.5 }}>
               <PixelScenery locationId={loc?.id} accent={loc?.accentColor} />
             </div>
+
+            {/* Description as background text */}
+            <div className="viewport-desc-bg">{loc?.description || ''}</div>
 
             <div className="viewport-header">
               <div className="viewport-title-row">
@@ -554,11 +560,16 @@ export default function Home() {
                 {loc && (
                   <>
                     <div className="machine-sizer">
-                      <MachineDisplay type={loc.machine.id} size={120} partCount={
-                      [upgrades.reinforcedAntenna, upgrades.industrialCasing, upgrades.fiberCable,
-                       upgrades.backupPowerCell, upgrades.coolingSystem, upgrades.autoTuner,
-                       upgrades.signalBooster, upgrades.meshExtender].filter(Boolean).length
-                      } />
+                      <MachineDisplay type={loc.machine.id} size={120} parts={{
+                        reinforcedAntenna: upgrades.reinforcedAntenna,
+                        industrialCasing: upgrades.industrialCasing,
+                        fiberCable: upgrades.fiberCable,
+                        backupPowerCell: upgrades.backupPowerCell,
+                        coolingSystem: upgrades.coolingSystem,
+                        autoTuner: upgrades.autoTuner,
+                        signalBooster: upgrades.signalBooster,
+                        meshExtender: upgrades.meshExtender,
+                      }} level={machineCount > 0 ? Math.max(...locationMachines.map(m => m.level || 1)) : 1} />
                     </div>
                     <div className="machine-glow-ring" style={{ borderColor: loc.accentColor }} />
                   </>
@@ -572,12 +583,6 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Location background decoration */}
-            <div className="viewport-decor">
-              <div className="deco-line" style={{ background: loc?.accentColor || '#555' }} />
-              <div className="viewport-desc">{loc?.description || ''}</div>
-              <div className="deco-line" style={{ background: loc?.accentColor || '#555' }} />
-            </div>
           </section>
 
           {/* Control Hub */}
@@ -759,6 +764,11 @@ export default function Home() {
         {/* ===== Achievement Toast ===== */}
         <AchievementToast achievement={achievementToast} onDismiss={() => setAchievementToast(null)} />
 
+        {/* ===== Cloud Toast Notification ===== */}
+        {cloudToast && (
+          <div className="cloud-toast">{cloudToast}</div>
+        )}
+
         {/* ===== Modals ===== */}
         {detailMachine && (
           <MachineDetail
@@ -844,7 +854,7 @@ export default function Home() {
                         {saving ? 'SAVING...' : 'SAVE TO CLOUD'}
                       </button>
                       <button className="prestige-buy-button" style={{flex: 1, background: '#442211', color: '#aa6644'}}
-                        onClick={() => { logout(); setShowProfile(false); setCloudStatus('☁️ Logged out'); setTimeout(() => setCloudStatus(''), 2000); }}>
+                        onClick={() => { logout(); setShowProfile(false); showToast('☁️ Logged out', 2000); }}>
                         LOGOUT
                       </button>
                     </div>
@@ -904,6 +914,19 @@ export default function Home() {
                     {soundEnabled ? 'ON' : 'OFF'}
                   </button>
                 </div>
+                <div className="prestige-upgrade-card" style={{marginTop: '0.4rem'}}>
+                  <div className="detail-stat-label" style={{fontSize: '0.45rem'}}>VOLUME</div>
+                  <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.3rem'}}>
+                    <span style={{color: '#666', fontSize: '0.35rem'}}>🔇</span>
+                    <input
+                      type="range" min="0" max="1" step="0.05"
+                      value={masterVolume}
+                      onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
+                      style={{flex: 1, accentColor: '#e89330', height: '4px', cursor: 'pointer'}}
+                    />
+                    <span style={{color: '#e89330', fontSize: '0.35rem'}}>🔊</span>
+                  </div>
+                </div>
                 <div className="prestige-upgrade-card" style={{marginTop: '0.4rem', textAlign: 'left'}}>
                   <div className="detail-stat-label" style={{fontSize: '0.4rem'}}>RESET GAME</div>
                   <div className="detail-stat-value" style={{fontSize: '0.35rem', color: '#884433', marginTop: '0.3rem'}}>
@@ -955,7 +978,7 @@ export default function Home() {
         ::-webkit-scrollbar-track { background: #141414; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
-        .game-container { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: #141414; }
+        .game-container { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: #141414; user-select: none; -webkit-user-select: none; }
 
         /* ===== HEADER — Street Signage ===== */
         .game-header {
@@ -978,6 +1001,7 @@ export default function Home() {
           min-height: 36px; border: 1px solid #333; border-radius: 4px;
           background: transparent; color: #aaa;
           transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+          user-select: none; -webkit-user-select: none;
         }
         .auth-header-button:hover, .achievements-button:hover, .prestige-header-button:hover, .reset-button:hover, .music-button:hover {
           background: #222; color: #d4d0c8;
@@ -989,7 +1013,15 @@ export default function Home() {
         .reset-button:hover { background: #222; color: #d4d0c8; }
         .music-button.on { color: #e89330; border-color: #555; }
         .music-button.off { color: #554433; border-color: #332211; }
-        .cloud-status { color: #666; font-size: 0.3rem; min-width: 0; text-align: center; }
+        .cloud-toast {
+          position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%);
+          background: #1c1c1c; border: 1px solid #333; border-radius: 6px;
+          padding: 0.5rem 1rem; font-size: 0.35rem; color: #e89330;
+          z-index: 9999; white-space: nowrap;
+          animation: toastFade 0.3s ease-out;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        @keyframes toastFade { 0% { opacity: 0; transform: translateX(-50%) translateY(10px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
         /* ===== MAIN CONTENT ===== */
         .main-content { display: flex; flex: 1; min-height: 0; }
@@ -1012,6 +1044,7 @@ export default function Home() {
         .balance-amount { font-size: 0.6rem; font-weight: bold; color: #e89330; font-family: 'Press Start 2P', monospace; white-space: nowrap; line-height: 1; }
         .peso-sign { font-family: Arial, Helvetica, sans-serif; }
         .viewport-location-subtitle { color: #888; font-size: 0.35rem; text-align: left; margin-top: 0.15rem; padding-left: 0.85rem; }
+        .viewport-desc-bg { position: absolute; bottom: 0.5rem; left: 50%; transform: translateX(-50%); color: #555; font-size: 0.3rem; text-align: center; line-height: 1.4; opacity: 0.4; pointer-events: none; white-space: nowrap; z-index: 1; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
 
         /* ── Live Console Monitor ── */
         .live-console {
@@ -1040,6 +1073,7 @@ export default function Home() {
           cursor: pointer; position: relative; z-index: 5;
           display: flex; flex-direction: column; align-items: center;
           touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+          user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
           transition: transform 0.1s ease;
         }
         .machine-sizer {
@@ -1060,6 +1094,7 @@ export default function Home() {
         .tap-hint {
           color: #e89330; font-size: 0.38rem; margin-top: 0.3rem;
           animation: blink 1.5s step-end infinite; text-align: center;
+          user-select: none; -webkit-user-select: none;
         }
         @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
 
@@ -1084,15 +1119,14 @@ export default function Home() {
         }
         @keyframes ringPulse { 0%,100% { transform: scale(1); opacity: 0.15; } 50% { transform: scale(1.05); opacity: 0.35; } }
 
-        .viewport-decor { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; width: 88%; max-width: 360px; }
-        .deco-line { height: 1px; flex: 1; opacity: 0.3; }
-        .viewport-desc { color: #999; font-size: 0.38rem; text-align: center; line-height: 1.5; word-break: break-word; }
+
 
         /* ===== CONTROL HUB — Concrete Panel ===== */
         .control-hub {
           width: 380px; background: #1a1a1a;
           overflow-y: auto; padding: 0.75rem;
           display: flex; flex-direction: column; gap: 0.5rem;
+          max-height: 75dvh;
         }
         .hub-stats-row { display: flex; gap: 0.35rem; }
         .hub-stat {
@@ -1122,6 +1156,7 @@ export default function Home() {
           border: none; padding: 0.5rem 0.7rem; border-radius: 4px;
           font-size: 0.5rem; cursor: pointer; flex-shrink: 0; min-width: 70px; min-height: 40px;
           transition: all 0.15s; font-weight: bold;
+          user-select: none; -webkit-user-select: none;
         }
         .buy-button:hover:not(.disabled) { filter: brightness(1.15); }
         .buy-button.disabled { background: #2a2a2a; color: #555; cursor: not-allowed; filter: none; }
@@ -1336,19 +1371,19 @@ export default function Home() {
         /* ===== Responsive: Tablet & Mobile ===== */
         @media (max-width: 900px) {
           .main-content { flex-direction: column; align-items: center; }
-          .viewport { border-right: none; border-bottom: 1px solid #333; min-height: 280px; justify-content: flex-start; padding-top: 1rem; width: 100%; max-width: 600px; }
-          .control-hub { width: 100%; max-width: 600px; max-height: 50vh; }
+          .viewport { border-right: none; border-bottom: 1px solid #333; min-height: auto; justify-content: flex-start; padding: 0.8rem 0.8rem 0.3rem; width: 100%; max-width: 600px; }
+          .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
         }
         @media (max-width: 768px) {
           .game-header { flex-wrap: wrap; padding: 0.6rem 0.7rem; gap: 0.4rem; }
           .game-title { font-size: 0.7rem; }
           .auth-header-button, .reset-button { padding: 0.6rem 0.9rem; font-size: 0.5rem; min-height: 50px; }
           .main-content { flex-direction: column; align-items: center; }
-          .viewport { border-right: none; border-bottom: 1px solid #333; min-height: auto; padding: 0.8rem; justify-content: flex-start; width: 100%; max-width: 600px; }
+          .viewport { border-right: none; border-bottom: 1px solid #333; min-height: auto; padding: 0.8rem 0.8rem 0.3rem; justify-content: flex-start; width: 100%; max-width: 600px; }
           .viewport-header { margin-bottom: 0.3rem; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
-          .control-hub { width: 100%; max-width: 600px; max-height: 55vh; }
+          .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
           .machine-sizer { width: 180px; height: 180px; }
           .machine-sizer svg { width: 180px !important; height: 180px !important; }
           .machine-display-area { margin-top: 0.3rem; }
@@ -1387,16 +1422,14 @@ export default function Home() {
           .game-header { padding: 0.4rem 0.5rem; gap: 0.25rem; }
           .game-title { font-size: 0.5rem; }
           .auth-header-button, .reset-button { padding: 0.4rem 0.55rem; font-size: 0.38rem; min-height: 38px; }
-          .viewport { padding: 0.6rem; min-height: 260px; max-width: 100%; }
-          .viewport-location-name { font-size: 0.6rem; }
+          .viewport { padding: 0.6rem 0.6rem 0.2rem; min-height: 260px; max-width: 100%; }
           .viewport-location-name { font-size: 0.6rem; }
           .viewport-location-subtitle { font-size: 0.38rem; }
-          .viewport-desc { font-size: 0.35rem; }
-          .viewport-decor { gap: 0.3rem; margin-top: 0.4rem; width: 92%; }
+
           .live-console { padding: 0.55rem; max-width: 100%; }
           .console-header { font-size: 0.38rem; }
           .console-grid { font-size: 0.35rem; gap: 0.25rem; }
-          .control-hub { padding: 0.5rem; max-height: 48vh; max-width: 100%; }
+          .control-hub { padding: 0.5rem; max-height: 52dvh; max-width: 100%; }
           .hub-stat { padding: 0.35rem; }
           .hub-stat-label { font-size: 0.38rem; }
           .hub-stat-value { font-size: 0.5rem; }

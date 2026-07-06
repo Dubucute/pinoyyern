@@ -1,83 +1,185 @@
 import { useRef, useCallback, useEffect } from 'react';
 
-// Pentatonic melody notes (C major pentatonic)
-const NOTES = [262, 294, 330, 392, 440, 523, 587, 659];
-// Arpeggio pattern: indices into NOTES array
-const PATTERN = [0, 2, 4, 6, 4, 2, 1, 3, 5, 7, 5, 3, 0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1];
-const NOTE_DURATION = 0.18;
-const NOTE_GAP = 0.04;
-const STEP_DURATION = NOTE_DURATION + NOTE_GAP;
-const VOLUME = 0.04;
+// Exact E-Major Pentatonic frequencies used in Grieg's opening motif
+const E4 = 329.63, Fs4 = 369.99, Gs4 = 415.30, B4 = 493.88;
+const Cs5 = 554.37, E5 = 659.25, Fs5 = 739.99, Gs5 = 830.61, B5 = 987.77, Cs6 = 1109.73;
+const E3 = 164.81, Gs3 = 207.65, B3 = 246.94, A3 = 220.00;
+
+// Authentic Morning Mood chord changes mapping perfectly to the phrases
+const CHORDS = [
+  [E3, B3, E4, Gs4],   // Phrase 1 (Home E major)
+  [Gs3, B3, E4, Gs4],  // Phrase 2 (Inversion/Shift)
+  [A3, Cs5, E4, Gs4],  // Phrase 3 (Lift)
+  [E3, B3, E4, Gs4]    // Resolution
+];
+
+// Correct note sequence of Morning Mood in 6/8 meter
+// dur: 1 = eighth note, 3 = dotted quarter note
+const MELODY = [
+  // First phrase line
+  { note: E4, dur: 1 }, { note: Fs4, dur: 1 }, { note: Gs4, dur: 1 }, { note: B4, dur: 1 }, { note: Gs4, dur: 1 }, { note: Fs4, dur: 1 },
+  { note: E4, dur: 1 }, { note: Fs4, dur: 1 }, { note: Gs4, dur: 1 }, { note: B4, dur: 1 }, { note: Gs4, dur: 2 }, { note: B4, dur: 1 },
+  
+  // Second phrase line (climbing up)
+  { note: Gs4, dur: 1 }, { note: B4, dur: 1 }, { note: Cs5, dur: 1 }, { note: E5, dur: 1 }, { note: Cs5, dur: 1 }, { note: B4, dur: 1 },
+  { note: Gs4, dur: 1 }, { note: B4, dur: 1 }, { note: Cs5, dur: 1 }, { note: E5, dur: 1 }, { note: Cs5, dur: 3 },
+
+  // Third phrase line (High octave copy)
+  { note: E5, dur: 1 }, { note: Fs5, dur: 1 }, { note: Gs5, dur: 1 }, { note: B5, dur: 1 }, { note: Gs5, dur: 1 }, { note: Fs5, dur: 1 },
+  { note: E5, dur: 1 }, { note: Fs5, dur: 1 }, { note: Gs5, dur: 1 }, { note: B5, dur: 1 }, { note: Gs5, dur: 2 }, { note: B5, dur: 1 },
+  
+  // Resolution cascade
+  { note: Gs5, dur: 1 }, { note: B5, dur: 1 }, { note: Cs6, dur: 1 }, { note: B5, dur: 1 }, { note: Gs5, dur: 1 }, { note: Fs5, dur: 1 },
+  { note: E5, dur: 6 } // Long final hold
+];
 
 export default function useBackgroundMusic() {
   const audioCtxRef = useRef(null);
   const isPlayingRef = useRef(false);
-  const scheduleTimerRef = useRef(null);
-  const currentStepRef = useRef(0);
-  const gainNodeRef = useRef(null);
   const isMutedRef = useRef(false);
+  const masterGainRef = useRef(null);
+  const volumeRef = useRef(0.5);
+  
+  // Speed values controlled inside mutable refs to prevent drift or stuttering
+  const bpmRef = useRef(88); 
+  const playbackRateRef = useRef(1.0); 
+
+  const nextNoteTimeRef = useRef(0);
+  const melodyIdxRef = useRef(0);
+  const accumulatedBeatsRef = useRef(0);
+  const timerIdRef = useRef(null);
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      masterGainRef.current = audioCtxRef.current.createGain();
+      masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
+      masterGainRef.current.connect(audioCtxRef.current.destination);
     }
     return audioCtxRef.current;
   }, []);
 
-  const scheduleNotes = useCallback(() => {
+  // Expose a dedicated setter function to change speed on the fly (e.g., 0.5 for slow, 1.5 for fast)
+  const setPlaybackSpeed = useCallback((rate) => {
+    if (rate > 0) {
+      playbackRateRef.current = rate;
+    }
+  }, []);
+
+  const setVolume = useCallback((vol) => {
+    volumeRef.current = Math.max(0, Math.min(1, vol));
+    if (masterGainRef.current && audioCtxRef.current) {
+      masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
+    }
+  }, []);
+
+  const scheduleNextEvents = useCallback(() => {
     if (!isPlayingRef.current || !audioCtxRef.current) return;
     const ctx = audioCtxRef.current;
     if (ctx.state === 'suspended') ctx.resume();
 
-    const now = ctx.currentTime;
-    const lookAhead = 0.1;
-    const scheduleAhead = 0.5;
+    // Adjust core timings based on the customized user playback speed
+    const directEighthDur = (60 / bpmRef.current);
+    const eighthNoteDur = directEighthDur / playbackRateRef.current;
+    const measureDur = eighthNoteDur * 6;
 
-    while (currentStepRef.current * STEP_DURATION < now + scheduleAhead) {
-      const stepTime = now + (currentStepRef.current * STEP_DURATION);
-      const noteIdx = PATTERN[currentStepRef.current % PATTERN.length];
-      const freq = NOTES[noteIdx];
+    while (nextNoteTimeRef.current < ctx.currentTime + 0.3) {
+      const currentNote = MELODY[melodyIdxRef.current];
+      const durationSeconds = currentNote.dur * eighthNoteDur;
+      const t = nextNoteTimeRef.current;
 
       if (!isMutedRef.current) {
-        try {
-          const osc = ctx.createOscillator();
-          const noteGain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, stepTime);
-          noteGain.gain.setValueAtTime(0, stepTime);
-          noteGain.gain.linearRampToValueAtTime(VOLUME, stepTime + 0.02);
-          noteGain.gain.setValueAtTime(VOLUME, stepTime + NOTE_DURATION - 0.03);
-          noteGain.gain.exponentialRampToValueAtTime(0.001, stepTime + NOTE_DURATION);
-          osc.connect(noteGain);
-          noteGain.connect(ctx.destination);
-          osc.start(stepTime);
-          osc.stop(stepTime + NOTE_DURATION);
-        } catch (_) {}
+        const targetChordIdx = Math.floor(accumulatedBeatsRef.current / 6) % CHORDS.length;
+
+        // Trigger Backing Chord Harmony
+        if (accumulatedBeatsRef.current % 6 === 0) {
+          const chord = CHORDS[targetChordIdx];
+          chord.forEach((freq, idx) => {
+            try {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(freq, t);
+              
+              const vol = idx < 2 ? 0.016 : 0.008;
+              gain.gain.setValueAtTime(0, t);
+              gain.gain.linearRampToValueAtTime(vol, t + 0.1);
+              gain.gain.setValueAtTime(vol, t + measureDur - 0.15);
+              gain.gain.exponentialRampToValueAtTime(0.001, t + measureDur);
+              
+              osc.connect(gain);
+              gain.connect(masterGainRef.current || ctx.destination);
+              osc.start(t);
+              osc.stop(t + measureDur);
+            } catch (_) {}
+          });
+        }
+
+        // Trigger Main Flute Track
+        if (currentNote.note) {
+          try {
+            const oscSine = ctx.createOscillator();
+            const oscTri = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            oscSine.type = 'sine';
+            oscSine.frequency.setValueAtTime(currentNote.note, t);
+            
+            oscTri.type = 'triangle';
+            oscTri.frequency.setValueAtTime(currentNote.note, t);
+
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(0.02, t + 0.03); 
+            gain.gain.setValueAtTime(0.02, t + durationSeconds * 0.7);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + durationSeconds * 0.95);
+
+            const triGain = ctx.createGain();
+            triGain.gain.setValueAtTime(0.18, t); // Blend clean flute warmth
+
+            oscTri.connect(triGain);
+            triGain.connect(gain);
+            oscSine.connect(gain);
+            gain.connect(masterGainRef.current || ctx.destination);
+
+            oscSine.start(t);
+            oscSine.stop(t + durationSeconds);
+            oscTri.start(t);
+            oscTri.stop(t + durationSeconds);
+          } catch (_) {}
+        }
       }
 
-      currentStepRef.current++;
+      // Keep timeline index completely bound to variables
+      accumulatedBeatsRef.current += currentNote.dur;
+      nextNoteTimeRef.current += durationSeconds;
+      melodyIdxRef.current = (melodyIdxRef.current + 1) % MELODY.length;
+
+      if (melodyIdxRef.current === 0) {
+        accumulatedBeatsRef.current = 0;
+      }
     }
 
-    // Schedule next batch
-    scheduleTimerRef.current = setTimeout(scheduleNotes, 100);
+    timerIdRef.current = setTimeout(scheduleNextEvents, 45);
   }, []);
 
   const start = useCallback(() => {
     const ctx = getCtx();
     if (ctx.state === 'suspended') ctx.resume();
     if (isPlayingRef.current) return;
+    
     isPlayingRef.current = true;
-    currentStepRef.current = 0;
-    scheduleNotes();
-  }, [getCtx, scheduleNotes]);
+    nextNoteTimeRef.current = ctx.currentTime + 0.05;
+    melodyIdxRef.current = 0;
+    accumulatedBeatsRef.current = 0;
+    scheduleNextEvents();
+  }, [getCtx, scheduleNextEvents]);
 
   const stop = useCallback(() => {
     isPlayingRef.current = false;
-    if (scheduleTimerRef.current) {
-      clearTimeout(scheduleTimerRef.current);
-      scheduleTimerRef.current = null;
+    if (timerIdRef.current) {
+      clearTimeout(timerIdRef.current);
+      timerIdRef.current = null;
     }
-    currentStepRef.current = 0;
   }, []);
 
   const toggleMute = useCallback(() => {
@@ -85,9 +187,6 @@ export default function useBackgroundMusic() {
     return isMutedRef.current;
   }, []);
 
-  const isMuted = useCallback(() => isMutedRef.current, []);
-
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       stop();
@@ -97,5 +196,5 @@ export default function useBackgroundMusic() {
     };
   }, [stop]);
 
-  return { start, stop, toggleMute, isMuted };
+  return { start, stop, toggleMute, setPlaybackSpeed, setVolume, isMuted: () => isMutedRef.current };
 }
