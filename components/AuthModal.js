@@ -129,68 +129,77 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
       <style jsx>{`
         .auth-modal-overlay {
           position: fixed; inset: 0; z-index: 10000;
-          background: rgba(0,0,0,0.6);
+          background: rgba(0,0,0,0.85);
+          backdrop-filter: blur(4px);
           display: flex; align-items: center; justify-content: center;
           font-family: 'Press Start 2P', monospace;
           padding: 1rem;
         }
         .auth-modal {
-          background: #3d4a35;
-          border: 3px solid #8cb369;
+          background: #1c1c1c;
+          border: 1px solid #333;
+          border-radius: 8px;
           padding: 1.5rem;
           width: 100%; max-width: 380px;
           position: relative;
-          color: #f5e6c8;
+          color: #d4d0c8;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
         .auth-close-btn {
           position: absolute; top: 0.5rem; right: 0.5rem;
-          background: none; border: none; color: #8a9a7a;
+          background: none; border: none; color: #666;
           font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 0.25rem;
-          font-family: inherit;
+          font-family: inherit; transition: color 0.2s;
         }
-        .auth-close-btn:hover { color: #fca5a5; }
-        .auth-icon { text-align: center; font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .auth-title { text-align: center; color: #f0c05a; font-size: 0.9rem; margin-bottom: 0.3rem; }
-        .auth-subtitle { text-align: center; color: #c4b49a; font-size: 0.5rem; margin-bottom: 1rem; line-height: 1.6; }
+        .auth-close-btn:hover { color: #d4d0c8; }
+        .auth-icon { text-align: center; font-size: 2rem; margin-bottom: 0.5rem; }
+        .auth-title { text-align: center; color: #e89330; font-size: 0.7rem; margin-bottom: 0.3rem; }
+        .auth-subtitle { text-align: center; color: #888; font-size: 0.4rem; margin-bottom: 1rem; line-height: 1.6; }
         .auth-error {
-          background: #4a2a1a; border: 1px solid #fca5a5;
-          color: #fecaca; padding: 0.6rem; font-size: 0.45rem;
+          background: rgba(100,40,30,0.3); border: 1px solid #884433;
+          border-radius: 4px;
+          color: #cc8877; padding: 0.6rem; font-size: 0.38rem;
           margin-bottom: 0.8rem; text-align: center;
         }
         .auth-success {
-          background: #2a3d2b; border: 1px solid #8cb369;
-          color: #c4d4b8; padding: 0.6rem; font-size: 0.45rem;
+          background: rgba(30,60,30,0.3); border: 1px solid #446644;
+          border-radius: 4px;
+          color: #88aa88; padding: 0.6rem; font-size: 0.38rem;
           margin-bottom: 0.8rem; text-align: center;
         }
         .auth-form { display: flex; flex-direction: column; gap: 0.8rem; }
         .auth-field label {
-          display: block; font-size: 0.5rem; color: #c4b49a; margin-bottom: 0.35rem;
+          display: block; font-size: 0.4rem; color: #888; margin-bottom: 0.35rem;
         }
         .auth-field input {
-          width: 100%; padding: 0.7rem; background: #2a3d2b; border: 2px solid #5c7a3a;
-          color: #f5e6c8; font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
-          outline: none; box-sizing: border-box;
+          width: 100%; padding: 0.6rem; background: #141414; border: 1px solid #333;
+          border-radius: 4px;
+          color: #d4d0c8; font-family: 'Press Start 2P', monospace; font-size: 0.4rem;
+          outline: none; box-sizing: border-box; transition: border-color 0.2s;
         }
-        .auth-field input:focus { border-color: #8cb369; }
+        .auth-field input:focus { border-color: #e89330; }
         .auth-submit-btn {
-          width: 100%; padding: 0.8rem; background: #8cb369; border: none;
-          color: #2a3d2b; font-family: 'Press Start 2P', monospace; font-size: 0.55rem;
-          cursor: pointer; margin-top: 0.5rem; transition: opacity 0.15s; min-height: 48px;
+          width: 100%; padding: 0.7rem;
+          background: #e89330; color: #141414;
+          border: none; border-radius: 6px;
+          font-family: 'Press Start 2P', monospace; font-size: 0.45rem;
+          cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; min-height: 44px;
+          font-weight: bold;
         }
-        .auth-submit-btn:hover { opacity: 0.85; background: #8cb369; }
-        .auth-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.45rem; color: #c4b49a; line-height: 1.8; }
-        .auth-switch button { background: none; border: none; color: #f0c05a; cursor: pointer; font-family: inherit; font-size: 0.45rem; text-decoration: underline; padding: 0; }
-        .auth-switch button:hover { color: #f0d88a; }
+        .auth-submit-btn:hover { filter: brightness(1.15); }
+        .auth-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
+        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.38rem; color: #888; line-height: 1.8; }
+        .auth-switch button { background: none; border: none; color: #e89330; cursor: pointer; font-family: inherit; font-size: 0.38rem; text-decoration: underline; padding: 0; }
+        .auth-switch button:hover { color: #d4902a; }
         @media (max-width: 480px) {
           .auth-modal { padding: 1.2rem; }
-          .auth-title { font-size: 0.75rem; }
-          .auth-subtitle { font-size: 0.4rem; }
-          .auth-field label { font-size: 0.4rem; }
-          .auth-field input { padding: 0.6rem; font-size: 0.4rem; }
-          .auth-submit-btn { padding: 0.7rem; font-size: 0.45rem; min-height: 44px; }
-          .auth-switch { font-size: 0.38rem; }
-          .auth-switch button { font-size: 0.38rem; }
+          .auth-title { font-size: 0.6rem; }
+          .auth-subtitle { font-size: 0.35rem; }
+          .auth-field label { font-size: 0.35rem; }
+          .auth-field input { padding: 0.5rem; font-size: 0.35rem; }
+          .auth-submit-btn { padding: 0.6rem; font-size: 0.4rem; min-height: 40px; }
+          .auth-switch { font-size: 0.32rem; }
+          .auth-switch button { font-size: 0.32rem; }
         }
       `}</style>
     </div>

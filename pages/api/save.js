@@ -41,6 +41,23 @@ export default async function handler(req, res) {
       { upsert: true }
     );
 
+    // Also update leaderboard with stats
+    const leaderboard = db.collection('leaderboard');
+    await leaderboard.updateOne(
+      { userId: decoded.userId },
+      {
+        $set: {
+          userId: decoded.userId,
+          username: decoded.username,
+          totalEarned: gameState.totalEarned || 0,
+          totalClicks: gameState.totalClicks || 0,
+          playTime: gameState.playTime || 0,
+          updatedAt: new Date(),
+        },
+      },
+      { upsert: true }
+    );
+
     return res.status(200).json({ message: 'Game saved to cloud!', savedAt: new Date().toISOString() });
   } catch (error) {
     if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {

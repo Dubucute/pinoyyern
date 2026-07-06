@@ -43,8 +43,8 @@ export const getMachineSellValue = (entry, asset) => {
   return Math.floor((purchaseCost + upgradeCost) * MACHINE_SELL_REFUND);
 };
 
-export const calculatePps = (machinesByLocation, localUpgrades, speedMultiplier, prestigeIncomeMult, prestigeSpeedMult) => {
-  let globalTotal = 0;
+export const calculatePps = (machinesByLocation, localUpgrades, speedMultiplier, prestigeIncomeMult, prestigeSpeedMult, diskarteUpgrades = {}, packageUpgrades = {}) => {
+  let globalTotal = 0.5; // Base passive income even with no machines
   let globalMeshMult = 1;
 
   // Check if Island-Wide Mesh is active (location index 5)
@@ -79,11 +79,28 @@ export const calculatePps = (machinesByLocation, localUpgrades, speedMultiplier,
     globalTotal += locTotal;
   });
 
+  // Global part upgrades (DISKARTE)
+  if (diskarteUpgrades.reinforcedAntenna) globalTotal *= 1.25;
+  if (diskarteUpgrades.industrialCasing) globalTotal *= 1.30;
+  if (diskarteUpgrades.fiberCable) globalTotal *= 1.35;
+  if (diskarteUpgrades.backupPowerCell) globalTotal *= 1.40;
+  if (diskarteUpgrades.coolingSystem) globalTotal *= 1.35;
+  if (diskarteUpgrades.autoTuner) globalTotal *= 1.45;
+  if (diskarteUpgrades.signalBooster) globalTotal *= 1.50;
+  if (diskarteUpgrades.meshExtender) globalTotal *= 1.70;
+
+  // Package/service plan multipliers
+  let packageMult = 1;
+  if (packageUpgrades.unlimitedPlan) packageMult += 1.00;
+  else if (packageUpgrades.regularPlan) packageMult += 0.50;
+  else if (packageUpgrades.sukiLoad) packageMult += 0.25;
+
   // Global multipliers
   globalTotal *= globalMeshMult;
   globalTotal *= speedMultiplier || 1;
   globalTotal *= prestigeIncomeMult || 1;
   globalTotal *= prestigeSpeedMult || 1;
+  globalTotal *= packageMult;
 
   return globalTotal;
 };
@@ -93,30 +110,34 @@ export const calculateActiveUsers = (machinesByLocation) => {
   if (!machinesByLocation) return total;
   machinesByLocation.forEach((machines, locIdx) => {
     const count = machines.length;
-    if (locIdx === 0) total += count * 3;
-    else if (locIdx === 1) total += count * 8;
-    else if (locIdx === 2) total += count * 20;
-    else if (locIdx === 3) total += count * 50;
-    else if (locIdx === 4) total += count * 120;
-    else if (locIdx === 5) total += count * 300;
+    if (locIdx === 0) total += count * 10;
+    else if (locIdx === 1) total += count * 30;
+    else if (locIdx === 2) total += count * 80;
+    else if (locIdx === 3) total += count * 200;
+    else if (locIdx === 4) total += count * 500;
+    else if (locIdx === 5) total += count * 1500;
   });
   return total;
 };
 
 export const calculateClickValue = (packageUpgrades, diskarteUpgrades, localUpgrades, currentLocation) => {
   let value = 1;
-  if (packageUpgrades.unlimited) value = 20;
-  else if (packageUpgrades.regular) value = 10;
-  else if (packageUpgrades.student) value = 5;
-  if (diskarteUpgrades.longRangeAntenna) value *= 2;
-  // Local click boost (e.g. Ice Candy Combo)
+  // Package upgrades add flat click bonus
+  if (packageUpgrades.unlimitedPlan) value = 20;
+  else if (packageUpgrades.regularPlan) value = 10;
+  else if (packageUpgrades.sukiLoad) value = 5;
+  // Part upgrades that boost click
+  if (diskarteUpgrades.coolingSystem) value += 2;
+  if (diskarteUpgrades.signalBooster) value += 3;
+  if (diskarteUpgrades.meshExtender) value += 5;
+  // Local click boost upgrades (e.g. Ice Candy Combo)
   const locUpgrades = localUpgrades?.[currentLocation] || {};
-  Object.values(locUpgrades).forEach(bought => {
-    if (!bought) return;
-    const loc = LOCATIONS[currentLocation];
-    if (!loc) return;
+  LOCATIONS.forEach((loc, idx) => {
+    if (idx !== currentLocation) return;
     loc.localUpgrades.forEach(def => {
-      if (def.type === 'clickBoost' && locUpgrades[def.id]) value *= def.value;
+      if (def.type === 'clickBoost' && locUpgrades[def.id]) {
+        value = Math.floor(value * def.value);
+      }
     });
   });
   return value;
