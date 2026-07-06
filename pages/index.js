@@ -143,6 +143,45 @@ export default function Home() {
     return () => clearInterval(id);
   }, [token, user, pesos, machinesByLocation, localUpgrades, unlockedLocations, currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements, totalEarned, totalClicks, prestigePoints, prestigeUpgrades, saveToCloud]);
 
+  // ===== Cloud Load (when user logs in) =====
+  useEffect(() => {
+    if (!token || !user) return;
+    let mounted = true;
+    const loadCloud = async () => {
+      try {
+        const cloudState = await loadFromCloud();
+        if (!mounted) return;
+        if (!cloudState) {
+          setCloudStatus('☁️ No cloud save');
+          setTimeout(() => setCloudStatus(''), 2000);
+          return;
+        }
+        // Merge cloud state into current game
+        setPesos(cloudState.pesos || 0);
+        if (cloudState.machinesByLocation) setMachinesByLocation(cloudState.machinesByLocation);
+        if (cloudState.localUpgrades) setLocalUpgrades(cloudState.localUpgrades);
+        if (cloudState.unlockedLocations) setUnlockedLocations(cloudState.unlockedLocations);
+        setCurrentLocation(Math.min(cloudState.currentLocation || 0, LOCATIONS.length - 1));
+        setUpgrades(cloudState.upgrades || { longRangeAntenna: false, maritesMarketing: false });
+        setCurrentSpeed(cloudState.currentSpeed || '3g');
+        setPackageUpgrades(cloudState.packageUpgrades || { student: false, regular: false, unlimited: false });
+        setUnlockedAchievements(cloudState.unlockedAchievements || []);
+        setTotalEarned(cloudState.totalEarned || 0);
+        setTotalClicks(cloudState.totalClicks || 0);
+        setPrestigePoints(cloudState.prestigePoints || 0);
+        setPrestigeUpgrades(cloudState.prestigeUpgrades || {});
+        setCloudStatus('☁️ Loaded!');
+        setTimeout(() => setCloudStatus(''), 3000);
+      } catch (_) {
+        if (!mounted) return;
+        setCloudStatus('☁️ Load failed');
+        setTimeout(() => setCloudStatus(''), 2000);
+      }
+    };
+    loadCloud();
+    return () => { mounted = false; };
+  }, [token, user, loadFromCloud]);
+
   // ===== Income Tick =====
   useEffect(() => {
     const tick = setInterval(() => {
@@ -283,37 +322,6 @@ export default function Home() {
     const targetSpd = NETWORK_SPEEDS.find(s => s.id === speed.id);
     if (pesos >= targetSpd.baseCost && targetSpd.baseCost > currentSpd.baseCost) { setPesos((p) => p - targetSpd.baseCost); setTotalEarned((t) => t + targetSpd.baseCost); setCurrentSpeed(speed.id); playUpgrade(); }
   };
-
-  // ===== Cloud Load (after login) =====
-  const handleCloudLoad = useCallback(async () => {
-    try {
-      const cloudState = await loadFromCloud();
-      if (!cloudState) {
-        setCloudStatus('☁️ No cloud save');
-        setTimeout(() => setCloudStatus(''), 2000);
-        return;
-      }
-      // Merge cloud state into current game
-      setPesos(cloudState.pesos || 0);
-      if (cloudState.machinesByLocation) setMachinesByLocation(cloudState.machinesByLocation);
-      if (cloudState.localUpgrades) setLocalUpgrades(cloudState.localUpgrades);
-      if (cloudState.unlockedLocations) setUnlockedLocations(cloudState.unlockedLocations);
-      setCurrentLocation(Math.min(cloudState.currentLocation || 0, LOCATIONS.length - 1));
-      setUpgrades(cloudState.upgrades || { longRangeAntenna: false, maritesMarketing: false });
-      setCurrentSpeed(cloudState.currentSpeed || '3g');
-      setPackageUpgrades(cloudState.packageUpgrades || { student: false, regular: false, unlimited: false });
-      setUnlockedAchievements(cloudState.unlockedAchievements || []);
-      setTotalEarned(cloudState.totalEarned || 0);
-      setTotalClicks(cloudState.totalClicks || 0);
-      setPrestigePoints(cloudState.prestigePoints || 0);
-      setPrestigeUpgrades(cloudState.prestigeUpgrades || {});
-      setCloudStatus('☁️ Loaded!');
-      setTimeout(() => setCloudStatus(''), 3000);
-    } catch (_) {
-      setCloudStatus('☁️ Load failed');
-      setTimeout(() => setCloudStatus(''), 2000);
-    }
-  }, [loadFromCloud]);
 
   // ===== Manual Cloud Save =====
   const handleManualSave = useCallback(async () => {
@@ -720,11 +728,6 @@ export default function Home() {
         {showAuthModal && (
           <AuthModal
             onClose={() => setShowAuthModal(false)}
-            onLoginSuccess={() => {
-              setShowAuthModal(false);
-              // Load cloud save after login
-              setTimeout(() => handleCloudLoad(), 500);
-            }}
           />
         )}
       </main>
