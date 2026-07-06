@@ -134,53 +134,53 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
           font-family: 'Press Start 2P', monospace;
         }
         .auth-modal {
-          background: #1a202c;
-          border: 4px solid #48bb78;
+          background: #3d2b25;
+          border: 4px solid #f0b429;
           padding: 1.5rem;
           width: 90%; max-width: 380px;
           position: relative;
-          color: #e2e8f0;
+          color: #fef3c7;
         }
         .auth-close-btn {
           position: absolute; top: 0.5rem; right: 0.5rem;
-          background: none; border: none; color: #718096;
+          background: none; border: none; color: #8a6b4a;
           font-size: 1rem; cursor: pointer;
           font-family: inherit;
         }
-        .auth-close-btn:hover { color: #fc8181; }
+        .auth-close-btn:hover { color: #fca5a5; }
         .auth-icon { text-align: center; font-size: 2rem; margin-bottom: 0.5rem; }
-        .auth-title { text-align: center; color: #48bb78; font-size: 0.9rem; margin-bottom: 0.3rem; }
-        .auth-subtitle { text-align: center; color: #a0aec0; font-size: 0.45rem; margin-bottom: 1rem; line-height: 1.6; }
+        .auth-title { text-align: center; color: #f0b429; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .auth-subtitle { text-align: center; color: #d4a574; font-size: 0.45rem; margin-bottom: 1rem; line-height: 1.6; }
         .auth-error {
-          background: #742a2a; border: 1px solid #fc8181;
-          color: #feb2b2; padding: 0.5rem; font-size: 0.4rem;
+          background: #4a1a1a; border: 1px solid #fca5a5;
+          color: #fecaca; padding: 0.5rem; font-size: 0.4rem;
           margin-bottom: 0.8rem; text-align: center;
         }
         .auth-success {
-          background: #22543d; border: 1px solid #48bb78;
-          color: #9ae6b4; padding: 0.5rem; font-size: 0.4rem;
+          background: #2a3d2b; border: 1px solid #a3b18a;
+          color: #c4d4b8; padding: 0.5rem; font-size: 0.4rem;
           margin-bottom: 0.8rem; text-align: center;
         }
         .auth-form { display: flex; flex-direction: column; gap: 0.8rem; }
         .auth-field label {
-          display: block; font-size: 0.45rem; color: #a0aec0; margin-bottom: 0.3rem;
+          display: block; font-size: 0.45rem; color: #d4a574; margin-bottom: 0.3rem;
         }
         .auth-field input {
-          width: 100%; padding: 0.6rem; background: #2d3748; border: 2px solid #4a5568;
-          color: #e2e8f0; font-family: 'Press Start 2P', monospace; font-size: 0.45rem;
+          width: 100%; padding: 0.6rem; background: #2a1f1a; border: 2px solid #5c3d2e;
+          color: #fef3c7; font-family: 'Press Start 2P', monospace; font-size: 0.45rem;
           outline: none; box-sizing: border-box;
         }
-        .auth-field input:focus { border-color: #48bb78; }
+        .auth-field input:focus { border-color: #f0b429; }
         .auth-submit-btn {
-          width: 100%; padding: 0.7rem; background: #48bb78; border: none;
-          color: #1a202c; font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
+          width: 100%; padding: 0.7rem; background: #f0b429; border: none;
+          color: #2a1f1a; font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
           cursor: pointer; margin-top: 0.5rem;
         }
-        .auth-submit-btn:hover { background: #38a169; }
+        .auth-submit-btn:hover { background: #d97706; }
         .auth-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.4rem; color: #a0aec0; }
-        .auth-switch button { background: none; border: none; color: #48bb78; cursor: pointer; font-family: inherit; font-size: 0.4rem; text-decoration: underline; }
-        .auth-switch button:hover { color: #68d391; }
+        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.4rem; color: #d4a574; }
+        .auth-switch button { background: none; border: none; color: #f0b429; cursor: pointer; font-family: inherit; font-size: 0.4rem; text-decoration: underline; }
+        .auth-switch button:hover { color: #fbbf24; }
       `}</style>
     </div>
   );

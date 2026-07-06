@@ -4,10 +4,10 @@ import { MACHINE_MAX_LEVEL, getMachineUpgradeCost, getMachineTotalUpgradeCost, g
 import { LOCATIONS } from '../config/gameData';
 
 const LEVEL_COLORS = {
-  1: '#48bb78', 2: '#48bb78', 3: '#68d391',
-  4: '#4299e1', 5: '#63b3ed', 6: '#90cdf4',
-  7: '#ed8936', 8: '#f6ad55', 9: '#fbd38d',
-  10: '#e53e3e',
+  1: '#f0b429', 2: '#f0b429', 3: '#fbbf24',
+  4: '#f59e0b', 5: '#d97706', 6: '#b45309',
+  7: '#f97316', 8: '#ea580c', 9: '#dc2626',
+  10: '#991b1b',
 };
 
 export default function MachineDetail({ machine, onClose, onSell, onRename, onUpgrade, spotLevels, pesos }) {
@@ -89,15 +89,15 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
               className="machine-detail-bar"
               style={{
                 backgroundColor: i < machine.level
-                  ? LEVEL_COLORS[i + 1] || '#48bb78'
-                  : '#2d3748',
+                  ? LEVEL_COLORS[i + 1] || '#f0b429'
+                  : '#3d2b25',
               }}
             />
           ))}
         </div>
 
         {location && (
-          <div className="machine-detail-location" style={{ background: '#1a202c', border: '3px solid #48bb78', margin: '0 1rem 0.5rem', padding: '0.6rem' }}>
+          <div className="machine-detail-location" style={{ background: '#2a1f1a', border: '3px solid #f0b429', margin: '0 1rem 0.5rem', padding: '0.6rem' }}>
             <div className="detail-stat-label">📍 Located At</div>
             <div className="detail-stat-value income" style={{ fontSize: '0.6rem' }}>{locationName}</div>
           </div>

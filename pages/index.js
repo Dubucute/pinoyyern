@@ -697,177 +697,310 @@ export default function Home() {
 
       <style jsx global>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Press Start 2P', cursive; background-color: #1a202c; color: #e2e8f0; image-rendering: pixelated; overflow: hidden; }
+        body {
+          font-family: 'Press Start 2P', cursive;
+          background-color: #2a1f1a;
+          color: #fef3c7;
+          image-rendering: pixelated;
+          overflow: hidden;
+        }
         .game-container { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #2d3748; }
-        ::-webkit-scrollbar-thumb { background: #4a5568; border: 2px solid #2d3748; }
+        ::-webkit-scrollbar-track { background: #3d2b25; }
+        ::-webkit-scrollbar-thumb { background: #6b4a3a; border: 2px solid #3d2b25; }
 
-        /* ===== HEADER ===== */
-        .game-header { display: flex; align-items: center; padding: 0.5rem 1rem; background: #2d3748; border-bottom: 4px solid #48bb78; gap: 1rem; flex-shrink: 0; }
+        /* ===== HEADER = cozy signage ===== */
+        .game-header {
+          display: flex; align-items: center; padding: 0.5rem 1rem;
+          background: #3d2b25;
+          border-bottom: 4px solid #f0b429;
+          gap: 1rem; flex-shrink: 0;
+          box-shadow: 0 4px 0 #2a1f1a;
+        }
         .header-left { flex-shrink: 0; }
-        .game-title { color: #48bb78; font-size: 0.65rem; text-shadow: 2px 2px 0 #1a202c; white-space: nowrap; }
+        .game-title {
+          color: #f0b429; font-size: 0.65rem;
+          text-shadow: 2px 2px 0 #2a1f1a, 0 0 12px rgba(240, 180, 41, 0.2);
+          white-space: nowrap;
+        }
         .header-stats { display: flex; gap: 1.5rem; flex: 1; justify-content: center; }
         .header-stat { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
-        .header-stat-label { color: #a0aec0; font-size: 0.35rem; }
+        .header-stat-label { color: #d4a574; font-size: 0.35rem; }
         .header-stat-value { font-size: 0.55rem; }
-        .header-stat-value.money { color: #48bb78; }
-        .header-stat-value.speed { color: #4299e1; }
+        .header-stat-value.money { color: #fbbf24; text-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
+        .header-stat-value.speed { color: #67e8f9; text-shadow: 0 0 8px rgba(103, 232, 249, 0.2); }
         .header-buttons { display: flex; gap: 0.35rem; align-items: center; flex-shrink: 0; }
-        .auth-header-button { font-family: 'Press Start 2P', cursive; background: #2d3748; color: #48bb78; border: 2px solid #48bb78; padding: 0.35rem 0.5rem; font-size: 0.35rem; cursor: pointer; white-space: nowrap; }
-        .auth-header-button:hover { background: #4a5568; }
-        .auth-header-button.logged-in { color: #f6e05e; border-color: #f6e05e; font-size: 0.3rem; }
-        .cloud-status { color: #48bb78; font-size: 0.3rem; min-width: 1.2rem; text-align: center; }
-        .reset-button { font-family: 'Press Start 2P', cursive; background: #e53e3e; color: #fff; border: 3px solid #c53030; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; }
-        .reset-button:hover { background: #fc8181; }
-        .achievements-button { font-family: 'Press Start 2P', cursive; background: #2d3748; color: #f6e05e; border: 2px solid #f6e05e; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; white-space: nowrap; }
-        .achievements-button:hover { background: #4a5568; }
-        .prestige-header-button { font-family: 'Press Start 2P', cursive; background: #2d3748; color: #48bb78; border: 2px solid #48bb78; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; white-space: nowrap; }
-        .prestige-header-button:hover { background: #4a5568; }
-        .music-button { font-family: 'Press Start 2P', cursive; background: #2d3748; border: 2px solid #4a5568; padding: 0.35rem 0.4rem; font-size: 0.5rem; cursor: pointer; }
-        .music-button.on { color: #48bb78; border-color: #48bb78; }
-        .music-button.off { color: #e53e3e; border-color: #e53e3e; }
+        .auth-header-button {
+          font-family: 'Press Start 2P', cursive;
+          background: #4a3528; color: #f0b429;
+          border: 2px solid #f0b429; padding: 0.35rem 0.5rem;
+          font-size: 0.35rem; cursor: pointer; white-space: nowrap;
+        }
+        .auth-header-button:hover { background: #5c3d2e; }
+        .auth-header-button.logged-in { color: #fbbf24; border-color: #fbbf24; font-size: 0.3rem; }
+        .cloud-status { color: #f0b429; font-size: 0.3rem; min-width: 1.2rem; text-align: center; }
+        .reset-button {
+          font-family: 'Press Start 2P', cursive;
+          background: #b91c1c; color: #fef3c7;
+          border: 3px solid #991b1b; padding: 0.35rem 0.5rem;
+          font-size: 0.4rem; cursor: pointer;
+        }
+        .reset-button:hover { background: #dc2626; }
+        .achievements-button {
+          font-family: 'Press Start 2P', cursive;
+          background: #4a3528; color: #fbbf24;
+          border: 2px solid #fbbf24; padding: 0.35rem 0.5rem;
+          font-size: 0.4rem; cursor: pointer; white-space: nowrap;
+        }
+        .achievements-button:hover { background: #5c3d2e; }
+        .prestige-header-button {
+          font-family: 'Press Start 2P', cursive;
+          background: #4a3528; color: #f0b429;
+          border: 2px solid #f0b429; padding: 0.35rem 0.5rem;
+          font-size: 0.4rem; cursor: pointer; white-space: nowrap;
+        }
+        .prestige-header-button:hover { background: #5c3d2e; }
+        .music-button {
+          font-family: 'Press Start 2P', cursive;
+          background: #4a3528; border: 2px solid #6b4a3a;
+          padding: 0.35rem 0.4rem; font-size: 0.5rem; cursor: pointer;
+        }
+        .music-button.on { color: #f0b429; border-color: #f0b429; }
+        .music-button.off { color: #b91c1c; border-color: #b91c1c; }
 
         /* ===== MAIN CONTENT ===== */
         .main-content { display: flex; flex: 1; min-height: 0; }
 
-        /* Viewport */
-        .viewport { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-right: 4px solid #48bb78; transition: background-color 0.5s; padding: 1rem; overflow: hidden; }
+        /* Viewport — cozy window */
+        .viewport {
+          flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          position: relative;
+          border-right: 4px solid #f0b429;
+          transition: background-color 0.5s;
+          padding: 1rem; overflow: hidden;
+        }
         .viewport-header { text-align: center; margin-bottom: 0.5rem; }
-        .viewport-location-name { font-size: 0.7rem; margin-bottom: 0.2rem; text-shadow: 2px 2px 0 #1a202c; }
-        .viewport-location-subtitle { color: #a0aec0; font-size: 0.35rem; text-shadow: 1px 1px 0 #1a202c; }
+        .viewport-location-name {
+          font-size: 0.7rem; margin-bottom: 0.2rem;
+          text-shadow: 2px 2px 0 #2a1f1a;
+        }
+        .viewport-location-subtitle {
+          color: #d4a574; font-size: 0.35rem;
+          text-shadow: 1px 1px 0 #2a1f1a;
+        }
         .viewport-machine-area { display: flex; flex-direction: column; align-items: center; position: relative; }
         .clickable-machine { cursor: pointer; transition: transform 0.1s; position: relative; padding: 0.5rem; }
         .clickable-machine.pressed { transform: scale(0.92); }
-        .clickable-machine:hover { filter: brightness(1.15); }
+        .clickable-machine:hover { filter: brightness(1.25) drop-shadow(0 0 12px rgba(240, 180, 41, 0.3)); }
         .machine-svg-wrapper { position: relative; }
         .machine-pulse-ring { position: absolute; inset: -8px; border: 2px solid; border-radius: 0; opacity: 0.3; animation: pulseRing 2s ease-in-out infinite; pointer-events: none; }
         @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.05); opacity: 0.6; } }
-        .viewport-click-hint { color: #f6e05e; font-size: 0.4rem; margin-top: 0.5rem; text-shadow: 1px 1px 0 #1a202c; animation: blink 1.5s step-end infinite; }
+        .viewport-click-hint {
+          color: #fbbf24; font-size: 0.4rem; margin-top: 0.5rem;
+          text-shadow: 1px 1px 0 #2a1f1a;
+          animation: blink 1.5s step-end infinite;
+        }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .viewport-decor { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; width: 80%; max-width: 400px; }
         .deco-line { height: 2px; flex: 1; opacity: 0.4; }
-        .viewport-desc { color: #a0aec0; font-size: 0.3rem; text-align: center; opacity: 0.6; white-space: nowrap; }
-        .floating-text { position: absolute; color: #48bb78; font-size: 0.9rem; font-weight: bold; text-shadow: 2px 2px 0 #1a202c; pointer-events: none; animation: floatUp 1s ease-out forwards; }
+        .viewport-desc { color: #d4a574; font-size: 0.3rem; text-align: center; opacity: 0.7; white-space: nowrap; }
+        .floating-text {
+          position: absolute; color: #fbbf24; font-size: 0.9rem; font-weight: bold;
+          text-shadow: 2px 2px 0 #2a1f1a, 0 0 12px rgba(251, 191, 36, 0.4);
+          pointer-events: none; animation: floatUp 1s ease-out forwards;
+        }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-60px); } }
 
-        /* Control Hub */
-        .control-hub { width: 360px; background: #2d3748; overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        /* Control Hub — cozy nook */
+        .control-hub {
+          width: 360px; background: #3d2b25;
+          overflow-y: auto; padding: 0.75rem;
+          display: flex; flex-direction: column; gap: 0.5rem;
+        }
         .hub-stats-row { display: flex; gap: 0.35rem; }
-        .hub-stat { flex: 1; background: #1a202c; border: 2px solid #4a5568; padding: 0.4rem; text-align: center; }
-        .hub-stat-label { display: block; color: #a0aec0; font-size: 0.3rem; margin-bottom: 0.2rem; }
-        .hub-stat-value { display: block; color: #48bb78; font-size: 0.45rem; }
-        .hub-stat-value.click { color: #f6e05e; }
-        .hub-section { background: #1a202c; border: 2px solid #4a5568; padding: 0.5rem; }
-        .hub-section-title { color: #e2e8f0; font-size: 0.4rem; margin-bottom: 0.4rem; padding-bottom: 0.3rem; border-bottom: 2px solid; display: flex; align-items: center; gap: 0.3rem; }
+        .hub-stat {
+          flex: 1; background: #2a1f1a; border: 2px solid #5c3d2e;
+          padding: 0.4rem; text-align: center;
+        }
+        .hub-stat-label { display: block; color: #d4a574; font-size: 0.3rem; margin-bottom: 0.2rem; }
+        .hub-stat-value { display: block; color: #f0b429; font-size: 0.45rem; }
+        .hub-stat-value.click { color: #fbbf24; }
+        .hub-section {
+          background: #2a1f1a; border: 2px solid #5c3d2e;
+          padding: 0.5rem;
+        }
+        .hub-section-title {
+          color: #fef3c7; font-size: 0.4rem; margin-bottom: 0.4rem;
+          padding-bottom: 0.3rem; border-bottom: 2px solid;
+          display: flex; align-items: center; gap: 0.3rem;
+        }
         .hub-purchase-card { display: flex; align-items: center; gap: 0.5rem; }
         .purchase-info { flex: 1; min-width: 0; }
-        .purchase-owned { display: block; color: #e2e8f0; font-size: 0.4rem; margin-bottom: 0.15rem; }
-        .purchase-income { display: block; color: #48bb78; font-size: 0.35rem; margin-bottom: 0.15rem; }
-        .purchase-cost { display: block; color: #f6e05e; font-size: 0.35rem; }
-        .buy-button { font-family: 'Press Start 2P', cursive; background: #48bb78; color: #1a202c; border: 3px solid #38a169; padding: 0.4rem 0.7rem; font-size: 0.45rem; cursor: pointer; flex-shrink: 0; }
-        .buy-button:hover:not(.disabled) { background: #68d391; }
-        .buy-button.disabled { background: #4a5568; color: #718096; border-color: #2d3748; cursor: not-allowed; }
-        .buy-button-small { font-family: 'Press Start 2P', cursive; background: #48bb78; color: #1a202c; border: 2px solid #38a169; padding: 0.25rem 0.4rem; font-size: 0.3rem; cursor: pointer; flex-shrink: 0; }
-        .buy-button-small:hover:not(.disabled) { background: #68d391; }
-        .buy-button-small.disabled { background: #4a5568; color: #718096; border-color: #2d3748; cursor: not-allowed; }
+        .purchase-owned { display: block; color: #fef3c7; font-size: 0.4rem; margin-bottom: 0.15rem; }
+        .purchase-income { display: block; color: #f0b429; font-size: 0.35rem; margin-bottom: 0.15rem; }
+        .purchase-cost { display: block; color: #fbbf24; font-size: 0.35rem; }
+        .buy-button {
+          font-family: 'Press Start 2P', cursive;
+          background: #f0b429; color: #2a1f1a;
+          border: 3px solid #d97706; padding: 0.4rem 0.7rem;
+          font-size: 0.45rem; cursor: pointer; flex-shrink: 0;
+        }
+        .buy-button:hover:not(.disabled) { background: #fbbf24; }
+        .buy-button.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
+        .buy-button-small {
+          font-family: 'Press Start 2P', cursive;
+          background: #f0b429; color: #2a1f1a;
+          border: 2px solid #d97706; padding: 0.25rem 0.4rem;
+          font-size: 0.3rem; cursor: pointer; flex-shrink: 0;
+        }
+        .buy-button-small:hover:not(.disabled) { background: #fbbf24; }
+        .buy-button-small.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
 
         /* Local Upgrades */
         .hub-local-upgrades { display: flex; flex-direction: column; gap: 0.35rem; }
-        .local-upgrade-card { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem; background: #2d3748; border: 2px solid #4a5568; }
-        .local-upgrade-card.owned { border-color: #48bb78; opacity: 0.8; }
+        .local-upgrade-card {
+          display: flex; align-items: center; gap: 0.4rem;
+          padding: 0.4rem; background: #3d2b25; border: 2px solid #5c3d2e;
+        }
+        .local-upgrade-card.owned { border-color: #f0b429; opacity: 0.8; }
         .local-upgrade-info { flex: 1; min-width: 0; }
-        .local-upgrade-name { color: #ed8936; font-size: 0.35rem; margin-bottom: 0.15rem; }
-        .local-upgrade-desc { color: #a0aec0; font-size: 0.25rem; margin-bottom: 0.15rem; line-height: 1.3; }
-        .local-upgrade-cost { color: #f6e05e; font-size: 0.3rem; }
+        .local-upgrade-name { color: #f59e0b; font-size: 0.35rem; margin-bottom: 0.15rem; }
+        .local-upgrade-desc { color: #d4a574; font-size: 0.25rem; margin-bottom: 0.15rem; line-height: 1.3; }
+        .local-upgrade-cost { color: #fbbf24; font-size: 0.3rem; }
 
         /* Machine List in Hub */
-        .hub-empty { color: #4a5568; font-size: 0.3rem; text-align: center; padding: 0.5rem; }
+        .hub-empty { color: #6b4a3a; font-size: 0.3rem; text-align: center; padding: 0.5rem; }
         .hub-machine-list { display: flex; flex-direction: column; gap: 0.25rem; max-height: 200px; overflow-y: auto; }
-        .hub-machine-card { display: flex; align-items: center; gap: 0.3rem; padding: 0.3rem; background: #2d3748; border: 2px solid #4a5568; cursor: pointer; transition: border-color 0.15s; }
-        .hub-machine-card:hover { border-color: #718096; }
-        .hub-machine-card.selected { border-color: #48bb78; background: #1a202c; }
-        .hmc-badge { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.35rem; color: #1a202c; font-weight: bold; flex-shrink: 0; border: 2px solid #1a202c; }
+        .hub-machine-card {
+          display: flex; align-items: center; gap: 0.3rem; padding: 0.3rem;
+          background: #3d2b25; border: 2px solid #5c3d2e;
+          cursor: pointer; transition: border-color 0.15s, background 0.15s;
+        }
+        .hub-machine-card:hover { border-color: #8a6b4a; background: #4a3528; }
+        .hub-machine-card.selected { border-color: #f0b429; background: #2a1f1a; }
+        .hmc-badge {
+          width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+          font-size: 0.35rem; color: #2a1f1a; font-weight: bold; flex-shrink: 0;
+          border: 2px solid #2a1f1a;
+        }
         .hmc-info { flex: 1; min-width: 0; }
         .hmc-name-row { display: flex; justify-content: space-between; align-items: center; gap: 0.2rem; }
-        .hmc-name { color: #e2e8f0; font-size: 0.3rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .hmc-name { color: #fef3c7; font-size: 0.3rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .hmc-level { font-size: 0.3rem; flex-shrink: 0; }
         .hmc-details { display: flex; justify-content: space-between; margin-top: 0.1rem; }
-        .hmc-details span { color: #a0aec0; font-size: 0.25rem; }
+        .hmc-details span { color: #d4a574; font-size: 0.25rem; }
 
         /* Global Shop Toggle */
-        .global-shop-toggle { font-family: 'Press Start 2P', cursive; background: #2d3748; color: #ed8936; border: 2px solid #4a5568; padding: 0.35rem; font-size: 0.35rem; cursor: pointer; text-align: left; }
-        .global-shop-toggle:hover { background: #4a5568; }
+        .global-shop-toggle {
+          font-family: 'Press Start 2P', cursive;
+          background: #4a3528; color: #f59e0b;
+          border: 2px solid #5c3d2e; padding: 0.35rem;
+          font-size: 0.35rem; cursor: pointer; text-align: left;
+        }
+        .global-shop-toggle:hover { background: #5c3d2e; }
         .hub-global-shop { display: flex; flex-direction: column; gap: 0.5rem; }
-        .global-upgrade-card { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem; background: #2d3748; border: 2px solid #4a5568; }
-        .global-upgrade-card.owned { border-color: #48bb78; opacity: 0.8; }
-        .global-upgrade-card.current { border-color: #48bb78; background: #2d3748; }
+        .global-upgrade-card {
+          display: flex; align-items: center; gap: 0.4rem;
+          padding: 0.35rem; background: #3d2b25; border: 2px solid #5c3d2e;
+        }
+        .global-upgrade-card.owned { border-color: #f0b429; opacity: 0.8; }
+        .global-upgrade-card.current { border-color: #f0b429; background: #3d2b25; }
         .global-upgrade-info { flex: 1; min-width: 0; }
-        .global-upgrade-name { color: #ed8936; font-size: 0.35rem; margin-bottom: 0.1rem; }
-        .global-upgrade-desc { color: #a0aec0; font-size: 0.25rem; margin-bottom: 0.1rem; line-height: 1.3; }
-        .global-upgrade-cost { color: #48bb78; font-size: 0.3rem; }
-        .current-badge-small { font-family: 'Press Start 2P', cursive; background: #48bb78; color: #1a202c; padding: 0.2rem 0.4rem; font-size: 0.3rem; border: 2px solid #38a169; flex-shrink: 0; }
+        .global-upgrade-name { color: #f59e0b; font-size: 0.35rem; margin-bottom: 0.1rem; }
+        .global-upgrade-desc { color: #d4a574; font-size: 0.25rem; margin-bottom: 0.1rem; line-height: 1.3; }
+        .global-upgrade-cost { color: #f0b429; font-size: 0.3rem; }
+        .current-badge-small {
+          font-family: 'Press Start 2P', cursive;
+          background: #f0b429; color: #2a1f1a;
+          padding: 0.2rem 0.4rem; font-size: 0.3rem;
+          border: 2px solid #d97706; flex-shrink: 0;
+        }
 
-        /* ===== FOOTER — Location Tabs ===== */
-        .location-tabs { display: flex; border-top: 4px solid #48bb78; background: #1a202c; flex-shrink: 0; }
-        .location-tab { flex: 1; font-family: 'Press Start 2P', cursive; background: #2d3748; color: #a0aec0; border: none; border-right: 2px solid #1a202c; border-bottom: 3px solid transparent; padding: 0.4rem 0.2rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+        /* ===== FOOTER — Location Tabs = cozy row ===== */
+        .location-tabs {
+          display: flex;
+          border-top: 4px solid #f0b429;
+          background: #2a1f1a;
+          flex-shrink: 0;
+        }
+        .location-tab {
+          flex: 1; font-family: 'Press Start 2P', cursive;
+          background: #3d2b25; color: #d4a574;
+          border: none; border-right: 2px solid #2a1f1a;
+          border-bottom: 3px solid transparent;
+          padding: 0.4rem 0.2rem; cursor: pointer;
+          display: flex; flex-direction: column; align-items: center; gap: 0.1rem;
+          transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
         .location-tab:last-child { border-right: none; }
-        .location-tab:hover { background: #4a5568; }
-        .location-tab.active { background: #1a202c; border-bottom-width: 3px; border-bottom-style: solid; }
+        .location-tab:hover { background: #5c3d2e; color: #fef3c7; }
+        .location-tab.active { background: #2a1f1a; border-bottom-width: 3px; border-bottom-style: solid; }
         .location-tab.locked { opacity: 0.6; }
-        .location-tab.can-unlock { opacity: 1; border-color: #48bb78; color: #48bb78; }
+        .location-tab.can-unlock { opacity: 1; border-color: #f0b429; color: #f0b429; }
         .loc-tab-icon { font-size: 0.65rem; }
         .loc-tab-name { font-size: 0.3rem; }
-        .loc-tab-cost { font-size: 0.25rem; color: #f6e05e; }
+        .loc-tab-cost { font-size: 0.25rem; color: #fbbf24; }
 
-        /* ===== Shared / Modal styles (from original) ===== */
-        .achievement-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 1rem; background: #1a202c; border: 4px solid #f6e05e; padding: 1rem 1.5rem; z-index: 100; animation: slideUpToast 0.3s ease-out; cursor: pointer; max-width: 90vw; }
+        /* ===== Shared / Modal styles (cozy version) ===== */
+        .achievement-toast {
+          position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+          display: flex; align-items: center; gap: 1rem;
+          background: #3d2b25; border: 4px solid #fbbf24;
+          padding: 1rem 1.5rem; z-index: 100;
+          animation: slideUpToast 0.3s ease-out; cursor: pointer; max-width: 90vw;
+          box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
+        }
         @keyframes slideUpToast { 0% { transform: translateX(-50%) translateY(100px); opacity: 0; } 100% { transform: translateX(-50%) translateY(0); opacity: 1; } }
-        .toast-icon { font-size: 2rem; } .toast-text { flex: 1; } .toast-title { color: #f6e05e; font-size: 0.5rem; margin-bottom: 0.3rem; } .toast-name { color: #48bb78; font-size: 0.7rem; margin-bottom: 0.3rem; } .toast-desc { color: #a0aec0; font-size: 0.4rem; }
-        .achievement-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 200; }
-        .achievement-panel { background: #2d3748; border: 4px solid #48bb78; width: 90%; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; }
-        .achievement-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 4px solid #48bb78; }
-        .achievement-panel-title { color: #f6e05e; font-size: 0.8rem; }
-        .achievement-close { font-family: 'Press Start 2P', cursive; background: none; color: #e2e8f0; border: 3px solid #4a5568; padding: 0.3rem 0.5rem; font-size: 0.6rem; cursor: pointer; }
-        .achievement-close:hover { background: #4a5568; }
+        .toast-icon { font-size: 2rem; } .toast-text { flex: 1; }
+        .toast-title { color: #fbbf24; font-size: 0.5rem; margin-bottom: 0.3rem; }
+        .toast-name { color: #f0b429; font-size: 0.7rem; margin-bottom: 0.3rem; }
+        .toast-desc { color: #d4a574; font-size: 0.4rem; }
+        .achievement-overlay { position: fixed; inset: 0; background: rgba(42, 31, 26, 0.9); display: flex; align-items: center; justify-content: center; z-index: 200; }
+        .achievement-panel { background: #3d2b25; border: 4px solid #f0b429; width: 90%; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; }
+        .achievement-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 4px solid #f0b429; }
+        .achievement-panel-title { color: #fbbf24; font-size: 0.8rem; }
+        .achievement-close { font-family: 'Press Start 2P', cursive; background: none; color: #fef3c7; border: 3px solid #5c3d2e; padding: 0.3rem 0.5rem; font-size: 0.6rem; cursor: pointer; }
+        .achievement-close:hover { background: #4a3528; }
         .achievement-panel-body { padding: 1rem; overflow-y: auto; }
-        .achievement-count { color: #a0aec0; font-size: 0.5rem; text-align: center; margin-bottom: 0.5rem; }
-        .achievement-progress-bar { width: 100%; height: 12px; background: #1a202c; border: 2px solid #4a5568; margin-bottom: 1.5rem; }
-        .achievement-progress-fill { height: 100%; background: #48bb78; transition: width 0.5s; }
+        .achievement-count { color: #d4a574; font-size: 0.5rem; text-align: center; margin-bottom: 0.5rem; }
+        .achievement-progress-bar { width: 100%; height: 12px; background: #2a1f1a; border: 2px solid #5c3d2e; margin-bottom: 1.5rem; }
+        .achievement-progress-fill { height: 100%; background: #f0b429; transition: width 0.5s; }
         .achievement-list { display: flex; flex-direction: column; gap: 0.5rem; }
-        .achievement-card { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: #1a202c; border: 3px solid #4a5568; }
-        .achievement-card.unlocked { border-color: #48bb78; }
+        .achievement-card { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: #2a1f1a; border: 3px solid #5c3d2e; }
+        .achievement-card.unlocked { border-color: #f0b429; }
         .achievement-card.locked { opacity: 0.6; }
         .achievement-card-icon { font-size: 1.5rem; flex-shrink: 0; }
         .achievement-card-info { flex: 1; }
-        .achievement-card-name { color: #ed8936; font-size: 0.6rem; margin-bottom: 0.3rem; }
-        .achievement-card-desc { color: #a0aec0; font-size: 0.4rem; }
-        .prestige-panel { background: #2d3748; border: 4px solid #48bb78; width: 90%; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; }
-        .prestige-panel-title { color: #48bb78; font-size: 0.8rem; }
-        .prestige-info { text-align: center; padding-bottom: 1rem; border-bottom: 4px solid #4a5568; margin-bottom: 1rem; }
+        .achievement-card-name { color: #f59e0b; font-size: 0.6rem; margin-bottom: 0.3rem; }
+        .achievement-card-desc { color: #d4a574; font-size: 0.4rem; }
+        .prestige-panel { background: #3d2b25; border: 4px solid #f0b429; width: 90%; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; }
+        .prestige-panel-title { color: #f0b429; font-size: 0.8rem; }
+        .prestige-info { text-align: center; padding-bottom: 1rem; border-bottom: 4px solid #5c3d2e; margin-bottom: 1rem; }
         .prestige-points-display { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
-        .prestige-points-icon { font-size: 2rem; } .prestige-points-value { color: #48bb78; font-size: 1.5rem; text-shadow: 2px 2px 0 #1a202c; } .prestige-points-label { color: #a0aec0; font-size: 0.4rem; }
-        .prestige-desc { color: #a0aec0; font-size: 0.4rem; margin-bottom: 1rem; line-height: 1.6; }
-        .prestige-button { font-family: 'Press Start 2P', cursive; background: #48bb78; color: #1a202c; border: 4px solid #38a169; padding: 0.8rem 1.5rem; font-size: 0.5rem; cursor: pointer; }
-        .prestige-button:hover:not(.disabled) { background: #68d391; }
-        .prestige-button.disabled { background: #4a5568; color: #718096; border-color: #2d3748; cursor: not-allowed; }
-        .prestige-upgrades-title { color: #ed8936; font-size: 0.6rem; margin-bottom: 1rem; }
+        .prestige-points-icon { font-size: 2rem; }
+        .prestige-points-value { color: #f0b429; font-size: 1.5rem; text-shadow: 2px 2px 0 #2a1f1a; }
+        .prestige-points-label { color: #d4a574; font-size: 0.4rem; }
+        .prestige-desc { color: #d4a574; font-size: 0.4rem; margin-bottom: 1rem; line-height: 1.6; }
+        .prestige-button { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; border: 4px solid #d97706; padding: 0.8rem 1.5rem; font-size: 0.5rem; cursor: pointer; }
+        .prestige-button:hover:not(.disabled) { background: #fbbf24; }
+        .prestige-button.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
+        .prestige-upgrades-title { color: #f59e0b; font-size: 0.6rem; margin-bottom: 1rem; }
         .prestige-upgrades-list { display: flex; flex-direction: column; gap: 0.5rem; }
-        .prestige-upgrade-card { background: #1a202c; border: 3px solid #4a5568; padding: 0.8rem; }
-        .prestige-upgrade-card.maxed { border-color: #48bb78; }
+        .prestige-upgrade-card { background: #2a1f1a; border: 3px solid #5c3d2e; padding: 0.8rem; }
+        .prestige-upgrade-card.maxed { border-color: #f0b429; }
         .prestige-upgrade-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; }
         .prestige-upgrade-icon { font-size: 1.5rem; flex-shrink: 0; }
         .prestige-upgrade-info { flex: 1; }
-        .prestige-upgrade-name { color: #ed8936; font-size: 0.5rem; margin-bottom: 0.3rem; }
-        .prestige-upgrade-desc { color: #a0aec0; font-size: 0.4rem; }
-        .prestige-upgrade-level { color: #48bb78; font-size: 0.4rem; flex-shrink: 0; }
-        .prestige-upgrade-bar { width: 100%; height: 8px; background: #2d3748; border: 2px solid #4a5568; margin-bottom: 0.5rem; }
-        .prestige-upgrade-fill { height: 100%; background: #48bb78; transition: width 0.3s; }
-        .prestige-buy-button { font-family: 'Press Start 2P', cursive; background: #48bb78; color: #1a202c; border: 3px solid #38a169; padding: 0.3rem 0.5rem; font-size: 0.4rem; cursor: pointer; width: 100%; }
-        .prestige-buy-button:hover:not(.disabled) { background: #68d391; }
-        .prestige-buy-button.disabled { background: #4a5568; color: #718096; border-color: #2d3748; cursor: not-allowed; }
-        .prestige-maxed-badge { font-family: 'Press Start 2P', cursive; background: #48bb78; color: #1a202c; padding: 0.3rem 0.5rem; font-size: 0.4rem; border: 3px solid #38a169; text-align: center; }
-        .machine-detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 300; }
+        .prestige-upgrade-name { color: #f59e0b; font-size: 0.5rem; margin-bottom: 0.3rem; }
+        .prestige-upgrade-desc { color: #d4a574; font-size: 0.4rem; }
+        .prestige-upgrade-level { color: #f0b429; font-size: 0.4rem; flex-shrink: 0; }
+        .prestige-upgrade-bar { width: 100%; height: 8px; background: #3d2b25; border: 2px solid #5c3d2e; margin-bottom: 0.5rem; }
+        .prestige-upgrade-fill { height: 100%; background: #f0b429; transition: width 0.3s; }
+        .prestige-buy-button { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; border: 3px solid #d97706; padding: 0.3rem 0.5rem; font-size: 0.4rem; cursor: pointer; width: 100%; }
+        .prestige-buy-button:hover:not(.disabled) { background: #fbbf24; }
+        .prestige-buy-button.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
+        .prestige-maxed-badge { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; padding: 0.3rem 0.5rem; font-size: 0.4rem; border: 3px solid #d97706; text-align: center; }
+        .machine-detail-overlay { position: fixed; inset: 0; background: rgba(42, 31, 26, 0.9); display: flex; align-items: center; justify-content: center; z-index: 300; }
         .machine-detail-panel { background: #2d3748; border: 4px solid #48bb78; width: 90%; max-width: 420px; }
         .machine-detail-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 4px solid #48bb78; }
         .machine-detail-title { color: #f6e05e; font-size: 0.6rem; }

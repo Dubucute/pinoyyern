@@ -1,10 +1,10 @@
 const ICON_COLORS = {
-  windowsillRouter: { body: '#4a5568', accent: '#48bb78', detail: '#2d3748', light: '#68d391' },
-  ruggedCageBox:   { body: '#dd6b20', accent: '#ed8936', detail: '#9c4221', light: '#f6ad55' },
-  batteryHub:      { body: '#2b6cb0', accent: '#4299e1', detail: '#1a365d', light: '#63b3ed' },
-  dualAntenna:     { body: '#6b46c1', accent: '#9f7aea', detail: '#44337a', light: '#b794f4' },
-  gamingPriority:  { body: '#e53e3e', accent: '#fc8181', detail: '#9b2c2c', light: '#feb2b2' },
-  satLink:         { body: '#2d3748', accent: '#48bb78', detail: '#1a202c', light: '#68d391' },
+  windowsillRouter: { body: '#5c3d2e', accent: '#f0b429', detail: '#3d2b25', light: '#fbbf24' },
+  ruggedCageBox:   { body: '#7a4a2e', accent: '#d97706', detail: '#4a3528', light: '#f59e0b' },
+  batteryHub:      { body: '#2a3d2b', accent: '#a3b18a', detail: '#1a2d1a', light: '#c4d4b8' },
+  dualAntenna:     { body: '#4a2838', accent: '#c084fc', detail: '#2d1a28', light: '#d8b4fe' },
+  gamingPriority:  { body: '#7a1f1a', accent: '#f97316', detail: '#3d0f0a', light: '#fb923c' },
+  satLink:         { body: '#1a2d3d', accent: '#67e8f9', detail: '#0f1a2d', light: '#a5f3fc' },
 };
 
 function MachineSvg({ type, size, viewBox = '0 0 64 64' }) {
@@ -182,13 +182,13 @@ export default function PixelIcon({ type, size = 32 }) {
     ),
     marketing: (
       <svg width={size} height={size} viewBox="0 0 32 32" style={{ imageRendering: 'pixelated' }}>
-        <rect x="4" y="8" width="24" height="16" fill="#48bb78" />
-        <rect x="6" y="10" width="20" height="12" fill="#38a169" />
-        <rect x="8" y="12" width="8" height="8" fill="#f6e05e" />
-        <rect x="18" y="12" width="8" height="8" fill="#f6e05e" />
-        <rect x="10" y="14" width="4" height="4" fill="#ecc94b" />
-        <rect x="20" y="14" width="4" height="4" fill="#ecc94b" />
-        <rect x="12" y="24" width="8" height="4" fill="#2d3748" />
+        <rect x="4" y="8" width="24" height="16" fill="#f0b429" />
+        <rect x="6" y="10" width="20" height="12" fill="#d97706" />
+        <rect x="8" y="12" width="8" height="8" fill="#fbbf24" />
+        <rect x="18" y="12" width="8" height="8" fill="#fbbf24" />
+        <rect x="10" y="14" width="4" height="4" fill="#f59e0b" />
+        <rect x="20" y="14" width="4" height="4" fill="#f59e0b" />
+        <rect x="12" y="24" width="8" height="4" fill="#3d2b25" />
       </svg>
     ),
   };
