@@ -517,22 +517,16 @@ export default function Home() {
             </div>
 
             <div className="viewport-header">
-              <div className="viewport-location-name" style={{ color: loc?.accentColor || '#e89330' }}>
-                {LOCATION_ICONS[currentLocation]} {loc?.name || 'Unknown'}
+              <div className="viewport-title-row">
+                <div className="viewport-location-name" style={{ color: loc?.accentColor || '#e89330' }}>
+                  <span className="loc-pin-icon">{LOCATION_ICONS[currentLocation]}</span> {loc?.name || 'Unknown'}
+                </div>
+                <div className="viewport-balance">
+                  <span className="balance-label">PERA</span>
+                  <span className="balance-amount"><span className="peso-sign">₱</span>{Math.floor(pesos).toLocaleString()}</span>
+                </div>
               </div>
               <div className="viewport-location-subtitle">{loc?.subtitle || ''}</div>
-            </div>
-
-            {/* Big Balance Display */}
-            <div style={{
-              fontSize: '1.2rem',
-              fontWeight: 'bold',
-              color: '#e89330',
-              marginBottom: '0.5rem',
-              textAlign: 'center',
-              fontFamily: "'Press Start 2P', monospace"
-            }}>
-              ₱{Math.floor(pesos).toLocaleString()}
             </div>
 
             {/* Live Console Monitor */}
@@ -1009,9 +1003,15 @@ export default function Home() {
             radial-gradient(ellipse at 20% 80%, rgba(232,147,48,0.03) 0%, transparent 60%),
             radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 50%);
         }
-        .viewport-header { text-align: center; margin-bottom: 0.5rem; }
-        .viewport-location-name { font-size: 0.75rem; margin-bottom: 0.2rem; font-weight: bold; }
-        .viewport-location-subtitle { color: #888; font-size: 0.4rem; }
+        .viewport-header { margin-bottom: 0.3rem; width: 100%; max-width: 340px; }
+        .viewport-title-row { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 0.4rem; width: 100%; flex-wrap: nowrap; }
+        .viewport-location-name { font-size: 0.55rem; font-weight: bold; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; display: flex; align-items: center; gap: 0.3rem; }
+        .loc-pin-icon { font-size: 0.75rem; }
+        .viewport-balance { flex-shrink: 0; background: #0d0d0d; border: 1px solid #333; border-radius: 4px; padding: 0.25rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+        .balance-label { font-size: 0.35rem; color: #666; font-family: 'Press Start 2P', monospace; letter-spacing: 1px; }
+        .balance-amount { font-size: 0.6rem; font-weight: bold; color: #e89330; font-family: 'Press Start 2P', monospace; white-space: nowrap; line-height: 1; }
+        .peso-sign { font-family: Arial, Helvetica, sans-serif; }
+        .viewport-location-subtitle { color: #888; font-size: 0.35rem; text-align: left; margin-top: 0.15rem; padding-left: 0.85rem; }
 
         /* ── Live Console Monitor ── */
         .live-console {
