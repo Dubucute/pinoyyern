@@ -59,6 +59,7 @@ export default function Home() {
   const [showGlobalShop, setShowGlobalShop] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [cloudStatus, setCloudStatus] = useState('');
+  const [saving, setSaving] = useState(false);
   const { user, token, logout, saveToCloud, loadFromCloud } = useAuth();
 
   // ===== Prestige =====
@@ -134,7 +135,10 @@ export default function Home() {
         await saveToCloud(state);
         setCloudStatus('☁️');
         setTimeout(() => setCloudStatus(''), 3000);
-      } catch (_) {}
+      } catch (err) {
+        setCloudStatus(`☁️ Auto-save failed: ${err.message}`);
+        setTimeout(() => setCloudStatus(''), 5000);
+      }
     }, 30000);
     return () => clearInterval(id);
   }, [token, user, pesos, machinesByLocation, localUpgrades, unlockedLocations, currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements, totalEarned, totalClicks, prestigePoints, prestigeUpgrades, saveToCloud]);
@@ -311,6 +315,27 @@ export default function Home() {
     }
   }, [loadFromCloud]);
 
+  // ===== Manual Cloud Save =====
+  const handleManualSave = useCallback(async () => {
+    if (!token || !user) return;
+    setSaving(true);
+    try {
+      const state = {
+        version: SAVE_VERSION, pesos, machinesByLocation, localUpgrades, unlockedLocations,
+        currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements,
+        totalEarned, totalClicks, prestigePoints, prestigeUpgrades,
+      };
+      await saveToCloud(state);
+      setCloudStatus('☁️ Saved!');
+      setTimeout(() => setCloudStatus(''), 3000);
+    } catch (err) {
+      setCloudStatus(`☁️ Save failed: ${err.message}`);
+      setTimeout(() => setCloudStatus(''), 5000);
+    } finally {
+      setSaving(false);
+    }
+  }, [token, user, pesos, machinesByLocation, localUpgrades, unlockedLocations, currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements, totalEarned, totalClicks, prestigePoints, prestigeUpgrades, saveToCloud]);
+
   // Machine detail callbacks
   const detailMachine = detailMachineId ? allMachines.find(m => m.id === detailMachineId) : null;
 
@@ -442,9 +467,14 @@ export default function Home() {
             <button className="achievements-button" onClick={() => setShowAchievements(true)}>🏆 {unlockedAchievements.length}/{ACHIEVEMENTS.length}</button>
             <button className="prestige-header-button" onClick={() => setShowPrestige(true)}>⭐ {prestigePoints}</button>
             {user ? (
-              <button className="auth-header-button logged-in" onClick={() => { logout(); setCloudStatus('☁️ Logged out'); setTimeout(() => setCloudStatus(''), 2000); }}>
-                👤 {user.username}
-              </button>
+              <>
+                <button className="auth-header-button logged-in" onClick={() => { logout(); setCloudStatus('☁️ Logged out'); setTimeout(() => setCloudStatus(''), 2000); }}>
+                  👤 {user.username}
+                </button>
+                <button className="auth-header-button save-button" onClick={handleManualSave} disabled={saving}>
+                  {saving ? '⏳' : '☁️ SAVE'}
+                </button>
+              </>
             ) : (
               <button className="auth-header-button" onClick={() => setShowAuthModal(true)}>
                 🔐 LOGIN
@@ -742,6 +772,9 @@ export default function Home() {
         }
         .auth-header-button:hover { background: rgba(140, 179, 105, 0.15); }
         .auth-header-button.logged-in { color: #f0c05a; border-color: #f0c05a; font-size: 0.45rem; }
+        .auth-header-button.save-button { color: #8cb369; border-color: #8cb369; }
+        .auth-header-button.save-button:hover:not(:disabled) { background: rgba(140, 179, 105, 0.2); }
+        .auth-header-button.save-button:disabled { opacity: 0.5; cursor: not-allowed; }
         .cloud-status { color: #f0c05a; font-size: 0.3rem; min-width: 1.2rem; text-align: center; }
         .reset-button {
           font-family: 'Press Start 2P', cursive;
