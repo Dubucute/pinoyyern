@@ -4,10 +4,10 @@ import { MACHINE_MAX_LEVEL, getMachineUpgradeCost, getMachineTotalUpgradeCost, g
 import { LOCATIONS } from '../config/gameData';
 
 const LEVEL_COLORS = {
-  1: '#f0b429', 2: '#f0b429', 3: '#fbbf24',
-  4: '#f59e0b', 5: '#d97706', 6: '#b45309',
-  7: '#f97316', 8: '#ea580c', 9: '#dc2626',
-  10: '#991b1b',
+  1: '#8cb369', 2: '#8cb369', 3: '#9cc47a',
+  4: '#a4c639', 5: '#7a9c4a', 6: '#6b8f3e',
+  7: '#f0c05a', 8: '#d4a574', 9: '#b8432f',
+  10: '#8b3a2a',
 };
 
 export default function MachineDetail({ machine, onClose, onSell, onRename, onUpgrade, spotLevels, pesos }) {
@@ -30,6 +30,7 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
   const [newName, setNewName] = useState(machine.customName || '');
 
   const displayName = machine.customName || `${machine.asset.name} #${machine.machineIndex + 1}`;
+  const accentColor = location?.accentColor || '#8cb369';
 
   const handleRename = () => {
     onRename(newName.trim() || null);
@@ -76,7 +77,7 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
               </>
             )}
           </div>
-          <div className="machine-detail-lv" style={{ color: LEVEL_COLORS[machine.level] || '#48bb78' }}>
+          <div className="machine-detail-lv" style={{ color: LEVEL_COLORS[machine.level] || '#8cb369' }}>
             Lv.{machine.level}
           </div>
         </div>
@@ -89,17 +90,17 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
               className="machine-detail-bar"
               style={{
                 backgroundColor: i < machine.level
-                  ? LEVEL_COLORS[i + 1] || '#f0b429'
-                  : '#3d2b25',
+                  ? LEVEL_COLORS[i + 1] || '#8cb369'
+                  : '#3d4a35',
               }}
             />
           ))}
         </div>
 
         {location && (
-          <div className="machine-detail-location" style={{ background: '#2a1f1a', border: '3px solid #f0b429', margin: '0 1rem 0.5rem', padding: '0.6rem' }}>
+            <div className="machine-detail-location" style={{ background: '#2a3d2b', border: '3px solid ' + accentColor, margin: '0 1rem 0.5rem', padding: '0.6rem' }}>
             <div className="detail-stat-label">📍 Located At</div>
-            <div className="detail-stat-value income" style={{ fontSize: '0.6rem' }}>{locationName}</div>
+            <div className="detail-stat-value income" style={{ fontSize: '0.6rem', color: accentColor }}>{locationName}</div>
           </div>
         )}
         <div className="machine-detail-stats-grid">

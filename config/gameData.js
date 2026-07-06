@@ -5,8 +5,8 @@ export const LOCATIONS = [
     subtitle: 'The Proving Grounds',
     description: 'Busy street corner with foot traffic',
     unlockCost: 0,
-    bgColor: '#3d2b25',
-    accentColor: '#f0b429',
+    bgColor: '#3d4a35',
+    accentColor: '#8cb369',
     machine: {
       id: 'windowsillRouter',
       name: 'Taped Windowsill Router',
@@ -45,8 +45,8 @@ export const LOCATIONS = [
     subtitle: 'The Graveyard Shift',
     description: 'Tricycle waiting area with 24/7 foot traffic',
     unlockCost: 12000,
-    bgColor: '#4a3528',
-    accentColor: '#f59e0b',
+    bgColor: '#4a3d2e',
+    accentColor: '#d4a574',
     machine: {
       id: 'batteryHub',
       name: '12V Battery-Powered Hub',
@@ -65,8 +65,8 @@ export const LOCATIONS = [
     subtitle: 'The High-Capacity Market',
     description: 'Bustling public market with heavy traffic',
     unlockCost: 80000,
-    bgColor: '#3d1f1a',
-    accentColor: '#c2410c',
+    bgColor: '#3d2e1f',
+    accentColor: '#c4956a',
     machine: {
       id: 'dualAntenna',
       name: 'Heavy-Duty Dual Antenna Array',
@@ -85,8 +85,8 @@ export const LOCATIONS = [
     subtitle: 'The Gaming & TikTok Capital',
     description: 'Near the school gate — prime gaming territory',
     unlockCost: 500000,
-    bgColor: '#3d2438',
-    accentColor: '#c084fc',
+    bgColor: '#2d3d2a',
+    accentColor: '#8fc4a0',
     machine: {
       id: 'gamingPriority',
       name: 'Low-Ping Gaming Priority Box',
@@ -106,7 +106,7 @@ export const LOCATIONS = [
     description: 'Beach resort area with tourist traffic',
     unlockCost: 5000000,
     bgColor: '#1a2d3d',
-    accentColor: '#67e8f9',
+    accentColor: '#7ab8c9',
     machine: {
       id: 'satLink',
       name: 'Solar-Powered Sat-Link Terminal',

@@ -417,7 +417,7 @@ export default function Home() {
         <title>Piso Wifi Barangay Empire</title>
         <meta name="description" content="Retro pixel-art idle tycoon game — build your barangay wifi empire!" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <meta name="theme-color" content="#2a1f1a" />
+        <meta name="theme-color" content="#2a3d2b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
@@ -462,9 +462,9 @@ export default function Home() {
         {/* ===== MAIN CONTENT ===== */}
         <div className="main-content">
           {/* Viewport */}
-          <section className="viewport" ref={clickAreaRef} style={{ backgroundColor: loc?.bgColor || '#2d3748' }}>
+          <section className="viewport" ref={clickAreaRef} style={{ backgroundColor: loc?.bgColor || '#2a3d2b' }}>
             <div className="viewport-header">
-              <div className="viewport-location-name" style={{ color: loc?.accentColor || '#48bb78' }}>
+              <div className="viewport-location-name" style={{ color: loc?.accentColor || '#8cb369' }}>
                 {LOCATION_ICONS[currentLocation]} {loc?.name || 'Unknown'}
               </div>
               <div className="viewport-location-subtitle">{loc?.subtitle || ''}</div>
@@ -485,9 +485,9 @@ export default function Home() {
             </div>
             {/* Location background decoration */}
             <div className="viewport-decor">
-              <div className="deco-line" style={{ background: loc?.accentColor || '#48bb78' }} />
+              <div className="deco-line" style={{ background: loc?.accentColor || '#8cb369' }} />
               <div className="viewport-desc">{loc?.description || ''}</div>
-              <div className="deco-line" style={{ background: loc?.accentColor || '#48bb78' }} />
+              <div className="deco-line" style={{ background: loc?.accentColor || '#8cb369' }} />
             </div>
             {floatingTexts.map(text => (
               <FloatingText key={text.id} x={text.x} y={text.y} value={text.value} onAnimationEnd={() => removeFloatingText(text.id)} />
@@ -505,7 +505,7 @@ export default function Home() {
 
             {/* Machine Purchase */}
             <div className="hub-section">
-              <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#48bb78' }}>
+              <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#8cb369' }}>
                 <PixelIcon type={loc?.machine.id} size={20} /> {loc?.machine.name || ''}
               </h3>
               <div className="hub-purchase-card">
@@ -523,7 +523,7 @@ export default function Home() {
             {/* Local Upgrades */}
             {loc && loc.localUpgrades.length > 0 && (
               <div className="hub-section">
-                <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#48bb78' }}>
+                <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#8cb369' }}>
                   🏗️ LOCAL UPGRADES
                 </h3>
                 <div className="hub-local-upgrades">
@@ -542,7 +542,7 @@ export default function Home() {
 
             {/* Machine List */}
             <div className="hub-section">
-              <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#48bb78' }}>
+              <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#8cb369' }}>
                 📋 MACHINES ({machineCount})
               </h3>
               {locationMachines.length === 0 ? (
@@ -555,11 +555,11 @@ export default function Home() {
                       <div key={m.id} className={`hub-machine-card ${detailMachineId === m.id ? 'selected' : ''}`}
                         onClick={() => setDetailMachineId(m.id)}
                       >
-                        <div className="hmc-badge" style={{ background: loc?.accentColor || '#48bb78' }}>{idx + 1}</div>
+                        <div className="hmc-badge" style={{ background: loc?.accentColor || '#8cb369' }}>{idx + 1}</div>
                         <div className="hmc-info">
                           <div className="hmc-name-row">
                             <span className="hmc-name">{m.name || `${loc?.machine.name || 'Machine'} #${idx + 1}`}</span>
-                            <span className="hmc-level" style={{ color: loc?.accentColor || '#48bb78' }}>Lv.{m.level || 1}</span>
+                            <span className="hmc-level" style={{ color: loc?.accentColor || '#8cb369' }}>Lv.{m.level || 1}</span>
                           </div>
                           <div className="hmc-details">
                             <span>₱{income}/sec</span>
@@ -703,46 +703,46 @@ export default function Home() {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
           font-family: 'Press Start 2P', cursive;
-          background-color: #2a1f1a;
-          color: #fef3c7;
+          background-color: #2a3d2b;
+          color: #f5e6c8;
           image-rendering: pixelated;
           overflow: hidden;
         }
         .game-container { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #3d2b25; }
-        ::-webkit-scrollbar-thumb { background: #6b4a3a; border: 2px solid #3d2b25; }
+        ::-webkit-scrollbar-track { background: #3d4a35; }
+        ::-webkit-scrollbar-thumb { background: #5c7a3a; border: 2px solid #3d4a35; }
 
         /* ===== HEADER = cozy signage ===== */
         .game-header {
           display: flex; align-items: center; padding: 0.6rem 1rem;
-          background: #3d2b25;
-          border-bottom: 3px solid #f0b429;
+          background: #3d4a35;
+          border-bottom: 3px solid #8cb369;
           gap: 0.8rem; flex-shrink: 0;
         }
         .header-left { flex-shrink: 0; }
         .game-title {
-          color: #f0b429; font-size: 0.8rem;
-          text-shadow: 2px 2px 0 #2a1f1a, 0 0 12px rgba(240, 180, 41, 0.2);
+          color: #f0c05a; font-size: 0.8rem;
+          text-shadow: 2px 2px 0 #2a3d2b, 0 0 12px rgba(240, 192, 90, 0.2);
           white-space: nowrap;
         }
         .header-stats { display: flex; gap: 1.5rem; flex: 1; justify-content: center; }
         .header-stat { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
-        .header-stat-label { color: #d4a574; font-size: 0.5rem; }
+        .header-stat-label { color: #c4b49a; font-size: 0.5rem; }
         .header-stat-value { font-size: 0.7rem; }
-        .header-stat-value.money { color: #fbbf24; text-shadow: 0 0 8px rgba(251, 191, 36, 0.3); }
-        .header-stat-value.speed { color: #67e8f9; text-shadow: 0 0 8px rgba(103, 232, 249, 0.2); }
+        .header-stat-value.money { color: #f0c05a; text-shadow: 0 0 8px rgba(240, 192, 90, 0.3); }
+        .header-stat-value.speed { color: #7ab8c9; text-shadow: 0 0 8px rgba(122, 184, 201, 0.2); }
         .header-buttons { display: flex; gap: 0.35rem; align-items: center; flex-shrink: 0; }
         .auth-header-button {
           font-family: 'Press Start 2P', cursive;
-          background: transparent; color: #f0b429;
-          border: 2px solid #f0b429; padding: 0.5rem 0.6rem;
+          background: transparent; color: #f0c05a;
+          border: 2px solid #8cb369; padding: 0.5rem 0.6rem;
           font-size: 0.5rem; cursor: pointer; white-space: nowrap; min-height: 44px;
           transition: background 0.15s;
         }
-        .auth-header-button:hover { background: rgba(240, 180, 41, 0.15); }
-        .auth-header-button.logged-in { color: #fbbf24; border-color: #fbbf24; font-size: 0.45rem; }
-        .cloud-status { color: #f0b429; font-size: 0.3rem; min-width: 1.2rem; text-align: center; }
+        .auth-header-button:hover { background: rgba(140, 179, 105, 0.15); }
+        .auth-header-button.logged-in { color: #f0c05a; border-color: #f0c05a; font-size: 0.45rem; }
+        .cloud-status { color: #f0c05a; font-size: 0.3rem; min-width: 1.2rem; text-align: center; }
         .reset-button {
           font-family: 'Press Start 2P', cursive;
           background: transparent; color: #fca5a5;
@@ -753,20 +753,20 @@ export default function Home() {
         .reset-button:hover { background: rgba(185, 28, 28, 0.15); }
         .achievements-button {
           font-family: 'Press Start 2P', cursive;
-          background: transparent; color: #fbbf24;
-          border: 2px solid #fbbf24; padding: 0.5rem 0.6rem;
+          background: transparent; color: #f0c05a;
+          border: 2px solid #8cb369; padding: 0.5rem 0.6rem;
           font-size: 0.5rem; cursor: pointer; white-space: nowrap; min-height: 44px;
           transition: background 0.15s;
         }
-        .achievements-button:hover { background: rgba(251, 191, 36, 0.15); }
+        .achievements-button:hover { background: rgba(140, 179, 105, 0.15); }
         .prestige-header-button {
           font-family: 'Press Start 2P', cursive;
-          background: transparent; color: #f0b429;
-          border: 2px solid #f0b429; padding: 0.5rem 0.6rem;
+          background: transparent; color: #f0c05a;
+          border: 2px solid #8cb369; padding: 0.5rem 0.6rem;
           font-size: 0.5rem; cursor: pointer; white-space: nowrap; min-height: 44px;
           transition: background 0.15s;
         }
-        .prestige-header-button:hover { background: rgba(240, 180, 41, 0.15); }
+        .prestige-header-button:hover { background: rgba(140, 179, 105, 0.15); }
         .music-button {
           font-family: 'Press Start 2P', cursive;
           background: transparent; border: 2px solid #6b4a3a;
@@ -774,7 +774,7 @@ export default function Home() {
           transition: background 0.15s;
         }
         .music-button:hover { background: rgba(255,255,255,0.05); }
-        .music-button.on { color: #f0b429; border-color: #f0b429; }
+        .music-button.on { color: #8cb369; border-color: #8cb369; }
         .music-button.off { color: #b91c1c; border-color: #b91c1c; }
 
         /* ===== MAIN CONTENT ===== */
@@ -784,128 +784,128 @@ export default function Home() {
         .viewport {
           flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
           position: relative;
-          border-right: 4px solid #f0b429;
+          border-right: 4px solid #8cb369;
           transition: background-color 0.5s;
           padding: 1rem; overflow: hidden;
         }
         .viewport-header { text-align: center; margin-bottom: 0.5rem; }
         .viewport-location-name {
           font-size: 0.9rem; margin-bottom: 0.25rem;
-          text-shadow: 2px 2px 0 #2a1f1a;
+          text-shadow: 2px 2px 0 #2a3d2b;
         }
         .viewport-location-subtitle {
-          color: #d4a574; font-size: 0.5rem;
-          text-shadow: 1px 1px 0 #2a1f1a;
+          color: #c4b49a; font-size: 0.5rem;
+          text-shadow: 1px 1px 0 #2a3d2b;
         }
         .viewport-machine-area { display: flex; flex-direction: column; align-items: center; position: relative; }
         .clickable-machine { cursor: pointer; transition: transform 0.1s; position: relative; padding: 0.5rem; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
         .clickable-machine.pressed { transform: scale(0.92); }
-        .clickable-machine:hover { filter: brightness(1.25) drop-shadow(0 0 12px rgba(240, 180, 41, 0.3)); }
+        .clickable-machine:hover { filter: brightness(1.25) drop-shadow(0 0 12px rgba(140, 179, 105, 0.3)); }
         .machine-svg-wrapper { position: relative; }
         .machine-pulse-ring { position: absolute; inset: -8px; border: 2px solid; border-radius: 0; opacity: 0.3; animation: pulseRing 2s ease-in-out infinite; pointer-events: none; }
         @keyframes pulseRing { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.05); opacity: 0.6; } }
         .viewport-click-hint {
-          color: #fbbf24; font-size: 0.55rem; margin-top: 0.6rem;
-          text-shadow: 1px 1px 0 #2a1f1a;
+          color: #f0c05a; font-size: 0.55rem; margin-top: 0.6rem;
+          text-shadow: 1px 1px 0 #2a3d2b;
           animation: blink 1.5s step-end infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .viewport-decor { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; width: 80%; max-width: 400px; }
         .deco-line { height: 2px; flex: 1; opacity: 0.4; }
-        .viewport-desc { color: #d4a574; font-size: 0.45rem; text-align: center; opacity: 0.7; white-space: nowrap; }
+        .viewport-desc { color: #c4b49a; font-size: 0.45rem; text-align: center; opacity: 0.7; white-space: nowrap; }
         .floating-text {
-          position: absolute; color: #fbbf24; font-size: 1.2rem; font-weight: bold;
-          text-shadow: 2px 2px 0 #2a1f1a, 0 0 16px rgba(251, 191, 36, 0.5);
+          position: absolute; color: #f0c05a; font-size: 1.2rem; font-weight: bold;
+          text-shadow: 2px 2px 0 #2a3d2b, 0 0 16px rgba(240, 192, 90, 0.5);
           pointer-events: none; animation: floatUp 1s ease-out forwards;
         }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-60px); } }
 
         /* Control Hub — cozy nook */
         .control-hub {
-          width: 380px; background: #3d2b25;
+          width: 380px; background: #3d4a35;
           overflow-y: auto; padding: 0.75rem;
           display: flex; flex-direction: column; gap: 0.6rem;
         }
         .hub-stats-row { display: flex; gap: 0.35rem; }
         .hub-stat {
-          flex: 1; background: #2a1f1a; border: 1px solid #5c3d2e;
+          flex: 1; background: #2a3d2b; border: 1px solid #5c7a3a;
           padding: 0.5rem; text-align: center;
         }
-        .hub-stat-label { display: block; color: #d4a574; font-size: 0.45rem; margin-bottom: 0.25rem; }
-        .hub-stat-value { display: block; color: #f0b429; font-size: 0.6rem; }
-        .hub-stat-value.click { color: #fbbf24; }
+        .hub-stat-label { display: block; color: #c4b49a; font-size: 0.45rem; margin-bottom: 0.25rem; }
+        .hub-stat-value { display: block; color: #f0c05a; font-size: 0.6rem; }
+        .hub-stat-value.click { color: #f0c05a; }
         .hub-section {
-          background: #2a1f1a; border: 1px solid #5c3d2e;
+          background: #2a3d2b; border: 1px solid #5c7a3a;
           padding: 0.6rem;
         }
         .hub-section-title {
-          color: #fef3c7; font-size: 0.55rem; margin-bottom: 0.5rem;
+          color: #f5e6c8; font-size: 0.55rem; margin-bottom: 0.5rem;
           padding-bottom: 0.35rem; border-bottom: 2px solid;
           display: flex; align-items: center; gap: 0.3rem;
         }
         .hub-purchase-card { display: flex; align-items: center; gap: 0.5rem; }
         .purchase-info { flex: 1; min-width: 0; }
-        .purchase-owned { display: block; color: #fef3c7; font-size: 0.5rem; margin-bottom: 0.2rem; }
-        .purchase-income { display: block; color: #f0b429; font-size: 0.5rem; margin-bottom: 0.2rem; }
-        .purchase-cost { display: block; color: #fbbf24; font-size: 0.5rem; }
+        .purchase-owned { display: block; color: #f5e6c8; font-size: 0.5rem; margin-bottom: 0.2rem; }
+        .purchase-income { display: block; color: #f0c05a; font-size: 0.5rem; margin-bottom: 0.2rem; }
+        .purchase-cost { display: block; color: #f0c05a; font-size: 0.5rem; }
         .buy-button {
           font-family: 'Press Start 2P', cursive;
-          background: #f0b429; color: #2a1f1a;
+          background: #8cb369; color: #2a3d2b;
           border: none; padding: 0.6rem 0.9rem;
           font-size: 0.6rem; cursor: pointer; flex-shrink: 0; min-width: 80px; min-height: 44px;
           transition: opacity 0.15s;
         }
         .buy-button:hover:not(.disabled) { opacity: 0.85; }
-        .buy-button.disabled { background: #5c3d2e; color: #8a6b4a; cursor: not-allowed; opacity: 0.7; }
+        .buy-button.disabled { background: #5c7a3a; color: #8a9a7a; cursor: not-allowed; opacity: 0.7; }
         .buy-button-small {
           font-family: 'Press Start 2P', cursive;
-          background: #f0b429; color: #2a1f1a;
+          background: #8cb369; color: #2a3d2b;
           border: none; padding: 0.4rem 0.6rem;
           font-size: 0.45rem; cursor: pointer; flex-shrink: 0; min-height: 44px;
           transition: opacity 0.15s;
         }
         .buy-button-small:hover:not(.disabled) { opacity: 0.85; }
-        .buy-button-small.disabled { background: #5c3d2e; color: #8a6b4a; cursor: not-allowed; opacity: 0.7; }
+        .buy-button-small.disabled { background: #5c7a3a; color: #8a9a7a; cursor: not-allowed; opacity: 0.7; }
 
         /* Local Upgrades */
         .hub-local-upgrades { display: flex; flex-direction: column; gap: 0.35rem; }
         .local-upgrade-card {
           display: flex; align-items: center; gap: 0.4rem;
-          padding: 0.5rem; background: #3d2b25; border: 1px solid #5c3d2e;
+          padding: 0.5rem; background: #3d4a35; border: 1px solid #5c7a3a;
         }
-        .local-upgrade-card.owned { border-color: #f0b429; opacity: 0.8; }
+        .local-upgrade-card.owned { border-color: #8cb369; opacity: 0.8; }
         .local-upgrade-info { flex: 1; min-width: 0; }
-        .local-upgrade-name { color: #f59e0b; font-size: 0.5rem; margin-bottom: 0.2rem; }
-        .local-upgrade-desc { color: #d4a574; font-size: 0.38rem; margin-bottom: 0.2rem; line-height: 1.4; }
-        .local-upgrade-cost { color: #fbbf24; font-size: 0.45rem; }
+        .local-upgrade-name { color: #f0c05a; font-size: 0.5rem; margin-bottom: 0.2rem; }
+        .local-upgrade-desc { color: #c4b49a; font-size: 0.38rem; margin-bottom: 0.2rem; line-height: 1.4; }
+        .local-upgrade-cost { color: #f0c05a; font-size: 0.45rem; }
 
         /* Machine List in Hub */
-        .hub-empty { color: #6b4a3a; font-size: 0.45rem; text-align: center; padding: 0.7rem; }
+        .hub-empty { color: #8a7a6a; font-size: 0.45rem; text-align: center; padding: 0.7rem; }
         .hub-machine-list { display: flex; flex-direction: column; gap: 0.25rem; max-height: 200px; overflow-y: auto; }
         .hub-machine-card {
           display: flex; align-items: center; gap: 0.3rem; padding: 0.35rem;
-          background: #3d2b25; border: 1px solid #5c3d2e;
+          background: #3d4a35; border: 1px solid #5c7a3a;
           cursor: pointer; transition: border-color 0.15s, background 0.15s;
         }
-        .hub-machine-card:hover { border-color: #8a6b4a; background: #4a3528; }
-        .hub-machine-card.selected { border-color: #f0b429; background: #2a1f1a; }
+        .hub-machine-card:hover { border-color: #8cb369; background: #4a5c3d; }
+        .hub-machine-card.selected { border-color: #8cb369; background: #2a3d2b; }
         .hmc-badge {
           width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-          font-size: 0.5rem; color: #2a1f1a; font-weight: bold; flex-shrink: 0;
-          border: 2px solid #2a1f1a;
+          font-size: 0.5rem; color: #2a3d2b; font-weight: bold; flex-shrink: 0;
+          border: 2px solid #2a3d2b;
         }
         .hmc-info { flex: 1; min-width: 0; }
         .hmc-name-row { display: flex; justify-content: space-between; align-items: center; gap: 0.2rem; }
-        .hmc-name { color: #fef3c7; font-size: 0.45rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .hmc-name { color: #f5e6c8; font-size: 0.45rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .hmc-level { font-size: 0.45rem; flex-shrink: 0; }
         .hmc-details { display: flex; justify-content: space-between; margin-top: 0.1rem; }
-        .hmc-details span { color: #d4a574; font-size: 0.38rem; }
+        .hmc-details span { color: #c4b49a; font-size: 0.38rem; }
 
         /* Global Shop Toggle */
         .global-shop-toggle {
           font-family: 'Press Start 2P', cursive;
-          background: transparent; color: #f59e0b;
-          border: 2px solid #5c3d2e; padding: 0.5rem;
+          background: transparent; color: #f0c05a;
+          border: 2px solid #5c7a3a; padding: 0.5rem;
           font-size: 0.5rem; cursor: pointer; text-align: left; min-height: 44px;
           transition: background 0.15s;
         }
@@ -913,17 +913,17 @@ export default function Home() {
         .hub-global-shop { display: flex; flex-direction: column; gap: 0.5rem; }
         .global-upgrade-card {
           display: flex; align-items: center; gap: 0.4rem;
-          padding: 0.45rem; background: #3d2b25; border: 1px solid #5c3d2e;
+          padding: 0.45rem; background: #3d4a35; border: 1px solid #5c7a3a;
         }
-        .global-upgrade-card.owned { border-color: #f0b429; opacity: 0.8; }
-        .global-upgrade-card.current { border-color: #f0b429; background: #3d2b25; }
+        .global-upgrade-card.owned { border-color: #8cb369; opacity: 0.8; }
+        .global-upgrade-card.current { border-color: #8cb369; background: #3d4a35; }
         .global-upgrade-info { flex: 1; min-width: 0; }
-        .global-upgrade-name { color: #f59e0b; font-size: 0.5rem; margin-bottom: 0.15rem; }
-        .global-upgrade-desc { color: #d4a574; font-size: 0.38rem; margin-bottom: 0.15rem; line-height: 1.4; }
-        .global-upgrade-cost { color: #f0b429; font-size: 0.45rem; }
+        .global-upgrade-name { color: #f0c05a; font-size: 0.5rem; margin-bottom: 0.15rem; }
+        .global-upgrade-desc { color: #c4b49a; font-size: 0.38rem; margin-bottom: 0.15rem; line-height: 1.4; }
+        .global-upgrade-cost { color: #f0c05a; font-size: 0.45rem; }
         .current-badge-small {
           font-family: 'Press Start 2P', cursive;
-          background: #f0b429; color: #2a1f1a;
+          background: #8cb369; color: #2a3d2b;
           padding: 0.35rem 0.5rem; font-size: 0.45rem;
           flex-shrink: 0; min-height: 44px; display: flex; align-items: center;
         }
@@ -931,8 +931,8 @@ export default function Home() {
         /* ===== FOOTER — Location Tabs = cozy row ===== */
         .location-tabs {
           display: flex;
-          border-top: 3px solid #f0b429;
-          background: #2a1f1a;
+          border-top: 3px solid #8cb369;
+          background: #2a3d2b;
           flex-shrink: 0;
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
@@ -941,136 +941,136 @@ export default function Home() {
         .location-tabs::-webkit-scrollbar { display: none; }
         .location-tab {
           flex: 1; font-family: 'Press Start 2P', cursive;
-          background: #3d2b25; color: #d4a574;
-          border: none; border-right: 2px solid #2a1f1a;
+          background: #3d4a35; color: #c4b49a;
+          border: none; border-right: 2px solid #2a3d2b;
           border-bottom: 3px solid transparent;
           padding: 0.5rem 0.25rem; cursor: pointer; min-height: 56px;
           display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem;
           transition: background 0.15s, border-color 0.15s, color 0.15s;
         }
         .location-tab:last-child { border-right: none; }
-        .location-tab:hover { background: #5c3d2e; color: #fef3c7; }
-        .location-tab.active { background: #2a1f1a; border-bottom-width: 3px; border-bottom-style: solid; }
+        .location-tab:hover { background: #5c7a3a; color: #f5e6c8; }
+        .location-tab.active { background: #2a3d2b; border-bottom-width: 3px; border-bottom-style: solid; }
         .location-tab.locked { opacity: 0.6; }
-        .location-tab.can-unlock { opacity: 1; border-color: #f0b429; color: #f0b429; }
+        .location-tab.can-unlock { opacity: 1; border-color: #8cb369; color: #f0c05a; }
         .loc-tab-icon { font-size: 0.9rem; }
         .loc-tab-name { font-size: 0.45rem; }
-        .loc-tab-cost { font-size: 0.35rem; color: #fbbf24; }
+        .loc-tab-cost { font-size: 0.35rem; color: #f0c05a; }
 
         /* ===== Shared / Modal styles (cozy version) ===== */
         .achievement-toast {
           position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
           display: flex; align-items: center; gap: 1rem;
-          background: #3d2b25; border: 4px solid #fbbf24;
+          background: #3d4a35; border: 4px solid #f0c05a;
           padding: 1rem 1.5rem; z-index: 100;
           animation: slideUpToast 0.3s ease-out; cursor: pointer; max-width: 90vw;
-          box-shadow: 0 0 30px rgba(251, 191, 36, 0.15);
+          box-shadow: 0 0 30px rgba(240, 192, 90, 0.15);
         }
         @keyframes slideUpToast { 0% { transform: translateX(-50%) translateY(100px); opacity: 0; } 100% { transform: translateX(-50%) translateY(0); opacity: 1; } }
         .toast-icon { font-size: 2rem; } .toast-text { flex: 1; }
-        .toast-title { color: #fbbf24; font-size: 0.5rem; margin-bottom: 0.3rem; }
-        .toast-name { color: #f0b429; font-size: 0.7rem; margin-bottom: 0.3rem; }
-        .toast-desc { color: #d4a574; font-size: 0.4rem; }
-        .achievement-overlay { position: fixed; inset: 0; background: rgba(42, 31, 26, 0.9); display: flex; align-items: center; justify-content: center; z-index: 200; }
-        .achievement-panel { background: #3d2b25; border: 3px solid #f0b429; width: 95%; max-width: 520px; max-height: 85vh; display: flex; flex-direction: column; }
-        .achievement-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 3px solid #f0b429; }
-        .achievement-panel-title { color: #fbbf24; font-size: 0.8rem; }
-        .achievement-close { font-family: 'Press Start 2P', cursive; background: none; color: #fef3c7; border: 1px solid #5c3d2e; padding: 0.3rem 0.5rem; font-size: 0.6rem; cursor: pointer; }
+        .toast-title { color: #f0c05a; font-size: 0.5rem; margin-bottom: 0.3rem; }
+        .toast-name { color: #f0c05a; font-size: 0.7rem; margin-bottom: 0.3rem; }
+        .toast-desc { color: #c4b49a; font-size: 0.4rem; }
+        .achievement-overlay { position: fixed; inset: 0; background: rgba(42, 61, 43, 0.9); display: flex; align-items: center; justify-content: center; z-index: 200; }
+        .achievement-panel { background: #3d4a35; border: 3px solid #8cb369; width: 95%; max-width: 520px; max-height: 85vh; display: flex; flex-direction: column; }
+        .achievement-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 3px solid #8cb369; }
+        .achievement-panel-title { color: #f0c05a; font-size: 0.8rem; }
+        .achievement-close { font-family: 'Press Start 2P', cursive; background: none; color: #f5e6c8; border: 1px solid #5c7a3a; padding: 0.3rem 0.5rem; font-size: 0.6rem; cursor: pointer; }
         .achievement-close:hover { background: rgba(255,255,255,0.05); }
         .achievement-panel-body { padding: 1rem; overflow-y: auto; }
-        .achievement-count { color: #d4a574; font-size: 0.5rem; text-align: center; margin-bottom: 0.5rem; }
-        .achievement-progress-bar { width: 100%; height: 12px; background: #2a1f1a; border: 1px solid #5c3d2e; margin-bottom: 1.5rem; }
-        .achievement-progress-fill { height: 100%; background: #f0b429; transition: width 0.5s; }
+        .achievement-count { color: #c4b49a; font-size: 0.5rem; text-align: center; margin-bottom: 0.5rem; }
+        .achievement-progress-bar { width: 100%; height: 12px; background: #2a3d2b; border: 1px solid #5c7a3a; margin-bottom: 1.5rem; }
+        .achievement-progress-fill { height: 100%; background: #8cb369; transition: width 0.5s; }
         .achievement-list { display: flex; flex-direction: column; gap: 0.5rem; }
-        .achievement-card { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: #2a1f1a; border: 1px solid #5c3d2e; }
-        .achievement-card.unlocked { border-color: #f0b429; }
+        .achievement-card { display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: #2a3d2b; border: 1px solid #5c7a3a; }
+        .achievement-card.unlocked { border-color: #8cb369; }
         .achievement-card.locked { opacity: 0.6; }
         .achievement-card-icon { font-size: 1.5rem; flex-shrink: 0; }
         .achievement-card-info { flex: 1; }
-        .achievement-card-name { color: #f59e0b; font-size: 0.6rem; margin-bottom: 0.3rem; }
-        .achievement-card-desc { color: #d4a574; font-size: 0.4rem; }
-        .prestige-panel { background: #3d2b25; border: 3px solid #f0b429; width: 95%; max-width: 520px; max-height: 85vh; display: flex; flex-direction: column; }
-        .prestige-panel-title { color: #f0b429; font-size: 0.8rem; }
-        .prestige-info { text-align: center; padding-bottom: 1rem; border-bottom: 1px solid #5c3d2e; margin-bottom: 1rem; }
+        .achievement-card-name { color: #f0c05a; font-size: 0.6rem; margin-bottom: 0.3rem; }
+        .achievement-card-desc { color: #c4b49a; font-size: 0.4rem; }
+        .prestige-panel { background: #3d4a35; border: 3px solid #8cb369; width: 95%; max-width: 520px; max-height: 85vh; display: flex; flex-direction: column; }
+        .prestige-panel-title { color: #f0c05a; font-size: 0.8rem; }
+        .prestige-info { text-align: center; padding-bottom: 1rem; border-bottom: 1px solid #5c7a3a; margin-bottom: 1rem; }
         .prestige-points-display { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
         .prestige-points-icon { font-size: 2rem; }
-        .prestige-points-value { color: #f0b429; font-size: 1.5rem; text-shadow: 2px 2px 0 #2a1f1a; }
-        .prestige-points-label { color: #d4a574; font-size: 0.4rem; }
-        .prestige-desc { color: #d4a574; font-size: 0.4rem; margin-bottom: 1rem; line-height: 1.6; }
-        .prestige-button { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; border: none; padding: 0.8rem 1.5rem; font-size: 0.5rem; cursor: pointer; transition: opacity 0.15s; }
-        .prestige-button:hover:not(.disabled) { background: #fbbf24; }
-        .prestige-button.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
-        .prestige-upgrades-title { color: #f59e0b; font-size: 0.6rem; margin-bottom: 1rem; }
+        .prestige-points-value { color: #f0c05a; font-size: 1.5rem; text-shadow: 2px 2px 0 #2a3d2b; }
+        .prestige-points-label { color: #c4b49a; font-size: 0.4rem; }
+        .prestige-desc { color: #c4b49a; font-size: 0.4rem; margin-bottom: 1rem; line-height: 1.6; }
+        .prestige-button { font-family: 'Press Start 2P', cursive; background: #8cb369; color: #2a3d2b; border: none; padding: 0.8rem 1.5rem; font-size: 0.5rem; cursor: pointer; transition: opacity 0.15s; }
+        .prestige-button:hover:not(.disabled) { opacity: 0.85; }
+        .prestige-button.disabled { background: #5c7a3a; color: #8a9a7a; cursor: not-allowed; }
+        .prestige-upgrades-title { color: #f0c05a; font-size: 0.6rem; margin-bottom: 1rem; }
         .prestige-upgrades-list { display: flex; flex-direction: column; gap: 0.5rem; }
-        .prestige-upgrade-card { background: #2a1f1a; border: 1px solid #5c3d2e; padding: 0.8rem; }
-        .prestige-upgrade-card.maxed { border-color: #f0b429; }
+        .prestige-upgrade-card { background: #2a3d2b; border: 1px solid #5c7a3a; padding: 0.8rem; }
+        .prestige-upgrade-card.maxed { border-color: #8cb369; }
         .prestige-upgrade-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; }
         .prestige-upgrade-icon { font-size: 1.5rem; flex-shrink: 0; }
         .prestige-upgrade-info { flex: 1; }
-        .prestige-upgrade-name { color: #f59e0b; font-size: 0.5rem; margin-bottom: 0.3rem; }
-        .prestige-upgrade-desc { color: #d4a574; font-size: 0.4rem; }
-        .prestige-upgrade-level { color: #f0b429; font-size: 0.4rem; flex-shrink: 0; }
-        .prestige-upgrade-bar { width: 100%; height: 8px; background: #3d2b25; border: 2px solid #5c3d2e; margin-bottom: 0.5rem; }
-        .prestige-upgrade-fill { height: 100%; background: #f0b429; transition: width 0.3s; }
-        .prestige-buy-button { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; border: none; padding: 0.3rem 0.5rem; font-size: 0.4rem; cursor: pointer; width: 100%; transition: opacity 0.15s; }
-        .prestige-buy-button:hover:not(.disabled) { background: #fbbf24; }
-        .prestige-buy-button.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
-        .prestige-maxed-badge { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; padding: 0.3rem 0.5rem; font-size: 0.4rem; text-align: center; }
-        .machine-detail-overlay { position: fixed; inset: 0; background: rgba(42, 31, 26, 0.9); display: flex; align-items: center; justify-content: center; z-index: 300; padding: 1rem; }
-        .machine-detail-panel { background: #3d2b25; border: 4px solid #f0b429; width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 30px rgba(240, 180, 41, 0.15); }
-        .machine-detail-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 4px solid #f0b429; }
-        .machine-detail-title { color: #fbbf24; font-size: 0.65rem; }
-        .machine-detail-close { font-family: 'Press Start 2P', cursive; background: none; color: #d4a574; border: 3px solid #5c3d2e; padding: 0.3rem 0.5rem; font-size: 0.55rem; cursor: pointer; }
-        .machine-detail-close:hover { background: #5c3d2e; }
+        .prestige-upgrade-name { color: #f0c05a; font-size: 0.5rem; margin-bottom: 0.3rem; }
+        .prestige-upgrade-desc { color: #c4b49a; font-size: 0.4rem; }
+        .prestige-upgrade-level { color: #f0c05a; font-size: 0.4rem; flex-shrink: 0; }
+        .prestige-upgrade-bar { width: 100%; height: 8px; background: #3d4a35; border: 2px solid #5c7a3a; margin-bottom: 0.5rem; }
+        .prestige-upgrade-fill { height: 100%; background: #8cb369; transition: width 0.3s; }
+        .prestige-buy-button { font-family: 'Press Start 2P', cursive; background: #8cb369; color: #2a3d2b; border: none; padding: 0.3rem 0.5rem; font-size: 0.4rem; cursor: pointer; width: 100%; transition: opacity 0.15s; }
+        .prestige-buy-button:hover:not(.disabled) { opacity: 0.85; }
+        .prestige-buy-button.disabled { background: #5c7a3a; color: #8a9a7a; cursor: not-allowed; }
+        .prestige-maxed-badge { font-family: 'Press Start 2P', cursive; background: #8cb369; color: #2a3d2b; padding: 0.3rem 0.5rem; font-size: 0.4rem; text-align: center; }
+        .machine-detail-overlay { position: fixed; inset: 0; background: rgba(42, 61, 43, 0.9); display: flex; align-items: center; justify-content: center; z-index: 300; padding: 1rem; }
+        .machine-detail-panel { background: #3d4a35; border: 4px solid #8cb369; width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 30px rgba(140, 179, 105, 0.15); }
+        .machine-detail-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 4px solid #8cb369; }
+        .machine-detail-title { color: #f0c05a; font-size: 0.65rem; }
+        .machine-detail-close { font-family: 'Press Start 2P', cursive; background: none; color: #c4b49a; border: 3px solid #5c7a3a; padding: 0.3rem 0.5rem; font-size: 0.55rem; cursor: pointer; }
+        .machine-detail-close:hover { background: #5c7a3a; }
         .machine-detail-main { display: flex; align-items: center; gap: 1rem; padding: 1rem 1rem 0.5rem; }
         .machine-detail-icon { flex-shrink: 0; }
         .machine-detail-id { flex: 1; min-width: 0; }
-        .machine-detail-name { color: #f59e0b; font-size: 0.6rem; margin-bottom: 0.3rem; word-break: break-word; }
-        .machine-detail-type { color: #6b4a3a; font-size: 0.45rem; margin-top: 0.2rem; }
-        .machine-detail-lv { font-size: 0.9rem; font-weight: bold; text-shadow: 2px 2px 0 #2a1f1a; flex-shrink: 0; }
+        .machine-detail-name { color: #f0c05a; font-size: 0.6rem; margin-bottom: 0.3rem; word-break: break-word; }
+        .machine-detail-type { color: #8a7a6a; font-size: 0.45rem; margin-top: 0.2rem; }
+        .machine-detail-lv { font-size: 0.9rem; font-weight: bold; text-shadow: 2px 2px 0 #2a3d2b; flex-shrink: 0; }
         .machine-detail-bars { display: flex; gap: 3px; padding: 0 1rem 1rem; justify-content: center; flex-wrap: wrap; }
-        .machine-detail-bar { width: 20px; height: 10px; border: 1px solid #2a1f1a; }
+        .machine-detail-bar { width: 20px; height: 10px; border: 1px solid #2a3d2b; }
         .machine-detail-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding: 0 1rem 1rem; }
-        .detail-stat-box { background: #2a1f1a; border: 1px solid #5c3d2e; padding: 0.7rem; }
+        .detail-stat-box { background: #2a3d2b; border: 1px solid #5c7a3a; padding: 0.7rem; }
         .detail-stat-box.span-2 { grid-column: span 2; }
-        .detail-stat-label { color: #d4a574; font-size: 0.4rem; margin-bottom: 0.4rem; }
+        .detail-stat-label { color: #c4b49a; font-size: 0.4rem; margin-bottom: 0.4rem; }
         .detail-stat-value { font-size: 0.55rem; font-weight: bold; word-break: break-word; }
-        .detail-stat-value.earnings { color: #f0b429; }
-        .detail-stat-value.time { color: #67e8f9; }
-        .detail-stat-value.income { color: #f59e0b; }
-        .detail-stat-value.next { color: #fbbf24; }
-        .detail-stat-value.cost { color: #fbbf24; }
+        .detail-stat-value.earnings { color: #f0c05a; }
+        .detail-stat-value.time { color: #7ab8c9; }
+        .detail-stat-value.income { color: #f0c05a; }
+        .detail-stat-value.next { color: #f0c05a; }
+        .detail-stat-value.cost { color: #f0c05a; }
         .detail-stat-value.spent { color: #fca5a5; }
-        .detail-stat-value.eff { color: #f0b429; }
-        .rename-trigger { font-family: 'Press Start 2P', cursive; background: none; color: #6b4a3a; border: none; cursor: pointer; font-size: 0.55rem; margin-left: 0.3rem; vertical-align: middle; }
-        .rename-trigger:hover { color: #d4a574; }
+        .detail-stat-value.eff { color: #f0c05a; }
+        .rename-trigger { font-family: 'Press Start 2P', cursive; background: none; color: #8a7a6a; border: none; cursor: pointer; font-size: 0.55rem; margin-left: 0.3rem; vertical-align: middle; }
+        .rename-trigger:hover { color: #c4b49a; }
         .rename-input-group { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
-        .rename-input { font-family: 'Press Start 2P', cursive; background: #2a1f1a; color: #f59e0b; border: 1px solid #5c3d2e; padding: 0.4rem; font-size: 0.45rem; width: 100%; outline: none; }
-        .rename-input:focus { border-color: #f0b429; }
-        .rename-confirm-btn { font-family: 'Press Start 2P', cursive; background: #f0b429; color: #2a1f1a; border: none; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; flex-shrink: 0; }
-        .rename-confirm-btn:hover { background: #fbbf24; }
-        .rename-cancel-btn { font-family: 'Press Start 2P', cursive; background: none; color: #d4a574; border: 1px solid #5c3d2e; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; flex-shrink: 0; }
-        .rename-cancel-btn:hover { background: #5c3d2e; }
+        .rename-input { font-family: 'Press Start 2P', cursive; background: #2a3d2b; color: #f0c05a; border: 1px solid #5c7a3a; padding: 0.4rem; font-size: 0.45rem; width: 100%; outline: none; }
+        .rename-input:focus { border-color: #8cb369; }
+        .rename-confirm-btn { font-family: 'Press Start 2P', cursive; background: #8cb369; color: #2a3d2b; border: none; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; flex-shrink: 0; }
+        .rename-confirm-btn:hover { background: #9cc47a; }
+        .rename-cancel-btn { font-family: 'Press Start 2P', cursive; background: none; color: #c4b49a; border: 1px solid #5c7a3a; padding: 0.35rem 0.5rem; font-size: 0.4rem; cursor: pointer; flex-shrink: 0; }
+        .rename-cancel-btn:hover { background: #5c7a3a; }
         .machine-detail-actions { padding: 0 1rem 0.5rem; }
-        .detail-upgrade-btn { font-family: 'Press Start 2P', cursive; width: 100%; background: #f0b429; color: #2a1f1a; border: none; padding: 0.8rem; font-size: 0.5rem; cursor: pointer; transition: opacity 0.15s; }
-        .detail-upgrade-btn:hover { background: #fbbf24; }
-        .detail-upgrade-btn.disabled { background: #5c3d2e; color: #8a6b4a; border-color: #4a3528; cursor: not-allowed; }
-        .detail-max-badge { font-family: 'Press Start 2P', cursive; width: 100%; background: #f0b429; color: #2a1f1a; padding: 0.8rem; font-size: 0.5rem; text-align: center; }
+        .detail-upgrade-btn { font-family: 'Press Start 2P', cursive; width: 100%; background: #8cb369; color: #2a3d2b; border: none; padding: 0.8rem; font-size: 0.5rem; cursor: pointer; transition: opacity 0.15s; }
+        .detail-upgrade-btn:hover { opacity: 0.85; }
+        .detail-upgrade-btn.disabled { background: #5c7a3a; color: #8a9a7a; cursor: not-allowed; }
+        .detail-max-badge { font-family: 'Press Start 2P', cursive; width: 100%; background: #8cb369; color: #2a3d2b; padding: 0.8rem; font-size: 0.5rem; text-align: center; }
         .machine-detail-sell { padding: 0 1rem 1rem; }
-        .sell-button { font-family: 'Press Start 2P', cursive; width: 100%; background: #b91c1c; color: #fef3c7; border: none; padding: 0.7rem; font-size: 0.5rem; cursor: pointer; transition: opacity 0.15s; }
+        .sell-button { font-family: 'Press Start 2P', cursive; width: 100%; background: #b8432f; color: #f5e6c8; border: none; padding: 0.7rem; font-size: 0.5rem; cursor: pointer; transition: opacity 0.15s; }
         .sell-button:hover { background: #dc2626; }
         .sell-confirm { text-align: center; }
-        .sell-confirm-text { color: #fbbf24; font-size: 0.55rem; margin-bottom: 0.5rem; }
+        .sell-confirm-text { color: #f0c05a; font-size: 0.55rem; margin-bottom: 0.5rem; }
         .sell-confirm-actions { display: flex; gap: 0.5rem; justify-content: center; }
-        .sell-confirm-yes { font-family: 'Press Start 2P', cursive; background: #b91c1c; color: #fef3c7; border: none; padding: 0.6rem 1rem; font-size: 0.55rem; cursor: pointer; flex: 1; }
+        .sell-confirm-yes { font-family: 'Press Start 2P', cursive; background: #b8432f; color: #f5e6c8; border: none; padding: 0.6rem 1rem; font-size: 0.55rem; cursor: pointer; flex: 1; }
         .sell-confirm-yes:hover { background: #dc2626; }
-        .sell-confirm-no { font-family: 'Press Start 2P', cursive; background: #5c3d2e; color: #d4a574; border: none; padding: 0.6rem 1rem; font-size: 0.55rem; cursor: pointer; flex: 1; }
-        .sell-confirm-no:hover { background: #6b4a3a; }
+        .sell-confirm-no { font-family: 'Press Start 2P', cursive; background: #5c7a3a; color: #c4b49a; border: none; padding: 0.6rem 1rem; font-size: 0.55rem; cursor: pointer; flex: 1; }
+        .sell-confirm-no:hover { background: #6b8f3e; }
 
         /* ===== Responsive: Tablet & Mobile ===== */
         @media (max-width: 900px) {
           .main-content { flex-direction: column; }
-          .viewport { border-right: none; border-bottom: 4px solid #f0b429; min-height: 260px; }
+          .viewport { border-right: none; border-bottom: 4px solid #8cb369; min-height: 260px; }
           .control-hub { width: 100%; max-height: 55vh; }
         }
         @media (max-width: 768px) {
@@ -1081,7 +1081,7 @@ export default function Home() {
           .header-stat-label { font-size: 0.4rem; }
           .header-buttons { gap: 0.25rem; }
           .main-content { flex-direction: column; }
-          .viewport { border-right: none; border-bottom: 4px solid #f0b429; min-height: 260px; }
+          .viewport { border-right: none; border-bottom: 4px solid #8cb369; min-height: 260px; }
           .control-hub { width: 100%; max-height: 55vh; }
           .location-tab { padding: 0.35rem 0.15rem; min-height: 48px; }
           .loc-tab-icon { font-size: 0.7rem; }

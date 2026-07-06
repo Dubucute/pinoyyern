@@ -135,53 +135,53 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
           padding: 1rem;
         }
         .auth-modal {
-          background: #3d2b25;
-          border: 3px solid #f0b429;
+          background: #3d4a35;
+          border: 3px solid #8cb369;
           padding: 1.5rem;
           width: 100%; max-width: 380px;
           position: relative;
-          color: #fef3c7;
+          color: #f5e6c8;
         }
         .auth-close-btn {
           position: absolute; top: 0.5rem; right: 0.5rem;
-          background: none; border: none; color: #8a6b4a;
+          background: none; border: none; color: #8a9a7a;
           font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 0.25rem;
           font-family: inherit;
         }
         .auth-close-btn:hover { color: #fca5a5; }
         .auth-icon { text-align: center; font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .auth-title { text-align: center; color: #f0b429; font-size: 0.9rem; margin-bottom: 0.3rem; }
-        .auth-subtitle { text-align: center; color: #d4a574; font-size: 0.5rem; margin-bottom: 1rem; line-height: 1.6; }
+        .auth-title { text-align: center; color: #f0c05a; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .auth-subtitle { text-align: center; color: #c4b49a; font-size: 0.5rem; margin-bottom: 1rem; line-height: 1.6; }
         .auth-error {
-          background: #4a1a1a; border: 1px solid #fca5a5;
+          background: #4a2a1a; border: 1px solid #fca5a5;
           color: #fecaca; padding: 0.6rem; font-size: 0.45rem;
           margin-bottom: 0.8rem; text-align: center;
         }
         .auth-success {
-          background: #2a3d2b; border: 1px solid #a3b18a;
+          background: #2a3d2b; border: 1px solid #8cb369;
           color: #c4d4b8; padding: 0.6rem; font-size: 0.45rem;
           margin-bottom: 0.8rem; text-align: center;
         }
         .auth-form { display: flex; flex-direction: column; gap: 0.8rem; }
         .auth-field label {
-          display: block; font-size: 0.5rem; color: #d4a574; margin-bottom: 0.35rem;
+          display: block; font-size: 0.5rem; color: #c4b49a; margin-bottom: 0.35rem;
         }
         .auth-field input {
-          width: 100%; padding: 0.7rem; background: #2a1f1a; border: 2px solid #5c3d2e;
-          color: #fef3c7; font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
+          width: 100%; padding: 0.7rem; background: #2a3d2b; border: 2px solid #5c7a3a;
+          color: #f5e6c8; font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
           outline: none; box-sizing: border-box;
         }
-        .auth-field input:focus { border-color: #f0b429; }
+        .auth-field input:focus { border-color: #8cb369; }
         .auth-submit-btn {
-          width: 100%; padding: 0.8rem; background: #f0b429; border: none;
-          color: #2a1f1a; font-family: 'Press Start 2P', monospace; font-size: 0.55rem;
+          width: 100%; padding: 0.8rem; background: #8cb369; border: none;
+          color: #2a3d2b; font-family: 'Press Start 2P', monospace; font-size: 0.55rem;
           cursor: pointer; margin-top: 0.5rem; transition: opacity 0.15s; min-height: 48px;
         }
-        .auth-submit-btn:hover { opacity: 0.85; background: #f0b429; }
+        .auth-submit-btn:hover { opacity: 0.85; background: #8cb369; }
         .auth-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.45rem; color: #d4a574; line-height: 1.8; }
-        .auth-switch button { background: none; border: none; color: #f0b429; cursor: pointer; font-family: inherit; font-size: 0.45rem; text-decoration: underline; padding: 0; }
-        .auth-switch button:hover { color: #fbbf24; }
+        .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.45rem; color: #c4b49a; line-height: 1.8; }
+        .auth-switch button { background: none; border: none; color: #f0c05a; cursor: pointer; font-family: inherit; font-size: 0.45rem; text-decoration: underline; padding: 0; }
+        .auth-switch button:hover { color: #f0d88a; }
         @media (max-width: 480px) {
           .auth-modal { padding: 1.2rem; }
           .auth-title { font-size: 0.75rem; }
