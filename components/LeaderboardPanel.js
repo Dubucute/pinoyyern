@@ -40,7 +40,7 @@ export default function LeaderboardPanel({ visible, onClose }) {
 
   return (
     <div className="achievement-overlay" onClick={onClose}>
-      <div className="achievement-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px' }}>
+      <div className="achievement-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '560px' }}>
         <div className="achievement-panel-header">
           <h2 className="achievement-panel-title">🏆 LEADERBOARD</h2>
           <button className="achievement-close" onClick={onClose}>✕</button>
@@ -134,8 +134,8 @@ export default function LeaderboardPanel({ visible, onClose }) {
             display: flex; align-items: center; gap: 0.3rem;
             padding: 0.35rem 0.4rem; border-radius: 4px;
           }
-          .leaderboard-header { background: #141414; color: #666; font-size: 0.3rem; border-bottom: 1px solid #2a2a2a; }
-          .leaderboard-row { background: #1a1a1a; border: 1px solid #2a2a2a; font-size: 0.35rem; }
+          .leaderboard-header { background: #141414; color: #666; font-size: 0.35rem; border-bottom: 1px solid #2a2a2a; }
+          .leaderboard-row { background: #1a1a1a; border: 1px solid #2a2a2a; font-size: 0.38rem; }
           .leaderboard-row.top { border-color: #443311; }
           .lb-rank { width: 2rem; flex-shrink: 0; text-align: center; color: #d4d0c8; }
           .lb-name { flex: 1; color: #e89330; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -140,7 +140,7 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
           border: 1px solid #333;
           border-radius: 8px;
           padding: 1.5rem;
-          width: 100%; max-width: 380px;
+          width: 100%; max-width: 440px;
           position: relative;
           color: #d4d0c8;
           box-shadow: 0 8px 32px rgba(0,0,0,0.5);
@@ -153,8 +153,8 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
         }
         .auth-close-btn:hover { color: #d4d0c8; }
         .auth-icon { text-align: center; font-size: 2rem; margin-bottom: 0.5rem; }
-        .auth-title { text-align: center; color: #e89330; font-size: 0.7rem; margin-bottom: 0.3rem; }
-        .auth-subtitle { text-align: center; color: #888; font-size: 0.4rem; margin-bottom: 1rem; line-height: 1.6; }
+        .auth-title { text-align: center; color: #e89330; font-size: 0.8rem; margin-bottom: 0.3rem; }
+        .auth-subtitle { text-align: center; color: #888; font-size: 0.45rem; margin-bottom: 1rem; line-height: 1.6; }
         .auth-error {
           background: rgba(100,40,30,0.3); border: 1px solid #884433;
           border-radius: 4px;
@@ -169,20 +169,20 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
         }
         .auth-form { display: flex; flex-direction: column; gap: 0.8rem; }
         .auth-field label {
-          display: block; font-size: 0.4rem; color: #888; margin-bottom: 0.35rem;
+          display: block; font-size: 0.45rem; color: #888; margin-bottom: 0.35rem;
         }
         .auth-field input {
-          width: 100%; padding: 0.6rem; background: #141414; border: 1px solid #333;
+          width: 100%; padding: 0.7rem; background: #141414; border: 1px solid #333;
           border-radius: 4px;
-          color: #d4d0c8; font-family: 'Press Start 2P', monospace; font-size: 0.4rem;
+          color: #d4d0c8; font-family: 'Press Start 2P', monospace; font-size: 0.45rem;
           outline: none; box-sizing: border-box; transition: border-color 0.2s;
         }
         .auth-field input:focus { border-color: #e89330; }
         .auth-submit-btn {
-          width: 100%; padding: 0.7rem;
+          width: 100%; padding: 0.8rem;
           background: #e89330; color: #141414;
           border: none; border-radius: 6px;
-          font-family: 'Press Start 2P', monospace; font-size: 0.45rem;
+          font-family: 'Press Start 2P', monospace; font-size: 0.5rem;
           cursor: pointer; margin-top: 0.5rem; transition: all 0.2s; min-height: 44px;
           font-weight: bold;
         }

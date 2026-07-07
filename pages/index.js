@@ -1405,7 +1405,7 @@ export default function Home() {
         /* ===== Responsive: Tablet & Mobile ===== */
         @media (max-width: 900px) {
           .main-content { position: relative; }
-          .viewport { border-right: none; min-height: auto; justify-content: flex-start; padding: 0.8rem 0.8rem 0.3rem; width: 100%; max-width: 100%; }
+          .viewport { border-right: none; min-height: auto; justify-content: space-between; padding: 0.8rem 0.8rem 0.3rem; width: 100%; max-width: 100%; }
           .control-hub {
             position: absolute; top: 0; right: 0; bottom: 0;
             width: 320px; max-width: 85vw; max-height: 100%;
@@ -1418,7 +1418,7 @@ export default function Home() {
           .game-title { font-size: 0.6rem; }
           .header-buttons { gap: 4px; }
           .auth-header-button, .reset-button { padding: 0.5rem 0.7rem; font-size: 0.42rem; min-height: 44px; }
-          .viewport { border-right: none; padding: 0.8rem 0.8rem 0.3rem; justify-content: flex-start; width: 100%; max-width: 100%; }
+          .viewport { border-right: none; padding: 0.6rem 0.6rem 0.3rem; justify-content: space-between; width: 100%; max-width: 100%; }
           .viewport-header { margin-bottom: 0.3rem; max-width: 100%; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
