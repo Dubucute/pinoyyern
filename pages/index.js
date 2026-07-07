@@ -1061,11 +1061,11 @@ export default function Home() {
         }
         .viewport-header { margin-bottom: 0.3rem; width: 100%; max-width: 340px; }
         .viewport-title-row { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 0.4rem; width: 100%; flex-wrap: nowrap; }
-        .viewport-location-name { font-size: 0.55rem; font-weight: bold; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; display: flex; align-items: center; gap: 0.3rem; }
-        .loc-pin-icon { font-size: 0.75rem; }
-        .viewport-balance { flex-shrink: 0; background: #0d0d0d; border: 1px solid #333; border-radius: 4px; padding: 0.25rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+        .viewport-location-name { font-size: 0.55rem; font-weight: bold; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; display: flex; align-items: center; gap: 0.3rem; }
+        .loc-pin-icon { font-size: 0.75rem; flex-shrink: 0; }
+        .viewport-balance { flex-shrink: 1; max-width: 50%; background: #0d0d0d; border: 1px solid #333; border-radius: 4px; padding: 0.25rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; overflow: hidden; min-width: 0; }
         .balance-label { font-size: 0.35rem; color: #666; font-family: 'Press Start 2P', monospace; letter-spacing: 1px; }
-        .balance-amount { font-size: 0.6rem; font-weight: bold; color: #e89330; font-family: 'Press Start 2P', monospace; white-space: nowrap; line-height: 1; }
+        .balance-amount { font-size: 0.6rem; font-weight: bold; color: #e89330; font-family: 'Press Start 2P', monospace; white-space: nowrap; line-height: 1; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
         .peso-sign { font-family: Arial, Helvetica, sans-serif; }
         .viewport-location-subtitle { color: #888; font-size: 0.35rem; text-align: left; margin-top: 0.15rem; padding-left: 0.85rem; }
         .viewport-desc-bg { position: absolute; bottom: 0.5rem; left: 50%; transform: translateX(-50%); color: #555; font-size: 0.3rem; text-align: center; line-height: 1.4; opacity: 0.4; pointer-events: none; white-space: nowrap; z-index: 1; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
@@ -1422,6 +1422,8 @@ export default function Home() {
           .viewport-header { margin-bottom: 0.3rem; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
+          .viewport-balance { max-width: 55%; padding: 0.2rem 0.4rem; }
+          .balance-amount { font-size: 0.5rem; }
           .control-hub { width: 300px; max-width: 80vw; }
           .menu-toggle-button { font-size: 0.42rem; padding: 0.5rem; min-height: 42px; }
           .machine-sizer { width: 220px; height: 220px; }
@@ -1466,6 +1468,9 @@ export default function Home() {
           .viewport { padding: 0.6rem 0.6rem 0.2rem; min-height: 260px; max-width: 100%; }
           .viewport-location-name { font-size: 0.6rem; }
           .viewport-location-subtitle { font-size: 0.38rem; }
+          .viewport-balance { max-width: 55%; padding: 0.15rem 0.35rem; }
+          .balance-amount { font-size: 0.42rem; }
+          .balance-label { font-size: 0.3rem; }
 
           .live-console { padding: 0.55rem; max-width: 100%; }
           .console-header { font-size: 0.38rem; }
