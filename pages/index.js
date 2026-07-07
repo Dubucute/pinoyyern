@@ -89,7 +89,7 @@ export default function Home() {
     setTimeout(() => setCloudToast(''), duration);
   }, []);
   const [saving, setSaving] = useState(false);
-  const { user, token, logout, saveToCloud, loadFromCloud } = useAuth();
+  const { user, token, logout, saveToCloud, loadFromCloud, checkSession } = useAuth();
 
   // ===== Session Management: one session per user =====
   useEffect(() => {
@@ -124,6 +124,18 @@ export default function Home() {
     localStorage.removeItem('piso-wifi-empire-state');
     showToast('Session expired — logged in from another device', 4000);
   }, [logout, showToast]);
+
+  // ===== Session polling — detect cross-device login every 5 seconds =====
+  useEffect(() => {
+    if (!token || !user || !gameStarted) return;
+    const id = setInterval(async () => {
+      const result = await checkSession();
+      if (!result.valid && result.sessionExpired) {
+        handleSessionExpired();
+      }
+    }, 5000);
+    return () => clearInterval(id);
+  }, [token, user, gameStarted, checkSession, handleSessionExpired]);
 
   // ===== Prestige =====
   const [prestigePoints, setPrestigePoints] = useState(0);
@@ -552,7 +564,7 @@ export default function Home() {
     setTimeout(() => {
       const state = saveStateRef.current;
       if (state) {
-        const saved = { ...state, prestigePoints: newPoints, prestigeCount: (state.prestigeCount || 0) + 1, pesos: prestigeStartingMoney, totalEarned: 0, totalClicks: state.totalClicks || 0, playTime: state.playTime || 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
+        const saved = { ...state, prestigePoints: newPoints, prestigeCount: state.prestigeCount || 0, pesos: prestigeStartingMoney, totalEarned: 0, totalClicks: state.totalClicks || 0, playTime: state.playTime || 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
         localStorage.setItem('piso-wifi-empire-state', JSON.stringify(saved));
         if (token && user) {
           saveToCloud(saved).then(() => showToast('☁️ Rebirth saved!')).catch((err) => { if (err.sessionExpired) { handleSessionExpired(); } else { showToast('☁️ Rebirth save failed', 5000); } });

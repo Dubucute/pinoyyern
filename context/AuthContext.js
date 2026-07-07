@@ -101,8 +101,24 @@ export function AuthProvider({ children }) {
     return data.gameState;
   }, [token]);
 
+  const checkSession = useCallback(async () => {
+    if (!token) return { valid: false };
+    try {
+      const res = await fetch('/api/check-session', {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok && data.sessionExpired) {
+        return { valid: false, sessionExpired: true };
+      }
+      return { valid: res.ok };
+    } catch {
+      return { valid: false };
+    }
+  }, [token]);
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, saveToCloud, loadFromCloud }}>
+    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, saveToCloud, loadFromCloud, checkSession }}>
       {children}
     </AuthContext.Provider>
   );
