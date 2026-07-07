@@ -49,6 +49,8 @@ export default function Home() {
   // ===== UI State =====
   const [floatingTexts, setFloatingTexts] = useState([]);
   const [isPressed, setIsPressed] = useState(false);
+  const [showControlHub, setShowControlHub] = useState(true);
+  const [controlTab, setControlTab] = useState('stats');
 
   // ===== Save Refs (fixed interval, no re-creation on every tick) =====
   const saveStateRef = useRef(null);
@@ -523,6 +525,9 @@ export default function Home() {
           <h1 className="game-title">PISO WIFI IDLE</h1>
           <span style={{flex:1, minWidth:'0.5rem'}} />
           <div style={{display:'flex', alignItems:'center', gap:'1px'}}>
+            <button className="auth-header-button" onClick={() => setShowControlHub(!showControlHub)}>
+              MENU
+            </button>
             <button className="auth-header-button" onClick={() => setShowLeaderboard(!showLeaderboard)}>
               LEADERBOARD
             </button>
@@ -571,7 +576,7 @@ export default function Home() {
                 <span className="console-value gold">₱{Math.round(pps).toLocaleString()}</span>
                 <span className="console-label">ACTIVE USERS</span>
                 <span className="console-value amber">{activeUsers}</span>
-                <span className="console-label">MACHINES</span>
+                <span className="console-label">VENDOS</span>
                 <span className="console-value">{totalMachines}</span>
                 <div className="console-bar"><div className="console-bar-fill" style={{width: `${Math.min(pps / 100 * 100, 100)}%`}} /></div>
               </div>
@@ -609,13 +614,37 @@ export default function Home() {
           </section>
 
           {/* Control Hub */}
+          {showControlHub && (
           <aside className="control-hub">
+            {/* Tab Headers */}
+            <div className="hub-tabs">
+              <button
+                className={`hub-tab ${controlTab === 'stats' ? 'active' : ''}`}
+                onClick={() => setControlTab('stats')}
+              >
+                📊 STATS
+              </button>
+              <button
+                className={`hub-tab ${controlTab === 'upgrades' ? 'active' : ''}`}
+                onClick={() => setControlTab('upgrades')}
+              >
+                ⬆️ UPGRADES
+              </button>
+            </div>
+
+            {controlTab === 'stats' && (
+              <>
             {/* Stats row */}
             <div className="hub-stats-row">
               <div className="hub-stat"><span className="hub-stat-label">ACTIVE USERS</span><span className="hub-stat-value">{activeUsers}</span></div>
               <div className="hub-stat"><span className="hub-stat-label">TOTAL EARNED</span><span className="hub-stat-value click">₱{Math.floor(totalEarned).toLocaleString()}</span></div>
-              <div className="hub-stat"><span className="hub-stat-label">MACHINES</span><span className="hub-stat-value">{totalMachines}</span></div>
+              <div className="hub-stat"><span className="hub-stat-label">VENDOS</span><span className="hub-stat-value">{totalMachines}</span></div>
             </div>
+            </>
+            )}
+
+            {controlTab === 'upgrades' && (
+            <>
 
             {/* Machine Purchase */}
             <div className="hub-section">
@@ -657,10 +686,10 @@ export default function Home() {
             {/* Machine List */}
             <div className="hub-section">
               <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#8cb369' }}>
-                📋 MACHINES ({machineCount})
+                📋 VENDOS ({machineCount})
               </h3>
               {locationMachines.length === 0 ? (
-                <div className="hub-empty">No machines yet. Buy your first {loc?.machine.name || 'machine'}!</div>
+                <div className="hub-empty">No vendos yet. Buy your first {loc?.machine.name || 'vendo'}!</div>
               ) : (
                 <div className="hub-machine-list">
                   {locationMachines.map((m, idx) => {
@@ -672,7 +701,7 @@ export default function Home() {
                         <div className="hmc-badge" style={{ background: loc?.accentColor || '#8cb369' }}>{idx + 1}</div>
                         <div className="hmc-info">
                           <div className="hmc-name-row">
-                            <span className="hmc-name">{m.name || `${loc?.machine.name || 'Machine'} #${idx + 1}`}</span>
+                            <span className="hmc-name">{m.name || `${loc?.machine.name || 'Vendo'} #${idx + 1}`}</span>
                             <span className="hmc-level" style={{ color: loc?.accentColor || '#8cb369' }}>Lv.{m.level || 1}</span>
                           </div>
                           <div className="hmc-details">
@@ -689,7 +718,7 @@ export default function Home() {
 
             {/* Global Shop Toggle */}
             <button className="global-shop-toggle" onClick={() => setShowGlobalShop(!showGlobalShop)}>
-              {showGlobalShop ? '▼' : '▶'} GLOBAL UPGRADES
+              {showGlobalShop ? '▼' : '▶'} VENDO UPGRADES
             </button>
 
             {showGlobalShop && (
@@ -758,7 +787,10 @@ export default function Home() {
                 </div>
               </div>
             )}
+            </>
+            )}
           </aside>
+          )}
         </div>
 
         {/* ===== FOOTER — Location Tabs ===== */}
@@ -865,7 +897,7 @@ export default function Home() {
                       <div className="detail-stat-value earnings">₱{Math.floor(totalEarned).toLocaleString()}</div>
                     </div>
                     <div className="prestige-upgrade-card" style={{textAlign: 'left', marginTop: '0.3rem'}}>
-                      <div className="detail-stat-label">MACHINES DEPLOYED</div>
+                      <div className="detail-stat-label">VENDOS DEPLOYED</div>
                       <div className="detail-stat-value" style={{color: '#d4d0c8'}}>{totalMachines}</div>
                     </div>
                     <div className="prestige-upgrade-card" style={{textAlign: 'left', marginTop: '0.3rem'}}>
@@ -1143,6 +1175,16 @@ export default function Home() {
         @keyframes ringPulse { 0%,100% { transform: scale(1); opacity: 0.15; } 50% { transform: scale(1.05); opacity: 0.35; } }
 
 
+
+        /* ===== CONTROL HUB — Tabs ===== */
+        .hub-tabs { display: flex; gap: 1px; margin-bottom: 0; background: #2a2a2a; border-radius: 4px 4px 0 0; overflow: hidden; }
+        .hub-tab {
+          flex: 1; font-family: 'Press Start 2P', cursive; font-size: 0.45rem;
+          padding: 0.5rem; background: #1a1a1a; color: #666; border: none; cursor: pointer;
+          transition: background 0.15s, color 0.15s;
+        }
+        .hub-tab.active { background: #2a2a2a; color: #e89330; }
+        .hub-tab:hover { color: #d4d0c8; }
 
         /* ===== CONTROL HUB — Concrete Panel ===== */
         .control-hub {

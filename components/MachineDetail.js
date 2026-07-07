@@ -41,7 +41,7 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
     <div className="machine-detail-overlay" onClick={onClose}>
       <div className="machine-detail-panel" onClick={(e) => e.stopPropagation()}>
         <div className="machine-detail-header">
-          <div className="machine-detail-title">MACHINE DETAILS</div>
+          <div className="machine-detail-title">VENDO DETAILS</div>
           <button className="machine-detail-close" onClick={onClose}>✕</button>
         </div>
 
@@ -58,7 +58,7 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleRename(); if (e.key === 'Escape') { setNewName(machine.customName || ''); setEditingName(false); } }}
-                  placeholder="Name this machine..."
+                  placeholder="Name this vendo..."
                   maxLength={24}
                   autoFocus
                 />
@@ -147,7 +147,7 @@ export default function MachineDetail({ machine, onClose, onSell, onRename, onUp
         <div className="machine-detail-sell">
           {!confirmSell ? (
             <button className="sell-button" onClick={() => setConfirmSell(true)}>
-              SELL MACHINE ₱{sellValue.toLocaleString()}
+              SELL VENDO ₱{sellValue.toLocaleString()}
             </button>
           ) : (
             <div className="sell-confirm">
