@@ -551,12 +551,12 @@ export default function Home() {
                 <div className="viewport-location-name" style={{ color: loc?.accentColor || '#e89330' }}>
                   <span className="loc-pin-icon">{LOCATION_ICONS[currentLocation]}</span> {loc?.name || 'Unknown'}
                 </div>
-                <div className="viewport-balance">
-                  <span className="balance-label">PERA</span>
-                  <span className="balance-amount"><span className="peso-sign">₱</span>{Math.floor(pesos).toLocaleString()}</span>
-                </div>
               </div>
               <div className="viewport-location-subtitle">{loc?.subtitle || ''}</div>
+              <div className="viewport-balance">
+                <span className="balance-label">PERA</span>
+                <span className="balance-amount"><span className="peso-sign">₱</span>{Math.floor(pesos).toLocaleString()}</span>
+              </div>
             </div>
 
             {/* Live Console Monitor */}
@@ -1059,15 +1059,15 @@ export default function Home() {
             radial-gradient(ellipse at 20% 80%, rgba(232,147,48,0.03) 0%, transparent 60%),
             radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.02) 0%, transparent 50%);
         }
-        .viewport-header { margin-bottom: 0.3rem; width: 100%; max-width: 340px; }
-        .viewport-title-row { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 0.4rem; width: 100%; flex-wrap: nowrap; }
-        .viewport-location-name { font-size: 0.55rem; font-weight: bold; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 1; display: flex; align-items: center; gap: 0.3rem; }
+        .viewport-header { margin-bottom: 0.3rem; width: 100%; max-width: 340px; text-align: center; }
+        .viewport-title-row { display: flex; justify-content: center; align-items: center; width: 100%; }
+        .viewport-location-name { font-size: 0.55rem; font-weight: bold; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 0.3rem; }
         .loc-pin-icon { font-size: 0.75rem; flex-shrink: 0; }
-        .viewport-balance { flex-shrink: 1; max-width: 50%; background: #0d0d0d; border: 1px solid #333; border-radius: 4px; padding: 0.25rem 0.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; overflow: hidden; min-width: 0; }
+        .viewport-balance { margin-top: 0.3rem; background: #0d0d0d; border: 1px solid #333; border-radius: 4px; padding: 0.3rem 0.6rem; text-align: center; display: inline-flex; flex-direction: column; align-items: center; gap: 0.1rem; }
         .balance-label { font-size: 0.35rem; color: #666; font-family: 'Press Start 2P', monospace; letter-spacing: 1px; }
-        .balance-amount { font-size: 0.6rem; font-weight: bold; color: #e89330; font-family: 'Press Start 2P', monospace; white-space: nowrap; line-height: 1; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .balance-amount { font-size: 0.6rem; font-weight: bold; color: #e89330; font-family: 'Press Start 2P', monospace; white-space: nowrap; line-height: 1; }
         .peso-sign { font-family: Arial, Helvetica, sans-serif; }
-        .viewport-location-subtitle { color: #888; font-size: 0.35rem; text-align: left; margin-top: 0.15rem; padding-left: 0.85rem; }
+        .viewport-location-subtitle { color: #888; font-size: 0.35rem; text-align: center; margin-top: 0.15rem; }
         .viewport-desc-bg { position: absolute; bottom: 0.5rem; left: 50%; transform: translateX(-50%); color: #555; font-size: 0.3rem; text-align: center; line-height: 1.4; opacity: 0.4; pointer-events: none; white-space: nowrap; z-index: 1; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
 
         /* ── Live Console Monitor ── */
@@ -1137,7 +1137,7 @@ export default function Home() {
           margin-top: 0.5rem; position: relative;
         }
         .machine-glow-ring {
-          position: absolute; inset: -12px; border: 1px solid;
+          position: absolute; inset: 8px; border: 1px solid;
           border-radius: 50%; opacity: 0.2;
           animation: ringPulse 2s ease-in-out infinite; pointer-events: none;
         }
@@ -1419,15 +1419,15 @@ export default function Home() {
           .header-buttons { gap: 4px; }
           .auth-header-button, .reset-button { padding: 0.5rem 0.7rem; font-size: 0.42rem; min-height: 44px; }
           .viewport { border-right: none; padding: 0.8rem 0.8rem 0.3rem; justify-content: flex-start; width: 100%; max-width: 100%; }
-          .viewport-header { margin-bottom: 0.3rem; }
+          .viewport-header { margin-bottom: 0.3rem; max-width: 100%; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
-          .viewport-balance { max-width: 55%; padding: 0.2rem 0.4rem; }
-          .balance-amount { font-size: 0.5rem; }
+          .viewport-balance { padding: 0.25rem 0.5rem; }
+          .balance-amount { font-size: 0.55rem; }
           .control-hub { width: 300px; max-width: 80vw; }
           .menu-toggle-button { font-size: 0.42rem; padding: 0.5rem; min-height: 42px; }
-          .machine-sizer { width: 220px; height: 220px; }
-          .machine-sizer svg { width: 220px !important; height: 220px !important; }
+          .machine-sizer { width: 240px; height: 240px; }
+          .machine-sizer svg { width: 240px !important; height: 240px !important; }
           .machine-display-area { margin-top: 0.3rem; }
           .buy-button { padding: 0.6rem 0.9rem; font-size: 0.6rem; min-height: 52px; min-width: 90px; }
           .buy-button-small { padding: 0.55rem 0.75rem; font-size: 0.5rem; min-height: 46px; min-width: 80px; }
@@ -1468,8 +1468,8 @@ export default function Home() {
           .viewport { padding: 0.6rem 0.6rem 0.2rem; min-height: 260px; max-width: 100%; }
           .viewport-location-name { font-size: 0.6rem; }
           .viewport-location-subtitle { font-size: 0.38rem; }
-          .viewport-balance { max-width: 55%; padding: 0.15rem 0.35rem; }
-          .balance-amount { font-size: 0.42rem; }
+          .viewport-balance { padding: 0.2rem 0.4rem; }
+          .balance-amount { font-size: 0.48rem; }
           .balance-label { font-size: 0.3rem; }
 
           .live-console { padding: 0.55rem; max-width: 100%; }
@@ -1512,8 +1512,8 @@ export default function Home() {
           .detail-upgrade-btn { padding: 0.5rem; font-size: 0.38rem; }
           .sell-button { padding: 0.5rem; font-size: 0.38rem; }
           .hub-machine-list { max-height: 120px; }
-          .machine-sizer { width: 180px; height: 180px; }
-          .machine-sizer svg { width: 180px !important; height: 180px !important; }
+          .machine-sizer { width: 200px; height: 200px; }
+          .machine-sizer svg { width: 200px !important; height: 200px !important; }
         }
       `}</style>
     </>
