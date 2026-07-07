@@ -50,6 +50,7 @@ export default function Home() {
   const [floatingTexts, setFloatingTexts] = useState([]);
   const [isPressed, setIsPressed] = useState(false);
   const [showControlHub, setShowControlHub] = useState(true);
+  const [gameStarted, setGameStarted] = useState(false);
 
   // ===== Save Refs (fixed interval, no re-creation on every tick) =====
   const saveStateRef = useRef(null);
@@ -133,16 +134,6 @@ export default function Home() {
       } catch (_) {}
     }
   }, []);
-
-  // ===== Prompt Login on First Visit =====
-  useEffect(() => {
-    const dismissed = localStorage.getItem('piso-login-dismissed');
-    if (!token && !dismissed) {
-      // Small delay to let the UI settle first
-      const t = setTimeout(() => setShowAuthModal(true), 800);
-      return () => clearTimeout(t);
-    }
-  }, [token]);
 
   const dismissLoginPrompt = useCallback(() => {
     localStorage.setItem('piso-login-dismissed', 'true');
@@ -300,15 +291,24 @@ export default function Home() {
 
   // ===== Click Handler =====
   const handleClick = (e) => {
+    // iOS requires AudioContext to be created & resumed inside a user gesture
+    if (firstInteractionRef.current) {
+      firstInteractionRef.current = false;
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          const tmp = new AC();
+          if (tmp.state === 'suspended') tmp.resume().catch(() => {});
+          tmp.close().catch(() => {});
+        }
+      } catch (_) {}
+      bgMusic.start();
+      setMusicOn(true);
+    }
     setPesos((p) => p + currentClickValue);
     setTotalEarned((t) => t + currentClickValue);
     setTotalClicks((c) => c + 1);
     setIsPressed(true); playClick();
-    if (firstInteractionRef.current) {
-      firstInteractionRef.current = false;
-      bgMusic.start();
-      setMusicOn(true);
-    }
     setTimeout(() => setIsPressed(false), 100);
     if (clickAreaRef.current) {
       const rect = clickAreaRef.current.getBoundingClientRect();
@@ -507,6 +507,21 @@ export default function Home() {
     if (typeof window !== 'undefined') localStorage.removeItem('piso-wifi-empire-state');
   };
 
+  // ===== Title Screen Handlers =====
+  const handleStart = () => {
+    if (!token) {
+      setShowAuthModal(true);
+      return;
+    }
+    setGameStarted(true);
+  };
+
+  const handleAuthSuccess = () => {
+    localStorage.removeItem('piso-login-dismissed');
+    setShowAuthModal(false);
+    setGameStarted(true);
+  };
+
   // ===== Render =====
   return (
     <>
@@ -518,6 +533,91 @@ export default function Home() {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </Head>
+
+      {/* ===== TITLE SCREEN ===== */}
+      {!gameStarted && (
+        <div className="title-screen">
+          <div className="title-scanlines" />
+          <div className="title-content">
+            <div className="title-logo">
+              <div className="title-icon">📡</div>
+              <h1 className="title-text">PISO WIFI</h1>
+              <h2 className="title-subtext">IDLE EMPIRE</h2>
+              <div className="title-tagline">Build your wifi vending empire!</div>
+            </div>
+            <div className="title-menu">
+              <button className="title-button title-start" onClick={handleStart}>
+                <span className="title-btn-icon">▶</span> START
+              </button>
+              <button className="title-button title-options" onClick={() => setShowSettings(true)}>
+                <span className="title-btn-icon">⚙</span> OPTIONS
+              </button>
+            </div>
+            {token && user && (
+              <div className="title-save-info">Welcome back, {user.username}!</div>
+            )}
+            <div className="title-footer">v1.0 — Tap to earn!</div>
+          </div>
+          <div className="title-vendo-silhouette">
+            <PixelIcon type="pisoWifiAntenna" size={200} />
+          </div>
+
+          {/* Settings from title screen */}
+          {showSettings && (
+            <div className="achievement-overlay" onClick={() => setShowSettings(false)}>
+              <div className="achievement-panel" onClick={(e) => e.stopPropagation()} style={{maxWidth: '380px'}}>
+                <div className="achievement-panel-header">
+                  <h2 className="achievement-panel-title">OPTIONS</h2>
+                  <button className="achievement-close" onClick={() => setShowSettings(false)}>✕</button>
+                </div>
+                <div className="achievement-panel-body">
+                  <div className="prestige-upgrade-card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <div>
+                      <div className="detail-stat-label" style={{fontSize: '0.45rem'}}>MUSIC</div>
+                      <div className="detail-stat-value" style={{fontSize: '0.4rem', color: '#888'}}>Background music</div>
+                    </div>
+                    <button className="prestige-button" style={{width: 'auto', padding: '0.4rem 1rem', fontSize: '0.4rem', minWidth: '70px'}}
+                      onClick={() => {
+                        if (firstInteractionRef.current) { firstInteractionRef.current = false; bgMusic.start(); setMusicOn(true); }
+                        else { const nowMuted = bgMusic.toggleMute(); setMusicOn(!nowMuted); }
+                      }}>
+                      {musicOn ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                  <div className="prestige-upgrade-card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.4rem'}}>
+                    <div>
+                      <div className="detail-stat-label" style={{fontSize: '0.45rem'}}>SOUND EFFECTS</div>
+                      <div className="detail-stat-value" style={{fontSize: '0.4rem', color: '#888'}}>Click, buy, upgrade sounds</div>
+                    </div>
+                    <button className="prestige-button" style={{width: 'auto', padding: '0.4rem 1rem', fontSize: '0.4rem', minWidth: '70px',
+                      background: soundEnabled ? '#e89330' : '#2a2a2a', color: soundEnabled ? '#141414' : '#666'}}
+                      onClick={() => setSoundEnabled(!soundEnabled)}>
+                      {soundEnabled ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                  <div className="prestige-upgrade-card" style={{marginTop: '0.4rem'}}>
+                    <div className="detail-stat-label" style={{fontSize: '0.45rem'}}>VOLUME</div>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.3rem'}}>
+                      <span style={{color: '#666', fontSize: '0.35rem'}}>🔇</span>
+                      <input type="range" min="0" max="1" step="0.05" value={masterVolume}
+                        onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
+                        style={{flex: 1, accentColor: '#e89330', height: '4px', cursor: 'pointer'}} />
+                      <span style={{color: '#e89330', fontSize: '0.35rem'}}>🔊</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showAuthModal && (
+            <AuthModal onClose={() => setShowAuthModal(false)} onLoginSuccess={handleAuthSuccess} />
+          )}
+        </div>
+      )}
+
+      {/* ===== MAIN GAME ===== */}
+      {gameStarted && (
       <main className="game-container">
         {/* ===== HEADER ===== */}
         <header className="game-header">
@@ -969,8 +1069,86 @@ export default function Home() {
           </div>
         )}
       </main>
+      )}
 
       <style jsx global>{`
+        /* ===========================================
+           TITLE SCREEN
+           =========================================== */
+        .title-screen {
+          position: fixed; inset: 0; z-index: 500;
+          background: #0a0a0a;
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Press Start 2P', cursive;
+          overflow: hidden;
+        }
+        .title-scanlines {
+          position: absolute; inset: 0; pointer-events: none; z-index: 1;
+          background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
+        }
+        .title-content {
+          position: relative; z-index: 2;
+          display: flex; flex-direction: column; align-items: center;
+          gap: 2rem; padding: 1.5rem; text-align: center;
+        }
+        .title-logo { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+        .title-icon { font-size: 3rem; margin-bottom: 0.5rem; animation: titlePulse 2s ease-in-out infinite; }
+        @keyframes titlePulse { 0%,100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(232,147,48,0.3)); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(232,147,48,0.6)); } }
+        .title-text {
+          color: #e89330; font-size: 1.8rem; letter-spacing: 4px;
+          text-shadow: 0 0 20px rgba(232,147,48,0.4), 0 4px 0 #8b5a1a;
+          line-height: 1.2;
+        }
+        .title-subtext {
+          color: #d4d0c8; font-size: 0.9rem; letter-spacing: 6px;
+          text-shadow: 0 0 10px rgba(212,208,200,0.2);
+        }
+        .title-tagline {
+          color: #666; font-size: 0.35rem; margin-top: 0.5rem;
+          letter-spacing: 2px; text-transform: uppercase;
+        }
+        .title-menu {
+          display: flex; flex-direction: column; gap: 0.8rem;
+          align-items: center; width: 100%; max-width: 280px;
+        }
+        .title-button {
+          font-family: 'Press Start 2P', cursive;
+          width: 100%; padding: 0.8rem 1.2rem;
+          font-size: 0.7rem; cursor: pointer;
+          border: 2px solid; border-radius: 4px;
+          display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+          transition: all 0.15s; letter-spacing: 2px;
+          min-height: 52px;
+        }
+        .title-btn-icon { font-size: 0.6rem; }
+        .title-start {
+          background: #e89330; color: #0a0a0a; border-color: #e89330;
+          box-shadow: 0 0 20px rgba(232,147,48,0.3), inset 0 -3px 0 #8b5a1a;
+        }
+        .title-start:hover { filter: brightness(1.15); transform: scale(1.02); box-shadow: 0 0 30px rgba(232,147,48,0.5); }
+        .title-start:active { transform: scale(0.98); }
+        .title-options {
+          background: transparent; color: #888; border-color: #333;
+          box-shadow: inset 0 -2px 0 #222;
+        }
+        .title-options:hover { color: #d4d0c8; border-color: #555; background: #1a1a1a; }
+        .title-save-info {
+          color: #22aa55; font-size: 0.35rem; margin-top: 0.5rem;
+          letter-spacing: 1px; animation: titleFadeIn 0.5s ease-out;
+        }
+        @keyframes titleFadeIn { 0% { opacity: 0; transform: translateY(5px); } 100% { opacity: 1; transform: translateY(0); } }
+        .title-footer { color: #333; font-size: 0.25rem; margin-top: 1rem; letter-spacing: 2px; }
+        .title-vendo-silhouette {
+          position: absolute; bottom: -30px; right: -20px; z-index: 1;
+          opacity: 0.06; pointer-events: none;
+        }
+        @media (max-width: 480px) {
+          .title-text { font-size: 1.2rem; }
+          .title-subtext { font-size: 0.6rem; letter-spacing: 4px; }
+          .title-button { font-size: 0.55rem; padding: 0.7rem 1rem; min-height: 46px; }
+          .title-icon { font-size: 2.2rem; }
+        }
+
         /* ===========================================
            STREET THEME — Manila Urban Concrete
            =========================================== */

@@ -14,7 +14,7 @@ export default function useSound() {
       audioCtxRef.current = ctx;
     }
     if (audioCtxRef.current.state === 'suspended') {
-      audioCtxRef.current.resume();
+      audioCtxRef.current.resume().catch(() => {});
     }
     return audioCtxRef.current;
   };

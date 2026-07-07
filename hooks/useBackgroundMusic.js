@@ -56,8 +56,11 @@ export default function useBackgroundMusic() {
       masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
       masterGainRef.current.connect(audioCtxRef.current.destination);
     }
+    if (audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume().catch(() => {});
+    }
     return audioCtxRef.current;
-  }, []);
+  }, []);;
 
   // Expose a dedicated setter function to change speed on the fly (e.g., 0.5 for slow, 1.5 for fast)
   const setPlaybackSpeed = useCallback((rate) => {
@@ -76,7 +79,7 @@ export default function useBackgroundMusic() {
   const scheduleNextEvents = useCallback(() => {
     if (!isPlayingRef.current || !audioCtxRef.current) return;
     const ctx = audioCtxRef.current;
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
 
     // Adjust core timings based on the customized user playback speed
     const directEighthDur = (60 / bpmRef.current);
@@ -164,7 +167,7 @@ export default function useBackgroundMusic() {
 
   const start = useCallback(() => {
     const ctx = getCtx();
-    if (ctx.state === 'suspended') ctx.resume();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
     if (isPlayingRef.current) return;
     
     isPlayingRef.current = true;
