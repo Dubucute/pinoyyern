@@ -30,16 +30,27 @@ export default async function handler(req, res) {
     }
 
     // Create JWT token
+    const sessionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const token = jwt.sign(
-      { userId: user._id.toString(), username: user.username },
+      { userId: user._id.toString(), username: user.username, sessionId },
       JWT_SECRET,
       { expiresIn: '30d' }
+    );
+
+    // Store session ID in saves collection — invalidates all other sessions
+    const { db } = await connectToDatabase();
+    const saves = db.collection('saves');
+    await saves.updateOne(
+      { userId: user._id.toString() },
+      { $set: { sessionId } },
+      { upsert: true }
     );
 
     return res.status(200).json({
       message: 'Login successful!',
       token,
       username: user.username,
+      sessionId,
     });
   } catch (error) {
     console.error('Login error:', error);

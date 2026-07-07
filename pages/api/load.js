@@ -24,6 +24,11 @@ export default async function handler(req, res) {
 
     const save = await saves.findOne({ userId: decoded.userId });
 
+    // Validate session — reject if another device logged in
+    if (save && save.sessionId && decoded.sessionId && save.sessionId !== decoded.sessionId) {
+      return res.status(403).json({ message: 'Session expired — logged in elsewhere', sessionExpired: true });
+    }
+
     if (!save) {
       return res.status(200).json({ message: 'No cloud save found', gameState: null });
     }

@@ -27,6 +27,12 @@ export default async function handler(req, res) {
     const { db } = await connectToDatabase();
     const saves = db.collection('saves');
 
+    // Validate session — reject if another device logged in
+    const saveDoc = await saves.findOne({ userId: decoded.userId }, { projection: { sessionId: 1 } });
+    if (saveDoc && saveDoc.sessionId && decoded.sessionId && saveDoc.sessionId !== decoded.sessionId) {
+      return res.status(403).json({ message: 'Session expired — logged in elsewhere', sessionExpired: true });
+    }
+
     // Upsert: save game state for this user
     await saves.updateOne(
       { userId: decoded.userId },

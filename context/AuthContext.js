@@ -29,9 +29,13 @@ export function AuthProvider({ children }) {
 
     localStorage.setItem('piso-token', data.token);
     localStorage.setItem('piso-user', JSON.stringify({ username: data.username }));
-    // Generate new session ID — this will cause other tabs to logout
-    const sessionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    localStorage.setItem('piso-session-id', sessionId);
+    // Store session ID for server-side validation
+    if (data.sessionId) {
+      localStorage.setItem('piso-session-id', data.sessionId);
+    }
+    // Generate local session ID for cross-tab detection within same browser
+    const tabId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem('piso-tab-id', tabId);
     setToken(data.token);
     setUser({ username: data.username });
     return data;
@@ -52,6 +56,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('piso-token');
     localStorage.removeItem('piso-user');
     localStorage.removeItem('piso-session-id');
+    localStorage.removeItem('piso-tab-id');
     setToken(null);
     setUser(null);
   }, []);
@@ -67,7 +72,14 @@ export function AuthProvider({ children }) {
       body: JSON.stringify({ gameState }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Save failed');
+    if (!res.ok) {
+      if (data.sessionExpired) {
+        const err = new Error(data.message || 'Session expired');
+        err.sessionExpired = true;
+        throw err;
+      }
+      throw new Error(data.message || 'Save failed');
+    }
     return data;
   }, [token]);
 
@@ -78,7 +90,14 @@ export function AuthProvider({ children }) {
       headers: { 'Authorization': `Bearer ${token}` },
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Load failed');
+    if (!res.ok) {
+      if (data.sessionExpired) {
+        const err = new Error(data.message || 'Session expired');
+        err.sessionExpired = true;
+        throw err;
+      }
+      throw new Error(data.message || 'Load failed');
+    }
     return data.gameState;
   }, [token]);
 

@@ -94,13 +94,7 @@ export default function Home() {
   // ===== Session Management: one session per user =====
   useEffect(() => {
     if (!token || !user) return;
-    const sessionId = localStorage.getItem('piso-session-id');
-    if (!sessionId) {
-      // New session — generate ID and store it
-      const newId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      localStorage.setItem('piso-session-id', newId);
-    }
-    // Listen for other tabs logging in/out
+    // Listen for other tabs logging in/out (same-browser cross-tab)
     const handleStorage = (e) => {
       if (e.key === 'piso-token' && !e.newValue) {
         // Another tab logged out — this session is dead
@@ -108,10 +102,10 @@ export default function Home() {
         localStorage.removeItem('piso-wifi-empire-state');
         showToast('Logged out from another session', 3000);
       }
-      if (e.key === 'piso-session-id' && e.newValue) {
-        const mySession = localStorage.getItem('piso-session-id');
-        if (e.newValue !== mySession) {
-          // Another device/tab logged in — logout this session
+      if (e.key === 'piso-tab-id' && e.newValue) {
+        const myTab = localStorage.getItem('piso-tab-id');
+        if (e.newValue !== myTab) {
+          // Another tab logged in — logout this tab
           logout();
           setGameStarted(false);
           localStorage.removeItem('piso-wifi-empire-state');
@@ -122,6 +116,14 @@ export default function Home() {
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, [token, user, logout, showToast]);
+
+  // Handle server-side session expiry from API responses
+  const handleSessionExpired = useCallback(() => {
+    logout();
+    setGameStarted(false);
+    localStorage.removeItem('piso-wifi-empire-state');
+    showToast('Session expired — logged in from another device', 4000);
+  }, [logout, showToast]);
 
   // ===== Prestige =====
   const [prestigePoints, setPrestigePoints] = useState(0);
@@ -207,6 +209,7 @@ export default function Home() {
         await saveToCloud(state);
         showToast('☁️ Auto-saved!');
       } catch (err) {
+        if (err.sessionExpired) { handleSessionExpired(); return; }
         showToast(`☁️ Auto-save failed: ${err.message}`, 5000);
       }
     }, 30000);
@@ -267,6 +270,7 @@ export default function Home() {
         showToast('☁️ Loaded!');
       } catch (error) {
         if (!mounted) return;
+        if (error.sessionExpired) { handleSessionExpired(); return; }
         console.error('Load error:', error);
         showToast('☁️ Load failed', 2000);
       }
@@ -456,6 +460,7 @@ export default function Home() {
       await saveToCloud(state);
       showToast('☁️ Saved!');
     } catch (err) {
+      if (err.sessionExpired) { handleSessionExpired(); return; }
       showToast(`☁️ Save failed: ${err.message}`, 5000);
     } finally {
       setSaving(false);
@@ -550,7 +555,7 @@ export default function Home() {
         const saved = { ...state, prestigePoints: newPoints, prestigeCount: (state.prestigeCount || 0) + 1, pesos: prestigeStartingMoney, totalEarned: 0, totalClicks: state.totalClicks || 0, playTime: state.playTime || 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
         localStorage.setItem('piso-wifi-empire-state', JSON.stringify(saved));
         if (token && user) {
-          saveToCloud(saved).then(() => showToast('☁️ Rebirth saved!')).catch(() => showToast('☁️ Rebirth save failed', 5000));
+          saveToCloud(saved).then(() => showToast('☁️ Rebirth saved!')).catch((err) => { if (err.sessionExpired) { handleSessionExpired(); } else { showToast('☁️ Rebirth save failed', 5000); } });
         }
       }
     }, 100);
@@ -587,7 +592,7 @@ export default function Home() {
     // Save cleared state to cloud
     if (token && user) {
       const cleared = { version: SAVE_VERSION, pesos: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g', unlockedAchievements: [], totalEarned: 0, lifetimeEarned: 0, prestigeCount: 0, totalClicks: 0, playTime: 0, prestigePoints: 0, prestigeUpgrades: {} };
-      saveToCloud(cleared).then(() => showToast('☁️ Game reset & saved!')).catch(() => showToast('☁️ Reset save failed', 5000));
+      saveToCloud(cleared).then(() => showToast('☁️ Game reset & saved!')).catch((err) => { if (err.sessionExpired) { handleSessionExpired(); } else { showToast('☁️ Reset save failed', 5000); } });
     }
   };
 
