@@ -86,7 +86,7 @@ export default function LeaderboardPanel({ visible, onClose }) {
               className={`leaderboard-tab ${tab === 'prestige' ? 'active' : ''}`}
               onClick={() => setTab('prestige')}
             >
-              🔄 PRESTIGE
+              🔄 REBIRTH
             </button>
           </div>
 

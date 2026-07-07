@@ -1,13 +1,13 @@
 import { PRESTIGE_UPGRADES } from '../config/gameData';
 import { getPrestigeCost } from '../utils/helpers';
 
-export default function PrestigePanel({ points, upgrades, visible, onClose, onPrestige, onBuyUpgrade, canPrestige }) {
+export default function PrestigePanel({ points, rebirthCount, upgrades, visible, onClose, onPrestige, onBuyUpgrade, canPrestige }) {
   if (!visible) return null;
   return (
     <div className="achievement-overlay" onClick={onClose}>
       <div className="prestige-panel" onClick={(e) => e.stopPropagation()}>
         <div className="achievement-panel-header">
-          <h2 className="prestige-panel-title">🔄 PRESTIGE</h2>
+          <h2 className="prestige-panel-title">🔄 REBIRTH</h2>
           <button className="achievement-close" onClick={onClose}>✕</button>
         </div>
         <div className="achievement-panel-body">
@@ -17,12 +17,16 @@ export default function PrestigePanel({ points, upgrades, visible, onClose, onPr
               <span className="prestige-points-value">{points}</span>
               <span className="prestige-points-label">BARANGAY TOKENS</span>
             </div>
+            <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+              <span style={{ color: '#888', fontSize: '0.35rem' }}>REBIRTHS: </span>
+              <span style={{ color: '#e89330', fontSize: '0.5rem', fontWeight: 'bold' }}>{rebirthCount || 0}</span>
+            </div>
             <div className="prestige-desc">
               Reset your progress to earn permanent bonuses. Each run earns more tokens based on total earnings.
             </div>
             <button className={`prestige-button ${!canPrestige ? 'disabled' : ''}`}
               onClick={onPrestige} disabled={!canPrestige}>
-              {canPrestige ? '⭐ PRESTIGE NOW' : 'MORE EARNINGS NEEDED'}
+              {canPrestige ? '⭐ REBIRTH NOW' : 'MORE EARNINGS NEEDED'}
             </button>
           </div>
           <h3 className="prestige-upgrades-title">PERMANENT UPGRADES</h3>

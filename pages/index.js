@@ -550,7 +550,7 @@ export default function Home() {
         const saved = { ...state, prestigePoints: newPoints, prestigeCount: (state.prestigeCount || 0) + 1, pesos: prestigeStartingMoney, totalEarned: 0, totalClicks: state.totalClicks || 0, playTime: state.playTime || 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
         localStorage.setItem('piso-wifi-empire-state', JSON.stringify(saved));
         if (token && user) {
-          saveToCloud(saved).then(() => showToast('☁️ Prestige saved!')).catch(() => showToast('☁️ Prestige save failed', 5000));
+          saveToCloud(saved).then(() => showToast('☁️ Rebirth saved!')).catch(() => showToast('☁️ Rebirth save failed', 5000));
         }
       }
     }, 100);
@@ -758,6 +758,10 @@ export default function Home() {
                 <span className="console-value amber">{activeUsers}</span>
                 <span className="console-label">VENDOS</span>
                 <span className="console-value">{totalMachines}</span>
+                {prestigeCount > 0 && (<>
+                  <span className="console-label">REBIRTHS</span>
+                  <span className="console-value gold">{prestigeCount}x</span>
+                </>)}
                 <div className="console-bar"><div className="console-bar-fill" style={{width: `${Math.min(pps / 100 * 100, 100)}%`}} /></div>
               </div>
             </div>
@@ -990,7 +994,7 @@ export default function Home() {
           />
         )}
         <AchievementPanel unlocked={unlockedAchievements} visible={showAchievements} onClose={() => setShowAchievements(false)} />
-        <PrestigePanel points={prestigePoints} upgrades={prestigeUpgrades} visible={showPrestige} onClose={() => setShowPrestige(false)} onPrestige={doPrestige} onBuyUpgrade={purchasePrestigeUpgrade} canPrestige={canPrestige} />
+        <PrestigePanel points={prestigePoints} rebirthCount={prestigeCount} upgrades={prestigeUpgrades} visible={showPrestige} onClose={() => setShowPrestige(false)} onPrestige={doPrestige} onBuyUpgrade={purchasePrestigeUpgrade} canPrestige={canPrestige} />
         <LeaderboardPanel visible={showLeaderboard} onClose={() => setShowLeaderboard(false)} />
         {showAuthModal && (
           <AuthModal
@@ -1153,24 +1157,23 @@ export default function Home() {
           </div>
         )}
 
-        {/* Confirm Prestige Modal */}
+        {/* Confirm Rebirth Modal */}
         {confirmPrestige && (
           <div className="achievement-overlay" onClick={() => setConfirmPrestige(false)}>
             <div className="achievement-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px' }}>
               <div className="achievement-panel-header">
-                <h2 className="achievement-panel-title">⭐ CONFIRM PRESTIGE</h2>
+                <h2 className="achievement-panel-title">⭐ CONFIRM REBIRTH</h2>
                 <button className="achievement-close" onClick={() => setConfirmPrestige(false)}>✕</button>
               </div>
               <div className="achievement-panel-body" style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: '0.45rem', color: '#d4d0c8', marginBottom: '0.8rem', lineHeight: 1.8 }}>
                   You will reset all your progress and earn <strong style={{ color: '#e89330' }}>{availablePrestigePoints} barangay tokens</strong>.
-                  <br /><br />
-                  This cannot be undone!
+                  <br /><br />Rebirth #{prestigeCount + 1} — This cannot be undone!
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button className="prestige-button" style={{ flex: 1, background: '#e89330' }}
                     onClick={confirmDoPrestige}>
-                    ⭐ YES, PRESTIGE
+                    ⭐ YES, REBIRTH
                   </button>
                   <button className="prestige-button" style={{ flex: 1, background: '#333', color: '#888' }}
                     onClick={() => setConfirmPrestige(false)}>
