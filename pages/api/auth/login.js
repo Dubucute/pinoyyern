@@ -38,7 +38,6 @@ export default async function handler(req, res) {
     );
 
     // Store session ID in saves collection — invalidates all other sessions
-    const { db } = await connectToDatabase();
     const saves = db.collection('saves');
     await saves.updateOne(
       { userId: user._id.toString() },
