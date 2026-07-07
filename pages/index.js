@@ -1055,7 +1055,7 @@ export default function Home() {
         @keyframes toastFade { 0% { opacity: 0; transform: translateX(-50%) translateY(10px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
         /* ===== MAIN CONTENT ===== */
-        .main-content { display: flex; flex: 1; min-height: 0; }
+        .main-content { display: flex; flex: 1; min-height: 0; position: relative; }
 
         /* ===== VIEWPORT — Street Monitor ===== */
         .viewport {
@@ -1108,16 +1108,16 @@ export default function Home() {
           transition: transform 0.1s ease;
         }
         .machine-sizer {
-          width: 140px; height: 140px;
+          width: 180px; height: 180px;
           transition: all 0.3s ease;
           display: flex; align-items: center; justify-content: center;
         }
         .machine-sizer svg {
-          width: 140px !important; height: 140px !important;
+          width: 180px !important; height: 180px !important;
         }
         @media (min-width: 900px) {
-          .machine-sizer { width: 220px; height: 220px; }
-          .machine-sizer svg { width: 220px !important; height: 220px !important; }
+          .machine-sizer { width: 280px; height: 280px; }
+          .machine-sizer svg { width: 280px !important; height: 280px !important; }
         }
         .clickable-machine:hover { filter: brightness(1.2); }
         .clickable-machine.pressed { transform: scale(0.92); }
@@ -1411,24 +1411,28 @@ export default function Home() {
 
         /* ===== Responsive: Tablet & Mobile ===== */
         @media (max-width: 900px) {
-          .main-content { flex-direction: column; align-items: center; }
-          .viewport { border-right: none; border-bottom: 1px solid #333; min-height: auto; justify-content: flex-start; padding: 0.8rem 0.8rem 0.3rem; width: 100%; max-width: 600px; }
-          .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
+          .main-content { position: relative; }
+          .viewport { border-right: none; min-height: auto; justify-content: flex-start; padding: 0.8rem 0.8rem 0.3rem; width: 100%; max-width: 100%; }
+          .control-hub {
+            position: absolute; top: 0; right: 0; bottom: 0;
+            width: 320px; max-width: 85vw; max-height: 100%;
+            z-index: 50; border-left: 1px solid #333;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+          }
         }
         @media (max-width: 768px) {
           .game-header { flex-wrap: wrap; padding: 0.5rem 0.6rem; gap: 0.3rem; }
           .game-title { font-size: 0.6rem; }
           .header-buttons { gap: 4px; }
           .auth-header-button, .reset-button { padding: 0.5rem 0.7rem; font-size: 0.42rem; min-height: 44px; }
-          .main-content { flex-direction: column; align-items: center; }
-          .viewport { border-right: none; border-bottom: 1px solid #333; min-height: auto; padding: 0.8rem 0.8rem 0.3rem; justify-content: flex-start; width: 100%; max-width: 600px; }
+          .viewport { border-right: none; padding: 0.8rem 0.8rem 0.3rem; justify-content: flex-start; width: 100%; max-width: 100%; }
           .viewport-header { margin-bottom: 0.3rem; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
-          .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
+          .control-hub { width: 300px; max-width: 80vw; }
           .menu-toggle-button { font-size: 0.42rem; padding: 0.5rem; min-height: 42px; }
-          .machine-sizer { width: 180px; height: 180px; }
-          .machine-sizer svg { width: 180px !important; height: 180px !important; }
+          .machine-sizer { width: 220px; height: 220px; }
+          .machine-sizer svg { width: 220px !important; height: 220px !important; }
           .machine-display-area { margin-top: 0.3rem; }
           .buy-button { padding: 0.6rem 0.9rem; font-size: 0.6rem; min-height: 52px; min-width: 90px; }
           .buy-button-small { padding: 0.55rem 0.75rem; font-size: 0.5rem; min-height: 46px; min-width: 80px; }
@@ -1473,7 +1477,7 @@ export default function Home() {
           .live-console { padding: 0.55rem; max-width: 100%; }
           .console-header { font-size: 0.38rem; }
           .console-grid { font-size: 0.35rem; gap: 0.25rem; }
-          .control-hub { padding: 0.4rem; max-height: 52dvh; max-width: 100%; }
+          .control-hub { width: 280px; max-width: 78vw; padding: 0.4rem; max-height: 100%; }
           .menu-toggle-button { font-size: 0.38rem; padding: 0.45rem; min-height: 38px; }
           .hub-stat { padding: 0.35rem; }
           .hub-stat-label { font-size: 0.38rem; }
@@ -1510,8 +1514,8 @@ export default function Home() {
           .detail-upgrade-btn { padding: 0.5rem; font-size: 0.38rem; }
           .sell-button { padding: 0.5rem; font-size: 0.38rem; }
           .hub-machine-list { max-height: 120px; }
-          .machine-sizer { width: 100px; height: 100px; }
-          .machine-sizer svg { width: 100px !important; height: 100px !important; }
+          .machine-sizer { width: 180px; height: 180px; }
+          .machine-sizer svg { width: 180px !important; height: 180px !important; }
         }
       `}</style>
     </>
