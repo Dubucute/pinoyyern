@@ -1047,12 +1047,12 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Prestige section */}
+                {/* Rebirth section */}
                 <div className="prestige-upgrade-card" style={{cursor: 'pointer', marginTop: '0.4rem'}} onClick={() => { setShowProfile(false); setShowPrestige(true); }}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <div>
-                      <div className="detail-stat-label">PRESTIGE</div>
-                      <div className="detail-stat-value" style={{fontSize: '0.4rem', color: '#e89330'}}>{prestigePoints} points</div>
+                      <div className="detail-stat-label">REBIRTH</div>
+                      <div className="detail-stat-value" style={{fontSize: '0.4rem', color: '#e89330'}}>{prestigePoints} tokens</div>
                     </div>
                     <div style={{fontSize: '0.35rem', color: '#666'}}>VIEW →</div>
                   </div>
