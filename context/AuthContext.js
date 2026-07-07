@@ -29,6 +29,9 @@ export function AuthProvider({ children }) {
 
     localStorage.setItem('piso-token', data.token);
     localStorage.setItem('piso-user', JSON.stringify({ username: data.username }));
+    // Generate new session ID — this will cause other tabs to logout
+    const sessionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem('piso-session-id', sessionId);
     setToken(data.token);
     setUser({ username: data.username });
     return data;
@@ -48,6 +51,7 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     localStorage.removeItem('piso-token');
     localStorage.removeItem('piso-user');
+    localStorage.removeItem('piso-session-id');
     setToken(null);
     setUser(null);
   }, []);

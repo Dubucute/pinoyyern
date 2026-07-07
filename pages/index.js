@@ -91,6 +91,38 @@ export default function Home() {
   const [saving, setSaving] = useState(false);
   const { user, token, logout, saveToCloud, loadFromCloud } = useAuth();
 
+  // ===== Session Management: one session per user =====
+  useEffect(() => {
+    if (!token || !user) return;
+    const sessionId = localStorage.getItem('piso-session-id');
+    if (!sessionId) {
+      // New session — generate ID and store it
+      const newId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem('piso-session-id', newId);
+    }
+    // Listen for other tabs logging in/out
+    const handleStorage = (e) => {
+      if (e.key === 'piso-token' && !e.newValue) {
+        // Another tab logged out — this session is dead
+        setGameStarted(false);
+        localStorage.removeItem('piso-wifi-empire-state');
+        showToast('Logged out from another session', 3000);
+      }
+      if (e.key === 'piso-session-id' && e.newValue) {
+        const mySession = localStorage.getItem('piso-session-id');
+        if (e.newValue !== mySession) {
+          // Another device/tab logged in — logout this session
+          logout();
+          setGameStarted(false);
+          localStorage.removeItem('piso-wifi-empire-state');
+          showToast('Session ended — logged in elsewhere', 3000);
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [token, user, logout, showToast]);
+
   // ===== Prestige =====
   const [prestigePoints, setPrestigePoints] = useState(0);
   const [prestigeUpgrades, setPrestigeUpgrades] = useState({});
@@ -1030,7 +1062,7 @@ export default function Home() {
                         {saving ? 'SAVING...' : 'SAVE TO CLOUD'}
                       </button>
                       <button className="prestige-buy-button" style={{flex: 1, background: '#442211', color: '#aa6644'}}
-                        onClick={() => { logout(); setShowProfile(false); showToast('☁️ Logged out', 2000); }}>
+                        onClick={() => { logout(); setShowProfile(false); localStorage.removeItem('piso-wifi-empire-state'); setGameStarted(false); showToast('☁️ Logged out', 2000); }}>
                         LOGOUT
                       </button>
                     </div>
@@ -1812,12 +1844,12 @@ export default function Home() {
           .game-title { font-size: 0.6rem; }
           .header-buttons { gap: 4px; }
           .auth-header-button, .reset-button { padding: 0.5rem 0.7rem; font-size: 0.42rem; min-height: 44px; }
-          .viewport { border-right: none; padding: 0.6rem 0.6rem 0.3rem; justify-content: space-between; width: 100%; max-width: 100%; }
+          .viewport { border-right: none; padding: 0.6rem 0.6rem 0.3rem; justify-content: center; width: 100%; max-width: 100%; }
           .viewport-header { margin-bottom: 0.3rem; max-width: 100%; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
           .viewport-balance { padding: 0.25rem 0.5rem; }
-          .balance-amount { font-size: 0.55rem; }
+          .balance-amount { font-size: 0.65rem; }
           .control-hub { width: 300px; max-width: 80vw; }
           .menu-toggle-button { font-size: 0.42rem; padding: 0.5rem; min-height: 42px; }
           .machine-sizer { width: 240px; height: 240px; }
@@ -1859,11 +1891,11 @@ export default function Home() {
           .game-title { font-size: 0.45rem; }
           .header-buttons { gap: 3px; }
           .auth-header-button, .reset-button { padding: 0.4rem 0.5rem; font-size: 0.38rem; min-height: 40px; border-radius: 3px; }
-          .viewport { padding: 0.6rem 0.6rem 0.2rem; min-height: 260px; max-width: 100%; }
+          .viewport { padding: 0.6rem 0.6rem 0.2rem; min-height: 260px; max-width: 100%; justify-content: center; }
           .viewport-location-name { font-size: 0.6rem; }
           .viewport-location-subtitle { font-size: 0.38rem; }
           .viewport-balance { padding: 0.2rem 0.4rem; }
-          .balance-amount { font-size: 0.48rem; }
+          .balance-amount { font-size: 0.55rem; }
           .balance-label { font-size: 0.3rem; }
 
           .live-console { padding: 0.55rem; max-width: 100%; }
