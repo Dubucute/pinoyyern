@@ -612,13 +612,6 @@ export default function Home() {
           {/* Control Hub */}
           {showControlHub && (
           <aside className="control-hub">
-            {/* Stats row */}
-            <div className="hub-stats-row">
-              <div className="hub-stat"><span className="hub-stat-label">ACTIVE USERS</span><span className="hub-stat-value">{activeUsers}</span></div>
-              <div className="hub-stat"><span className="hub-stat-label">TOTAL EARNED</span><span className="hub-stat-value click">₱{Math.floor(totalEarned).toLocaleString()}</span></div>
-              <div className="hub-stat"><span className="hub-stat-label">VENDOS</span><span className="hub-stat-value">{totalMachines}</span></div>
-            </div>
-
             {/* Machine Purchase */}
             <div className="hub-section">
               <h3 className="hub-section-title" style={{ borderColor: loc?.accentColor || '#8cb369' }}>
