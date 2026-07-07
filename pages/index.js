@@ -525,12 +525,12 @@ export default function Home() {
           <span style={{flex:1, minWidth:'0.5rem'}} />
           <div className="header-buttons">
             <button className="auth-header-button" onClick={() => setShowLeaderboard(!showLeaderboard)}>
-              🏆
+              LEADERBOARD
             </button>
             <button className="auth-header-button" onClick={() => setShowProfile(!showProfile)}>
-              👤
+              PROFILE
             </button>
-            <button className="reset-button" onClick={() => setShowSettings(!showSettings)}>⚙</button>
+            <button className="reset-button" onClick={() => setShowSettings(!showSettings)}>SETTINGS</button>
           </div>
         </header>
 
