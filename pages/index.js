@@ -524,17 +524,17 @@ export default function Home() {
         <header className="game-header">
           <h1 className="game-title">PISO WIFI IDLE</h1>
           <span style={{flex:1, minWidth:'0.5rem'}} />
-          <div style={{display:'flex', alignItems:'center', gap:'1px'}}>
+          <div className="header-buttons">
             <button className="auth-header-button" onClick={() => setShowControlHub(!showControlHub)}>
-              MENU
+              {showControlHub ? '✕' : 'MENU'}
             </button>
             <button className="auth-header-button" onClick={() => setShowLeaderboard(!showLeaderboard)}>
-              LEADERBOARD
+              🏆
             </button>
             <button className="auth-header-button" onClick={() => setShowProfile(!showProfile)}>
-              PROFILE
+              👤
             </button>
-            <button className="reset-button" onClick={() => setShowSettings(!showSettings)}>SETTINGS</button>
+            <button className="reset-button" onClick={() => setShowSettings(!showSettings)}>⚙</button>
           </div>
         </header>
 
@@ -1177,13 +1177,14 @@ export default function Home() {
 
 
         /* ===== CONTROL HUB — Tabs ===== */
-        .hub-tabs { display: flex; gap: 1px; margin-bottom: 0; background: #2a2a2a; border-radius: 4px 4px 0 0; overflow: hidden; }
+        .hub-tabs { display: flex; gap: 2px; margin-bottom: 0; background: #2a2a2a; border-radius: 6px 6px 0 0; overflow: hidden; flex-shrink: 0; }
         .hub-tab {
-          flex: 1; font-family: 'Press Start 2P', cursive; font-size: 0.45rem;
-          padding: 0.5rem; background: #1a1a1a; color: #666; border: none; cursor: pointer;
-          transition: background 0.15s, color 0.15s;
+          flex: 1; font-family: 'Press Start 2P', cursive; font-size: 0.42rem;
+          padding: 0.6rem 0.4rem; background: #1a1a1a; color: #555; border: none; cursor: pointer;
+          transition: background 0.15s, color 0.15s; min-height: 48px;
+          display: flex; align-items: center; justify-content: center; gap: 0.3rem;
         }
-        .hub-tab.active { background: #2a2a2a; color: #e89330; }
+        .hub-tab.active { background: #222; color: #e89330; }
         .hub-tab:hover { color: #d4d0c8; }
 
         /* ===== CONTROL HUB — Concrete Panel ===== */
@@ -1440,15 +1441,18 @@ export default function Home() {
           .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
         }
         @media (max-width: 768px) {
-          .game-header { flex-wrap: wrap; padding: 0.6rem 0.7rem; gap: 0.4rem; }
-          .game-title { font-size: 0.7rem; }
-          .auth-header-button, .reset-button { padding: 0.6rem 0.9rem; font-size: 0.5rem; min-height: 50px; }
+          .game-header { flex-wrap: wrap; padding: 0.5rem 0.6rem; gap: 0.3rem; }
+          .game-title { font-size: 0.6rem; }
+          .header-buttons { gap: 4px; }
+          .auth-header-button, .reset-button { padding: 0.5rem 0.7rem; font-size: 0.42rem; min-height: 44px; }
           .main-content { flex-direction: column; align-items: center; }
           .viewport { border-right: none; border-bottom: 1px solid #333; min-height: auto; padding: 0.8rem 0.8rem 0.3rem; justify-content: flex-start; width: 100%; max-width: 600px; }
           .viewport-header { margin-bottom: 0.3rem; }
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
           .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
+          .hub-tabs { border-radius: 8px 8px 0 0; }
+          .hub-tab { font-size: 0.5rem; padding: 0.65rem 0.4rem; min-height: 48px; }
           .machine-sizer { width: 180px; height: 180px; }
           .machine-sizer svg { width: 180px !important; height: 180px !important; }
           .machine-display-area { margin-top: 0.3rem; }
@@ -1484,9 +1488,10 @@ export default function Home() {
           body { overflow-y: auto; }
           .game-container { height: 100dvh; }
           .main-content { align-items: stretch; }
-          .game-header { padding: 0.4rem 0.5rem; gap: 0.25rem; }
-          .game-title { font-size: 0.5rem; }
-          .auth-header-button, .reset-button { padding: 0.4rem 0.55rem; font-size: 0.38rem; min-height: 38px; }
+          .game-header { padding: 0.35rem 0.45rem; gap: 0.2rem; }
+          .game-title { font-size: 0.45rem; }
+          .header-buttons { gap: 3px; }
+          .auth-header-button, .reset-button { padding: 0.4rem 0.5rem; font-size: 0.38rem; min-height: 40px; border-radius: 3px; }
           .viewport { padding: 0.6rem 0.6rem 0.2rem; min-height: 260px; max-width: 100%; }
           .viewport-location-name { font-size: 0.6rem; }
           .viewport-location-subtitle { font-size: 0.38rem; }
@@ -1494,7 +1499,9 @@ export default function Home() {
           .live-console { padding: 0.55rem; max-width: 100%; }
           .console-header { font-size: 0.38rem; }
           .console-grid { font-size: 0.35rem; gap: 0.25rem; }
-          .control-hub { padding: 0.5rem; max-height: 52dvh; max-width: 100%; }
+          .control-hub { padding: 0.4rem; max-height: 52dvh; max-width: 100%; }
+          .hub-tabs { border-radius: 6px 6px 0 0; }
+          .hub-tab { font-size: 0.42rem; padding: 0.5rem 0.3rem; min-height: 44px; }
           .hub-stat { padding: 0.35rem; }
           .hub-stat-label { font-size: 0.38rem; }
           .hub-stat-value { font-size: 0.5rem; }
