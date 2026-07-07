@@ -1338,7 +1338,7 @@ export default function Home() {
           width: 380px; background: #1a1a1a;
           overflow-y: auto; padding: 0.75rem;
           display: flex; flex-direction: column; gap: 0.5rem;
-          max-height: 75dvh;
+          height: 100%;
         }
         .hub-stats-row { display: flex; gap: 0.35rem; }
         .hub-stat {
