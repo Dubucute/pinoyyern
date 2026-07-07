@@ -13,13 +13,8 @@ export default function LeaderboardPanel({ visible, onClose }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (!visible) return;
-    setLoading(true);
-    setError('');
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-    fetch('/api/leaderboard', { signal: controller.signal })
+  const fetchLeaderboard = (signal) => {
+    return fetch('/api/leaderboard', { signal })
       .then((r) => r.json())
       .then((d) => {
         setData(d);
@@ -29,8 +24,28 @@ export default function LeaderboardPanel({ visible, onClose }) {
         setError('');
         setData({ topMoney: null, topClicks: null, topTime: null });
         setLoading(false);
-      })
-      .finally(() => clearTimeout(timeout));
+      });
+  };
+
+  useEffect(() => {
+    if (!visible) return;
+    setLoading(true);
+    setError('');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    fetchLeaderboard(controller.signal).finally(() => clearTimeout(timeout));
+
+    // Auto-refresh every 30 seconds while panel is open
+    const refreshInterval = setInterval(() => {
+      setLoading(true);
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 5000);
+      fetchLeaderboard(ctrl.signal).finally(() => clearTimeout(t));
+    }, 30000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, [visible]);
 
   if (!visible) return null;

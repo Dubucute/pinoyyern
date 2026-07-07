@@ -76,6 +76,8 @@ export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [confirmPrestige, setConfirmPrestige] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [masterVolume, setMasterVolume] = useState(0.7);
   const [cloudToast, setCloudToast] = useState('');
@@ -140,13 +142,24 @@ export default function Home() {
     setShowAuthModal(false);
   }, []);
 
+  // Quick localStorage save every 5 seconds
   useEffect(() => {
     const id = setInterval(() => {
       const state = saveStateRef.current;
       if (state) localStorage.setItem('piso-wifi-empire-state', JSON.stringify(state));
-    }, 10000);
+    }, 5000);
     return () => clearInterval(id);
   }, []); // Only on mount — reads from ref, never re-creates
+
+  // Save to localStorage immediately when page is about to unload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const state = saveStateRef.current;
+      if (state) localStorage.setItem('piso-wifi-empire-state', JSON.stringify(state));
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   // ===== Cloud Save (auto every 30s when logged in) =====
   useEffect(() => {
@@ -468,6 +481,11 @@ export default function Home() {
 
   const doPrestige = () => {
     if (!canPrestige) return;
+    setConfirmPrestige(true);
+  };
+
+  const confirmDoPrestige = () => {
+    setConfirmPrestige(false);
     const newPoints = availablePrestigePoints;
     setPesos(prestigeStartingMoney);
     setTotalEarned(0);
@@ -480,6 +498,17 @@ export default function Home() {
     setCurrentSpeed('3g'); setAchievementToast(null);
     setPrestigePoints(newPoints);
     setDetailMachineId(null);
+    // Immediately save after prestige
+    setTimeout(() => {
+      const state = saveStateRef.current;
+      if (state) {
+        const saved = { ...state, prestigePoints: newPoints, pesos: prestigeStartingMoney, totalEarned: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
+        localStorage.setItem('piso-wifi-empire-state', JSON.stringify(saved));
+        if (token && user) {
+          saveToCloud(saved).then(() => showToast('☁️ Prestige saved!')).catch(() => showToast('☁️ Prestige save failed', 5000));
+        }
+      }
+    }, 100);
   };
 
   const purchasePrestigeUpgrade = (upgradeId) => {
@@ -494,6 +523,11 @@ export default function Home() {
   };
 
   const resetGame = () => {
+    setConfirmReset(true);
+  };
+
+  const confirmResetGame = () => {
+    setConfirmReset(false);
     setPesos(0);
     setMachinesByLocation(LOCATIONS.map(() => []));
     setLocalUpgrades(LOCATIONS.map(() => ({})));
@@ -504,7 +538,12 @@ export default function Home() {
     setCurrentSpeed('3g'); setUnlockedAchievements([]); setTotalEarned(0);
     setTotalClicks(0); setPlayTime(0);
     setAchievementToast(null); setPrestigePoints(0); setPrestigeUpgrades({}); setDetailMachineId(null);
-    if (typeof window !== 'undefined') localStorage.removeItem('piso-wifi-empire-state');
+    localStorage.removeItem('piso-wifi-empire-state');
+    // Save cleared state to cloud
+    if (token && user) {
+      const cleared = { version: SAVE_VERSION, pesos: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g', unlockedAchievements: [], totalEarned: 0, totalClicks: 0, playTime: 0, prestigePoints: 0, prestigeUpgrades: {} };
+      saveToCloud(cleared).then(() => showToast('☁️ Game reset & saved!')).catch(() => showToast('☁️ Reset save failed', 5000));
+    }
   };
 
   // ===== Title Screen Handlers =====
@@ -1062,6 +1101,66 @@ export default function Home() {
                     onClick={resetGame}
                   >
                     RESET EVERYTHING
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Confirm Prestige Modal */}
+        {confirmPrestige && (
+          <div className="achievement-overlay" onClick={() => setConfirmPrestige(false)}>
+            <div className="achievement-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+              <div className="achievement-panel-header">
+                <h2 className="achievement-panel-title">⭐ CONFIRM PRESTIGE</h2>
+                <button className="achievement-close" onClick={() => setConfirmPrestige(false)}>✕</button>
+              </div>
+              <div className="achievement-panel-body" style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '0.45rem', color: '#d4d0c8', marginBottom: '0.8rem', lineHeight: 1.8 }}>
+                  You will reset all your progress and earn <strong style={{ color: '#e89330' }}>{availablePrestigePoints} barangay tokens</strong>.
+                  <br /><br />
+                  This cannot be undone!
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button className="prestige-button" style={{ flex: 1, background: '#e89330' }}
+                    onClick={confirmDoPrestige}>
+                    ⭐ YES, PRESTIGE
+                  </button>
+                  <button className="prestige-button" style={{ flex: 1, background: '#333', color: '#888' }}
+                    onClick={() => setConfirmPrestige(false)}>
+                    CANCEL
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Confirm Reset Modal */}
+        {confirmReset && (
+          <div className="achievement-overlay" onClick={() => setConfirmReset(false)}>
+            <div className="achievement-panel" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+              <div className="achievement-panel-header">
+                <h2 className="achievement-panel-title">⚠️ CONFIRM RESET</h2>
+                <button className="achievement-close" onClick={() => setConfirmReset(false)}>✕</button>
+              </div>
+              <div className="achievement-panel-body" style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '0.45rem', color: '#d4d0c8', marginBottom: '0.8rem', lineHeight: 1.8 }}>
+                  This will <strong style={{ color: '#cc4444' }}>erase ALL progress</strong> including:
+                  <br /><br />
+                  ₱ Pesos • Vendos • Upgrades • Tokens • Achievements
+                  <br /><br />
+                  This cannot be undone!
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button className="prestige-button" style={{ flex: 1, background: '#663322', color: '#d4c0b0' }}
+                    onClick={confirmResetGame}>
+                    🗑️ YES, RESET
+                  </button>
+                  <button className="prestige-button" style={{ flex: 1, background: '#333', color: '#888' }}
+                    onClick={() => setConfirmReset(false)}>
+                    CANCEL
                   </button>
                 </div>
               </div>
