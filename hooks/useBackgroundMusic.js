@@ -1,5 +1,5 @@
 import { useRef, useCallback, useEffect } from 'react';
-import { getAudioContext, getMasterGain, resumeAudioContext, closeAudioContext } from '../lib/audio';
+import { getAudioContext, getMasterGain, resumeAudioContext, fullyUnlockAudio, closeAudioContext } from '../lib/audio';
 
 // Exact E-Major Pentatonic frequencies used in Grieg's opening motif
 const E4 = 329.63, Fs4 = 369.99, Gs4 = 415.30, B4 = 493.88;
@@ -182,6 +182,7 @@ export default function useBackgroundMusic() {
       scheduleNextEvents();
     };
     if (ctx.state === 'suspended') {
+      fullyUnlockAudio();
       ctx.resume().then(doStart).catch(() => {});
     } else {
       doStart();
@@ -205,13 +206,13 @@ export default function useBackgroundMusic() {
     // iOS Safari: AudioContext gets suspended when switching tabs/apps
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
-        resumeAudioContext().then(() => {
+        fullyUnlockAudio().then(() => {
           if (isPlayingRef.current) scheduleNextEvents();
         }).catch(() => {});
       }
     };
     const handleResume = () => {
-      resumeAudioContext().then(() => {
+      fullyUnlockAudio().then(() => {
         if (isPlayingRef.current) scheduleNextEvents();
       }).catch(() => {});
     };

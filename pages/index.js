@@ -19,6 +19,7 @@ import MachineDetail from '../components/MachineDetail';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from '../components/AuthModal';
 import LeaderboardPanel from '../components/LeaderboardPanel';
+import { fullyUnlockAudio } from '../lib/audio';
 
 const SAVE_VERSION = 3; // Bumped — new upgrade/package IDs
 const LOCATION_ICONS = ['📍', '🏀', '🛺', '🛒', '🏫', '🏖️'];
@@ -359,20 +360,12 @@ export default function Home() {
 
   // ===== Click Handler =====
   const handleClick = (e) => {
-    const isFirst = firstInteractionRef.current;
-    // iOS requires AudioContext to be created & resumed inside a user gesture
-    if (isFirst) {
-      firstInteractionRef.current = false;
-      bgMusic.start();
-      setMusicOn(true);
-    }
     setPesos((p) => p + currentClickValue);
     setTotalEarned((t) => t + currentClickValue);
     setLifetimeEarned((t) => t + currentClickValue);
     setTotalClicks((c) => c + 1);
     setIsPressed(true);
-    // Skip click sound on first interaction to avoid iOS AudioContext conflict
-    if (!isFirst) playClick();
+    playClick();
     setTimeout(() => setIsPressed(false), 100);
     if (clickAreaRef.current) {
       const rect = clickAreaRef.current.getBoundingClientRect();
@@ -605,6 +598,11 @@ export default function Home() {
 
   // ===== Title Screen Handlers =====
   const handleStart = () => {
+    // iOS unlock: the START button tap is our user gesture — init audio here
+    firstInteractionRef.current = false;
+    fullyUnlockAudio();
+    bgMusic.start();
+    setMusicOn(true);
     if (!token) {
       setShowAuthModal(true);
       return;
@@ -673,10 +671,7 @@ export default function Home() {
                       <div className="detail-stat-value" style={{fontSize: '0.4rem', color: '#888'}}>Background music</div>
                     </div>
                     <button className="prestige-button" style={{width: 'auto', padding: '0.4rem 1rem', fontSize: '0.4rem', minWidth: '70px'}}
-                      onClick={() => {
-                        if (firstInteractionRef.current) { firstInteractionRef.current = false; bgMusic.start(); setMusicOn(true); }
-                        else { const nowMuted = bgMusic.toggleMute(); setMusicOn(!nowMuted); }
-                      }}>
+                      onClick={() => { const nowMuted = bgMusic.toggleMute(); setMusicOn(!nowMuted); }}>
                       {musicOn ? 'ON' : 'OFF'}
                     </button>
                   </div>
@@ -1116,10 +1111,7 @@ export default function Home() {
                   <button
                     className="prestige-button"
                     style={{width: 'auto', padding: '0.4rem 1rem', fontSize: '0.4rem', minWidth: '70px'}}
-                    onClick={() => {
-                      if (firstInteractionRef.current) { firstInteractionRef.current = false; bgMusic.start(); setMusicOn(true); }
-                      else { const nowMuted = bgMusic.toggleMute(); setMusicOn(!nowMuted); }
-                    }}
+                    onClick={() => { const nowMuted = bgMusic.toggleMute(); setMusicOn(!nowMuted); }}
                   >
                     {musicOn ? 'ON' : 'OFF'}
                   </button>
