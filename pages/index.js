@@ -637,7 +637,7 @@ export default function Home() {
         {/* ===== MAIN CONTENT ===== */}
         <div className="main-content">
           {/* Viewport — Live Monitor */}
-          <section className="viewport" style={{ backgroundColor: loc?.bgColor || '#141414' }}>
+          <section className="viewport" style={{ backgroundColor: loc?.bgColor || '#141414' }} onClick={() => showControlHub && setShowControlHub(false)}>
             {/* Pixel-art background scenery */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.5 }}>
               <PixelScenery locationId={loc?.id} accent={loc?.accentColor} />
@@ -679,7 +679,7 @@ export default function Home() {
             </div>
 
             {/* Clickable Machine */}
-            <div className={`clickable-machine ${isPressed ? 'pressed' : ''}`} onClick={handleClick} ref={clickAreaRef} style={{position:'relative'}}>
+            <div className={`clickable-machine ${isPressed ? 'pressed' : ''}`} onClick={(e) => { e.stopPropagation(); handleClick(e); }} ref={clickAreaRef} style={{position:'relative'}}>
               <div className="machine-display-area">
                 {loc && (
                   <>
