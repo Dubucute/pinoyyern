@@ -58,12 +58,14 @@ export default function Home() {
     saveStateRef.current = {
       version: SAVE_VERSION, pesos, machinesByLocation, localUpgrades, unlockedLocations,
       currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements,
-      totalEarned, totalClicks, playTime, prestigePoints, prestigeUpgrades,
+      totalEarned, lifetimeEarned, prestigeCount, totalClicks, playTime, prestigePoints, prestigeUpgrades,
     };
   }); // runs on every render — no deps needed, just captures latest
   const clickAreaRef = useRef(null);
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);
   const [totalEarned, setTotalEarned] = useState(0);
+  const [lifetimeEarned, setLifetimeEarned] = useState(0);
+  const [prestigeCount, setPrestigeCount] = useState(0);
   const [totalClicks, setTotalClicks] = useState(0);
   const [playTime, setPlayTime] = useState(0); // seconds
   const [achievementToast, setAchievementToast] = useState(null);
@@ -124,6 +126,8 @@ export default function Home() {
           setPackageUpgrades(data.packageUpgrades || { sukiLoad: false, regularPlan: false, unlimitedPlan: false });
           setUnlockedAchievements(data.unlockedAchievements || []);
           setTotalEarned(data.totalEarned || 0);
+          setLifetimeEarned(data.lifetimeEarned || 0);
+          setPrestigeCount(data.prestigeCount || 0);
           setTotalClicks(data.totalClicks || 0);
           setPlayTime(data.playTime || 0);
           setPrestigePoints(data.prestigePoints || 0);
@@ -222,6 +226,8 @@ export default function Home() {
         setPackageUpgrades(cloudState.packageUpgrades ?? { sukiLoad: false, regularPlan: false, unlimitedPlan: false });
         setUnlockedAchievements(cloudState.unlockedAchievements ?? []);
         setTotalEarned(cloudState.totalEarned ?? 0);
+        setLifetimeEarned(cloudState.lifetimeEarned ?? 0);
+        setPrestigeCount(cloudState.prestigeCount ?? 0);
         setTotalClicks(cloudState.totalClicks ?? 0);
         setPlayTime(cloudState.playTime ?? 0);
         setPrestigePoints(cloudState.prestigePoints ?? 0);
@@ -244,6 +250,7 @@ export default function Home() {
       if (tickIncome <= 0) return;
       setPesos((p) => p + tickIncome);
       setTotalEarned((t) => t + tickIncome);
+      setLifetimeEarned((t) => t + tickIncome);
       setMachinesByLocation((prev) => {
         const totalWeight = prev.reduce((sum, machines, locIdx) => {
           const location = LOCATIONS[locIdx];
@@ -320,6 +327,7 @@ export default function Home() {
     }
     setPesos((p) => p + currentClickValue);
     setTotalEarned((t) => t + currentClickValue);
+    setLifetimeEarned((t) => t + currentClickValue);
     setTotalClicks((c) => c + 1);
     setIsPressed(true); playClick();
     setTimeout(() => setIsPressed(false), 100);
@@ -359,6 +367,7 @@ export default function Home() {
     if (pesos < upgradeDef.cost) return;
     setPesos((p) => p - upgradeDef.cost);
     setTotalEarned((t) => t + upgradeDef.cost);
+    setLifetimeEarned((t) => t + upgradeDef.cost);
     setLocalUpgrades((prev) => {
       const next = [...prev];
       next[currentLocation] = { ...next[currentLocation], [upgradeId]: true };
@@ -375,6 +384,7 @@ export default function Home() {
       if (pesos >= cost) {
         setPesos((p) => p - cost);
         setTotalEarned((t) => t + cost);
+        setLifetimeEarned((t) => t + cost);
         setUnlockedLocations((prev) => [...prev, idx]);
         setCurrentLocation(idx);
         playLocationChange();
@@ -389,16 +399,16 @@ export default function Home() {
   const purchaseUpgrade = (upgrade) => {
     if (upgrades[upgrade.id]) return;
     const cost = upgrade.cost ?? 0;
-    if (pesos >= cost) { setPesos((p) => p - cost); setTotalEarned((t) => t + cost); setUpgrades((u) => ({ ...u, [upgrade.id]: true })); playUpgrade(); }
+    if (pesos >= cost) { setPesos((p) => p - cost); setTotalEarned((t) => t + cost); setLifetimeEarned((t) => t + cost); setUpgrades((u) => ({ ...u, [upgrade.id]: true })); playUpgrade(); }
   };
   const purchasePackage = (pkg) => {
     if (packageUpgrades[pkg.id]) return;
-    if (pesos >= pkg.cost) { setPesos((p) => p - pkg.cost); setTotalEarned((t) => t + pkg.cost); setPackageUpgrades((u) => ({ ...u, [pkg.id]: true })); playUpgrade(); }
+    if (pesos >= pkg.cost) { setPesos((p) => p - pkg.cost); setTotalEarned((t) => t + pkg.cost); setLifetimeEarned((t) => t + pkg.cost); setPackageUpgrades((u) => ({ ...u, [pkg.id]: true })); playUpgrade(); }
   };
   const purchaseSpeed = (speed) => {
     const currentSpd = NETWORK_SPEEDS.find(s => s.id === currentSpeed);
     const targetSpd = NETWORK_SPEEDS.find(s => s.id === speed.id);
-    if (pesos >= targetSpd.baseCost && targetSpd.baseCost > currentSpd.baseCost) { setPesos((p) => p - targetSpd.baseCost); setTotalEarned((t) => t + targetSpd.baseCost); setCurrentSpeed(speed.id); playUpgrade(); }
+    if (pesos >= targetSpd.baseCost && targetSpd.baseCost > currentSpd.baseCost) { setPesos((p) => p - targetSpd.baseCost); setTotalEarned((t) => t + targetSpd.baseCost); setLifetimeEarned((t) => t + targetSpd.baseCost); setCurrentSpeed(speed.id); playUpgrade(); }
   };
 
   // ===== Manual Cloud Save =====
@@ -409,7 +419,7 @@ export default function Home() {
       const state = {
         version: SAVE_VERSION, pesos, machinesByLocation, localUpgrades, unlockedLocations,
         currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements,
-        totalEarned, totalClicks, playTime, prestigePoints, prestigeUpgrades,
+        totalEarned, lifetimeEarned, prestigeCount, totalClicks, playTime, prestigePoints, prestigeUpgrades,
       };
       await saveToCloud(state);
       showToast('☁️ Saved!');
@@ -418,7 +428,7 @@ export default function Home() {
     } finally {
       setSaving(false);
     }
-  }, [token, user, pesos, machinesByLocation, localUpgrades, unlockedLocations, currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements, totalEarned, totalClicks, playTime, prestigePoints, prestigeUpgrades, saveToCloud]);
+  }, [token, user, pesos, machinesByLocation, localUpgrades, unlockedLocations, currentLocation, upgrades, currentSpeed, packageUpgrades, unlockedAchievements, totalEarned, lifetimeEarned, prestigeCount, totalClicks, playTime, prestigePoints, prestigeUpgrades, saveToCloud]);
 
   // Machine detail callbacks
   const detailMachine = detailMachineId ? allMachines.find(m => m.id === detailMachineId) : null;
@@ -431,6 +441,8 @@ export default function Home() {
     if (pesos >= cost) {
       setPesos((p) => p - cost);
       setTotalEarned((t) => t + cost);
+      setLifetimeEarned((t) => t + cost);
+      setLifetimeEarned((t) => t + cost);
       setMachinesByLocation((prev) => {
         const next = [...prev];
         next[machine.locationIndex] = next[machine.locationIndex].map(m =>
@@ -497,12 +509,13 @@ export default function Home() {
     setPackageUpgrades({ sukiLoad: false, regularPlan: false, unlimitedPlan: false });
     setCurrentSpeed('3g'); setAchievementToast(null);
     setPrestigePoints(newPoints);
+    setPrestigeCount((c) => c + 1);
     setDetailMachineId(null);
     // Immediately save after prestige
     setTimeout(() => {
       const state = saveStateRef.current;
       if (state) {
-        const saved = { ...state, prestigePoints: newPoints, pesos: prestigeStartingMoney, totalEarned: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
+        const saved = { ...state, prestigePoints: newPoints, prestigeCount: (state.prestigeCount || 0) + 1, pesos: prestigeStartingMoney, totalEarned: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
         localStorage.setItem('piso-wifi-empire-state', JSON.stringify(saved));
         if (token && user) {
           saveToCloud(saved).then(() => showToast('☁️ Prestige saved!')).catch(() => showToast('☁️ Prestige save failed', 5000));
@@ -537,11 +550,11 @@ export default function Home() {
     setPackageUpgrades({ sukiLoad: false, regularPlan: false, unlimitedPlan: false });
     setCurrentSpeed('3g'); setUnlockedAchievements([]); setTotalEarned(0);
     setTotalClicks(0); setPlayTime(0);
-    setAchievementToast(null); setPrestigePoints(0); setPrestigeUpgrades({}); setDetailMachineId(null);
+    setAchievementToast(null); setPrestigePoints(0); setPrestigeUpgrades({}); setPrestigeCount(0); setLifetimeEarned(0); setDetailMachineId(null);
     localStorage.removeItem('piso-wifi-empire-state');
     // Save cleared state to cloud
     if (token && user) {
-      const cleared = { version: SAVE_VERSION, pesos: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g', unlockedAchievements: [], totalEarned: 0, totalClicks: 0, playTime: 0, prestigePoints: 0, prestigeUpgrades: {} };
+      const cleared = { version: SAVE_VERSION, pesos: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g', unlockedAchievements: [], totalEarned: 0, lifetimeEarned: 0, prestigeCount: 0, totalClicks: 0, playTime: 0, prestigePoints: 0, prestigeUpgrades: {} };
       saveToCloud(cleared).then(() => showToast('☁️ Game reset & saved!')).catch(() => showToast('☁️ Reset save failed', 5000));
     }
   };

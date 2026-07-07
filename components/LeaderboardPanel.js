@@ -50,7 +50,7 @@ export default function LeaderboardPanel({ visible, onClose }) {
 
   if (!visible) return null;
 
-  const list = (data && (tab === 'money' ? data.topMoney : tab === 'clicks' ? data.topClicks : data.topTime)) || [];
+  const list = (data && (tab === 'money' ? data.topMoney : tab === 'clicks' ? data.topClicks : tab === 'prestige' ? data.topPrestige : data.topTime)) || [];
   const tabLabel = tab === 'money' ? '💰 TOP MONEY' : tab === 'clicks' ? '👆 TOP CLICKS' : '⏱️ TOP TIME';
 
   return (
@@ -81,6 +81,12 @@ export default function LeaderboardPanel({ visible, onClose }) {
               onClick={() => setTab('time')}
             >
               ⏱️ TIME
+            </button>
+            <button
+              className={`leaderboard-tab ${tab === 'prestige' ? 'active' : ''}`}
+              onClick={() => setTab('prestige')}
+            >
+              🔄 PRESTIGE
             </button>
           </div>
 
@@ -122,10 +128,12 @@ export default function LeaderboardPanel({ visible, onClose }) {
                   <span className="lb-name">{entry.username}</span>
                   <span className="lb-stat">
                     {tab === 'money'
-                      ? `₱${Math.floor(entry.totalEarned || 0).toLocaleString()}`
+                      ? `₱${Math.floor(entry.lifetimeEarned || 0).toLocaleString()}`
                       : tab === 'clicks'
                         ? (entry.totalClicks || 0).toLocaleString()
-                        : formatPlayTime(entry.playTime || 0)
+                        : tab === 'prestige'
+                          ? `${entry.prestigeCount || 0}x`
+                          : formatPlayTime(entry.playTime || 0)
                     }
                   </span>
                 </div>

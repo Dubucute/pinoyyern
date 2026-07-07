@@ -11,16 +11,33 @@ export default async function handler(req, res) {
 
     const topMoney = await leaderboard
       .find()
-      .sort({ totalEarned: -1 })
+      .sort({ lifetimeEarned: -1 })
       .limit(20)
-      .project({ username: 1, totalEarned: 1, totalClicks: 1, playTime: 1, updatedAt: 1, _id: 0 })
+      .project({ username: 1, lifetimeEarned: 1, totalClicks: 1, playTime: 1, prestigeCount: 1, updatedAt: 1, _id: 0 })
       .toArray();
 
-    const topClicks = [...topMoney].sort((a, b) => (b.totalClicks || 0) - (a.totalClicks || 0));
+    const topClicks = await leaderboard
+      .find()
+      .sort({ totalClicks: -1 })
+      .limit(20)
+      .project({ username: 1, lifetimeEarned: 1, totalClicks: 1, playTime: 1, prestigeCount: 1, updatedAt: 1, _id: 0 })
+      .toArray();
 
-    const topTime = [...topMoney].sort((a, b) => (b.playTime || 0) - (a.playTime || 0));
+    const topTime = await leaderboard
+      .find()
+      .sort({ playTime: -1 })
+      .limit(20)
+      .project({ username: 1, lifetimeEarned: 1, totalClicks: 1, playTime: 1, prestigeCount: 1, updatedAt: 1, _id: 0 })
+      .toArray();
 
-    return res.status(200).json({ topMoney, topClicks, topTime });
+    const topPrestige = await leaderboard
+      .find()
+      .sort({ prestigeCount: -1 })
+      .limit(20)
+      .project({ username: 1, lifetimeEarned: 1, totalClicks: 1, playTime: 1, prestigeCount: 1, updatedAt: 1, _id: 0 })
+      .toArray();
+
+    return res.status(200).json({ topMoney, topClicks, topTime, topPrestige });
   } catch (error) {
     console.error('Leaderboard error:', error);
     return res.status(500).json({ message: 'Server error' });

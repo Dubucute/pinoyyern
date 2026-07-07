@@ -50,6 +50,8 @@ export default async function handler(req, res) {
           userId: decoded.userId,
           username: decoded.username,
           totalEarned: gameState.totalEarned || 0,
+          lifetimeEarned: gameState.lifetimeEarned || 0,
+          prestigeCount: gameState.prestigeCount || 0,
           totalClicks: gameState.totalClicks || 0,
           playTime: gameState.playTime || 0,
           updatedAt: new Date(),
