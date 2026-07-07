@@ -1277,8 +1277,8 @@ export default function Home() {
           background: transparent; color: #666;
           border: none; border-right: 1px solid #2a2a2a;
           border-bottom: 2px solid transparent;
-          padding: 0.4rem 0.2rem; cursor: pointer; min-height: 48px;
-          display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1rem;
+          padding: 0.5rem 0.25rem; cursor: pointer; min-height: 56px;
+          display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem;
           transition: all 0.15s;
         }
         .location-tab:last-child { border-right: none; }
@@ -1286,9 +1286,9 @@ export default function Home() {
         .location-tab.active { background: #1a1a1a; border-bottom-color: #e89330; color: #e89330; }
         .location-tab.locked { opacity: 0.4; }
         .location-tab.can-unlock { opacity: 1; color: #e89330; }
-        .loc-tab-icon { font-size: 0.8rem; }
-        .loc-tab-name { font-size: 0.38rem; }
-        .loc-tab-cost { font-size: 0.3rem; color: #e89330; }
+        .loc-tab-icon { font-size: 0.9rem; }
+        .loc-tab-name { font-size: 0.4rem; }
+        .loc-tab-cost { font-size: 0.32rem; color: #e89330; }
 
         /* ===== Modals (achievement, prestige, machine detail) ===== */
         .achievement-toast {
@@ -1448,10 +1448,10 @@ export default function Home() {
           .global-shop-toggle { font-size: 0.5rem; padding: 0.5rem; min-height: 44px; }
           .hub-stat { padding: 0.5rem; }
           .tap-hint { font-size: 0.45rem; margin-top: 0.25rem; }
-          .location-tab { padding: 0.4rem 0.25rem; min-height: 54px; }
-          .loc-tab-icon { font-size: 0.85rem; }
-          .loc-tab-name { font-size: 0.42rem; }
-          .loc-tab-cost { font-size: 0.32rem; }
+          .location-tab { padding: 0.5rem 0.3rem; min-height: 60px; }
+          .loc-tab-icon { font-size: 1rem; }
+          .loc-tab-name { font-size: 0.45rem; }
+          .loc-tab-cost { font-size: 0.35rem; }
           .hub-machine-list { max-height: 180px; }
           .hmc-name { font-size: 0.45rem; }
           .hmc-level { font-size: 0.45rem; }
@@ -1497,10 +1497,10 @@ export default function Home() {
           .hmc-details span { font-size: 0.32rem; }
           .hmc-badge { width: 26px; height: 26px; font-size: 0.4rem; }
           .hub-machine-card { padding: 0.3rem; }
-          .loc-tab-icon { font-size: 0.7rem; }
-          .loc-tab-name { font-size: 0.35rem; }
-          .loc-tab-cost { font-size: 0.26rem; }
-          .location-tab { padding: 0.3rem 0.15rem; min-height: 44px; }
+          .loc-tab-icon { font-size: 0.8rem; }
+          .loc-tab-name { font-size: 0.38rem; }
+          .loc-tab-cost { font-size: 0.3rem; }
+          .location-tab { padding: 0.4rem 0.2rem; min-height: 52px; }
           .machine-detail-panel { max-width: 100%; }
           .machine-detail-header { padding: 0.6rem; }
           .machine-detail-title { font-size: 0.42rem; }
