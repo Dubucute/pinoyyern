@@ -515,7 +515,7 @@ export default function Home() {
     setTimeout(() => {
       const state = saveStateRef.current;
       if (state) {
-        const saved = { ...state, prestigePoints: newPoints, prestigeCount: (state.prestigeCount || 0) + 1, pesos: prestigeStartingMoney, totalEarned: 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
+        const saved = { ...state, prestigePoints: newPoints, prestigeCount: (state.prestigeCount || 0) + 1, pesos: prestigeStartingMoney, totalEarned: 0, totalClicks: state.totalClicks || 0, playTime: state.playTime || 0, machinesByLocation: LOCATIONS.map(() => []), localUpgrades: LOCATIONS.map(() => ({})), unlockedLocations: [0], currentLocation: 0, upgrades: { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false }, packageUpgrades: { sukiLoad: false, regularPlan: false, unlimitedPlan: false }, currentSpeed: '3g' };
         localStorage.setItem('piso-wifi-empire-state', JSON.stringify(saved));
         if (token && user) {
           saveToCloud(saved).then(() => showToast('☁️ Prestige saved!')).catch(() => showToast('☁️ Prestige save failed', 5000));
