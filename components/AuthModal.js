@@ -191,6 +191,17 @@ export default function AuthModal({ onClose, onLoginSuccess }) {
         .auth-switch { text-align: center; margin-top: 1rem; font-size: 0.38rem; color: #888; line-height: 1.8; }
         .auth-switch button { background: none; border: none; color: #e89330; cursor: pointer; font-family: inherit; font-size: 0.38rem; text-decoration: underline; padding: 0; }
         .auth-switch button:hover { color: #d4902a; }
+        @media (min-width: 901px) {
+          .auth-modal { padding: 2rem; max-width: 500px; }
+          .auth-title { font-size: 1rem; }
+          .auth-subtitle { font-size: 0.55rem; }
+          .auth-error, .auth-success { font-size: 0.48rem; }
+          .auth-field label { font-size: 0.55rem; }
+          .auth-field input { padding: 0.8rem; font-size: 0.55rem; }
+          .auth-submit-btn { padding: 0.9rem; font-size: 0.6rem; min-height: 50px; }
+          .auth-switch { font-size: 0.48rem; }
+          .auth-switch button { font-size: 0.48rem; }
+        }
         @media (max-width: 480px) {
           .auth-modal { padding: 1.2rem; }
           .auth-title { font-size: 0.6rem; }

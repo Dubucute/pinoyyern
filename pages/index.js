@@ -1580,6 +1580,110 @@ export default function Home() {
         .sell-confirm-no { font-family: 'Press Start 2P', cursive; background: #333; color: #888; border: none; border-radius: 4px; padding: 0.4rem 0.8rem; font-size: 0.45rem; cursor: pointer; flex: 1; }
         .sell-confirm-no:hover { background: #444; }
 
+        /* ===== Desktop: Bigger Text for Large Screens ===== */
+        @media (min-width: 901px) {
+          /* Title Screen */
+          .title-text { font-size: 2.2rem; }
+          .title-subtext { font-size: 1.1rem; }
+          .title-button { font-size: 0.85rem; min-height: 58px; }
+          .title-tagline { font-size: 0.45rem; }
+          .title-save-info { font-size: 0.45rem; }
+
+          /* Header */
+          .game-title { font-size: 0.75rem; }
+          .auth-header-button, .achievements-button, .prestige-header-button, .reset-button, .music-button {
+            font-size: 0.5rem; padding: 0.5rem 0.65rem;
+          }
+
+          /* Viewport */
+          .viewport-location-name { font-size: 0.7rem; }
+          .loc-pin-icon { font-size: 0.9rem; }
+          .viewport-balance { padding: 0.35rem 0.7rem; }
+          .balance-label { font-size: 0.45rem; }
+          .balance-amount { font-size: 0.75rem; }
+          .viewport-location-subtitle { font-size: 0.45rem; }
+          .viewport-desc-bg { font-size: 0.4rem; }
+
+          /* Console */
+          .console-header { font-size: 0.5rem; }
+          .console-grid { font-size: 0.45rem; }
+
+          /* Control Hub */
+          .hub-stat-label { font-size: 0.5rem; }
+          .hub-stat-value { font-size: 0.7rem; }
+          .hub-section-title { font-size: 0.55rem; }
+          .purchase-owned { font-size: 0.55rem; }
+          .purchase-income, .purchase-cost { font-size: 0.48rem; }
+          .buy-button { font-size: 0.6rem; padding: 0.55rem 0.8rem; min-height: 46px; }
+          .buy-button-small { font-size: 0.48rem; padding: 0.5rem 0.65rem; min-height: 42px; }
+          .local-upgrade-name { font-size: 0.55rem; }
+          .local-upgrade-desc { font-size: 0.45rem; }
+          .local-upgrade-cost { font-size: 0.48rem; }
+          .global-upgrade-name { font-size: 0.55rem; }
+          .global-upgrade-desc { font-size: 0.45rem; }
+          .global-upgrade-cost { font-size: 0.48rem; }
+          .global-shop-toggle { font-size: 0.5rem; padding: 0.5rem; min-height: 44px; }
+          .hub-empty { font-size: 0.48rem; }
+          .hmc-name { font-size: 0.48rem; }
+          .hmc-level { font-size: 0.48rem; }
+          .hmc-details span { font-size: 0.4rem; }
+          .hmc-badge { font-size: 0.5rem; }
+
+          /* Location Tabs */
+          .loc-tab-icon { font-size: 1.1rem; }
+          .loc-tab-name { font-size: 0.5rem; }
+          .loc-tab-cost { font-size: 0.4rem; }
+          .location-tab { padding: 0.6rem 0.3rem; min-height: 64px; }
+
+          /* Menu Toggle */
+          .menu-toggle-button { font-size: 0.5rem; padding: 0.55rem 1rem; min-height: 44px; }
+
+          /* Tap Hint */
+          .tap-hint { font-size: 0.48rem; }
+
+          /* Toast */
+          .toast-title { font-size: 0.5rem; }
+          .toast-name { font-size: 0.6rem; }
+          .toast-desc { font-size: 0.45rem; }
+
+          /* Achievement Panel */
+          .achievement-panel-title { font-size: 0.75rem; }
+          .achievement-close { font-size: 0.55rem; }
+          .achievement-count { font-size: 0.5rem; }
+          .achievement-card-name { font-size: 0.55rem; }
+          .achievement-card-desc { font-size: 0.45rem; }
+
+          /* Prestige Panel */
+          .prestige-panel-title { font-size: 0.75rem; }
+          .prestige-points-value { font-size: 1.4rem; }
+          .prestige-points-label { font-size: 0.45rem; }
+          .prestige-desc { font-size: 0.45rem; }
+          .prestige-button { font-size: 0.5rem; padding: 0.7rem 1.4rem; }
+          .prestige-upgrades-title { font-size: 0.6rem; }
+          .prestige-upgrade-name { font-size: 0.5rem; }
+          .prestige-upgrade-desc { font-size: 0.45rem; }
+          .prestige-upgrade-level { font-size: 0.45rem; }
+          .prestige-buy-button { font-size: 0.45rem; }
+          .prestige-maxed-badge { font-size: 0.45rem; }
+
+          /* Machine Detail Panel */
+          .machine-detail-title { font-size: 0.6rem; }
+          .machine-detail-close { font-size: 0.55rem; }
+          .machine-detail-name { font-size: 0.6rem; }
+          .machine-detail-type { font-size: 0.48rem; }
+          .machine-detail-lv { font-size: 0.85rem; }
+          .detail-stat-label { font-size: 0.45rem; }
+          .detail-stat-value { font-size: 0.55rem; }
+          .rename-trigger { font-size: 0.55rem; }
+          .rename-input { font-size: 0.48rem; }
+          .rename-confirm-btn, .rename-cancel-btn { font-size: 0.45rem; }
+          .detail-upgrade-btn { font-size: 0.5rem; }
+          .detail-max-badge { font-size: 0.5rem; }
+          .sell-button { font-size: 0.5rem; }
+          .sell-confirm-text { font-size: 0.55rem; }
+          .sell-confirm-yes, .sell-confirm-no { font-size: 0.55rem; }
+        }
+
         /* ===== Responsive: Tablet & Mobile ===== */
         @media (max-width: 900px) {
           .main-content { position: relative; }

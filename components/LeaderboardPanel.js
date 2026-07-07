@@ -140,6 +140,12 @@ export default function LeaderboardPanel({ visible, onClose }) {
           .lb-rank { width: 2rem; flex-shrink: 0; text-align: center; color: #d4d0c8; }
           .lb-name { flex: 1; color: #e89330; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
           .lb-stat { text-align: right; color: #d4d0c8; flex-shrink: 0; min-width: 5rem; }
+          @media (min-width: 901px) {
+            .leaderboard-tab { font-size: 0.45rem; padding: 0.5rem 0.4rem; }
+            .leaderboard-header { font-size: 0.45rem; }
+            .leaderboard-row { font-size: 0.48rem; padding: 0.45rem 0.5rem; }
+            .lb-stat { min-width: 6rem; font-size: 0.45rem; }
+          }
           @media (max-width: 480px) {
             .leaderboard-tab { font-size: 0.3rem; padding: 0.35rem 0.2rem; }
             .leaderboard-row { font-size: 0.3rem; }
