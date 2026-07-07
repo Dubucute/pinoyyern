@@ -140,6 +140,12 @@ export const calculateClickValue = (packageUpgrades, diskarteUpgrades, localUpgr
       }
     });
   });
+  // Soft cap to prevent click value explosion
+  const SOFT_CAP = 100; // 100x base click value is the "soft limit"
+  if (value > SOFT_CAP) {
+    // Apply logarithmic dampening beyond the soft cap
+    return SOFT_CAP + Math.log10(value / SOFT_CAP) * SOFT_CAP;
+  }
   return value;
 };
 
