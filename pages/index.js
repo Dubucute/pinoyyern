@@ -50,7 +50,6 @@ export default function Home() {
   const [floatingTexts, setFloatingTexts] = useState([]);
   const [isPressed, setIsPressed] = useState(false);
   const [showControlHub, setShowControlHub] = useState(true);
-  const [controlTab, setControlTab] = useState('stats');
 
   // ===== Save Refs (fixed interval, no re-creation on every tick) =====
   const saveStateRef = useRef(null);
@@ -525,9 +524,6 @@ export default function Home() {
           <h1 className="game-title">PISO WIFI IDLE</h1>
           <span style={{flex:1, minWidth:'0.5rem'}} />
           <div className="header-buttons">
-            <button className="auth-header-button" onClick={() => setShowControlHub(!showControlHub)}>
-              {showControlHub ? '✕' : 'MENU'}
-            </button>
             <button className="auth-header-button" onClick={() => setShowLeaderboard(!showLeaderboard)}>
               🏆
             </button>
@@ -616,35 +612,12 @@ export default function Home() {
           {/* Control Hub */}
           {showControlHub && (
           <aside className="control-hub">
-            {/* Tab Headers */}
-            <div className="hub-tabs">
-              <button
-                className={`hub-tab ${controlTab === 'stats' ? 'active' : ''}`}
-                onClick={() => setControlTab('stats')}
-              >
-                📊 STATS
-              </button>
-              <button
-                className={`hub-tab ${controlTab === 'upgrades' ? 'active' : ''}`}
-                onClick={() => setControlTab('upgrades')}
-              >
-                ⬆️ UPGRADES
-              </button>
-            </div>
-
-            {controlTab === 'stats' && (
-              <>
             {/* Stats row */}
             <div className="hub-stats-row">
               <div className="hub-stat"><span className="hub-stat-label">ACTIVE USERS</span><span className="hub-stat-value">{activeUsers}</span></div>
               <div className="hub-stat"><span className="hub-stat-label">TOTAL EARNED</span><span className="hub-stat-value click">₱{Math.floor(totalEarned).toLocaleString()}</span></div>
               <div className="hub-stat"><span className="hub-stat-label">VENDOS</span><span className="hub-stat-value">{totalMachines}</span></div>
             </div>
-            </>
-            )}
-
-            {controlTab === 'upgrades' && (
-            <>
 
             {/* Machine Purchase */}
             <div className="hub-section">
@@ -787,11 +760,14 @@ export default function Home() {
                 </div>
               </div>
             )}
-            </>
-            )}
           </aside>
           )}
         </div>
+
+        {/* ===== MENU TOGGLE BUTTON ===== */}
+        <button className="menu-toggle-button" onClick={() => setShowControlHub(!showControlHub)}>
+          {showControlHub ? '▼ HIDE MENU' : '▲ SHOW MENU'}
+        </button>
 
         {/* ===== FOOTER — Location Tabs ===== */}
         <nav className="location-tabs">
@@ -1176,16 +1152,15 @@ export default function Home() {
 
 
 
-        /* ===== CONTROL HUB — Tabs ===== */
-        .hub-tabs { display: flex; gap: 2px; margin-bottom: 0; background: #2a2a2a; border-radius: 6px 6px 0 0; overflow: hidden; flex-shrink: 0; }
-        .hub-tab {
-          flex: 1; font-family: 'Press Start 2P', cursive; font-size: 0.42rem;
-          padding: 0.6rem 0.4rem; background: #1a1a1a; color: #555; border: none; cursor: pointer;
-          transition: background 0.15s, color 0.15s; min-height: 48px;
-          display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+        /* ===== MENU TOGGLE BUTTON ===== */
+        .menu-toggle-button {
+          font-family: 'Press Start 2P', cursive; font-size: 0.4rem;
+          padding: 0.45rem 0.8rem; background: #1a1a1a; color: #e89330;
+          border: 1px solid #333; border-top: none; border-radius: 0 0 6px 6px;
+          cursor: pointer; width: 100%; text-align: center;
+          transition: background 0.15s; min-height: 38px;
         }
-        .hub-tab.active { background: #222; color: #e89330; }
-        .hub-tab:hover { color: #d4d0c8; }
+        .menu-toggle-button:hover { background: #222; }
 
         /* ===== CONTROL HUB — Concrete Panel ===== */
         .control-hub {
@@ -1451,8 +1426,7 @@ export default function Home() {
           .viewport-location-name { font-size: 0.75rem; }
           .viewport-location-subtitle { font-size: 0.45rem; }
           .control-hub { width: 100%; max-width: 600px; max-height: 55dvh; }
-          .hub-tabs { border-radius: 8px 8px 0 0; }
-          .hub-tab { font-size: 0.5rem; padding: 0.65rem 0.4rem; min-height: 48px; }
+          .menu-toggle-button { font-size: 0.42rem; padding: 0.5rem; min-height: 42px; }
           .machine-sizer { width: 180px; height: 180px; }
           .machine-sizer svg { width: 180px !important; height: 180px !important; }
           .machine-display-area { margin-top: 0.3rem; }
@@ -1500,8 +1474,7 @@ export default function Home() {
           .console-header { font-size: 0.38rem; }
           .console-grid { font-size: 0.35rem; gap: 0.25rem; }
           .control-hub { padding: 0.4rem; max-height: 52dvh; max-width: 100%; }
-          .hub-tabs { border-radius: 6px 6px 0 0; }
-          .hub-tab { font-size: 0.42rem; padding: 0.5rem 0.3rem; min-height: 44px; }
+          .menu-toggle-button { font-size: 0.38rem; padding: 0.45rem; min-height: 38px; }
           .hub-stat { padding: 0.35rem; }
           .hub-stat-label { font-size: 0.38rem; }
           .hub-stat-value { font-size: 0.5rem; }
