@@ -180,28 +180,51 @@ export default function Home() {
       try {
         const cloudState = await loadFromCloud();
         if (!mounted) return;
-        if (!cloudState || cloudState.version !== SAVE_VERSION) {
-          showToast('☁️ Save version mismatch, starting fresh');
+        if (!cloudState) {
+          // No cloud save for this user -> start fresh and clear local storage
+          localStorage.removeItem('piso-wifi-empire-state');
+          // Reset game state to defaults
+          setPesos(100); // starting capital as per line 33
+          setMachinesByLocation(LOCATIONS.map(() => []));
+          setLocalUpgrades(LOCATIONS.map(() => ({})));
+          setUnlockedLocations([0]);
+          setCurrentLocation(0);
+          setUpgrades({ reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false });
+          setCurrentSpeed('3g');
+          setPackageUpgrades({ sukiLoad: false, regularPlan: false, unlimitedPlan: false });
+          setUnlockedAchievements([]);
+          setTotalEarned(0);
+          setTotalClicks(0);
+          setPlayTime(0);
+          setPrestigePoints(0);
+          setPrestigeUpgrades({});
+          showToast('☁️ No cloud save found, starting fresh');
           return;
         }
-        // Merge cloud state into current game
-        setPesos(cloudState.pesos || 0);
-        if (cloudState.machinesByLocation) setMachinesByLocation(cloudState.machinesByLocation);
-        if (cloudState.localUpgrades) setLocalUpgrades(cloudState.localUpgrades);
-        if (cloudState.unlockedLocations) setUnlockedLocations(cloudState.unlockedLocations);
-        setCurrentLocation(Math.min(cloudState.currentLocation || 0, LOCATIONS.length - 1));
-        setUpgrades(cloudState.upgrades || { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false });
-        setCurrentSpeed(cloudState.currentSpeed || '3g');
-        setPackageUpgrades(cloudState.packageUpgrades || { sukiLoad: false, regularPlan: false, unlimitedPlan: false });
-        setUnlockedAchievements(cloudState.unlockedAchievements || []);
-        setTotalEarned(cloudState.totalEarned || 0);
-        setTotalClicks(cloudState.totalClicks || 0);
-        setPlayTime(cloudState.playTime || 0);
-        setPrestigePoints(cloudState.prestigePoints || 0);
-        setPrestigeUpgrades(cloudState.prestigeUpgrades || {});
+        if (cloudState.version !== SAVE_VERSION) {
+          // Version mismatch: treat as outdated, but we can still try to load compatible fields
+          showToast('☁️ Save version mismatch, attempting to load compatible data');
+          // We'll fallback to loading known fields, defaulting missing ones
+        }
+        // Merge cloud state into current game (with fallbacks)
+        setPesos(cloudState.pesos ?? 100);
+        setMachinesByLocation(cloudState.machinesByLocation ?? LOCATIONS.map(() => []));
+        setLocalUpgrades(cloudState.localUpgrades ?? LOCATIONS.map(() => ({})));
+        setUnlockedLocations(cloudState.unlockedLocations ?? [0]);
+        setCurrentLocation(Math.min(cloudState.currentLocation ?? 0, LOCATIONS.length - 1));
+        setUpgrades(cloudState.upgrades ?? { reinforcedAntenna: false, industrialCasing: false, fiberCable: false, backupPowerCell: false, coolingSystem: false, autoTuner: false, signalBooster: false, meshExtender: false });
+        setCurrentSpeed(cloudState.currentSpeed ?? '3g');
+        setPackageUpgrades(cloudState.packageUpgrades ?? { sukiLoad: false, regularPlan: false, unlimitedPlan: false });
+        setUnlockedAchievements(cloudState.unlockedAchievements ?? []);
+        setTotalEarned(cloudState.totalEarned ?? 0);
+        setTotalClicks(cloudState.totalClicks ?? 0);
+        setPlayTime(cloudState.playTime ?? 0);
+        setPrestigePoints(cloudState.prestigePoints ?? 0);
+        setPrestigeUpgrades(cloudState.prestigeUpgrades ?? {});
         showToast('☁️ Loaded!');
-      } catch (_) {
+      } catch (error) {
         if (!mounted) return;
+        console.error('Load error:', error);
         showToast('☁️ Load failed', 2000);
       }
     };
