@@ -1,4 +1,5 @@
 import { useRef, useCallback, useEffect } from 'react';
+import { getAudioContext, getMasterGain, resumeAudioContext, closeAudioContext } from '../lib/audio';
 
 // Exact E-Major Pentatonic frequencies used in Grieg's opening motif
 const E4 = 329.63, Fs4 = 369.99, Gs4 = 415.30, B4 = 493.88;
@@ -34,10 +35,9 @@ const MELODY = [
 ];
 
 export default function useBackgroundMusic() {
-  const audioCtxRef = useRef(null);
   const isPlayingRef = useRef(false);
   const isMutedRef = useRef(false);
-  const masterGainRef = useRef(null);
+  const myGainRef = useRef(null);
   const volumeRef = useRef(0.5);
   
   // Speed values controlled inside mutable refs to prevent drift or stuttering
@@ -49,15 +49,24 @@ export default function useBackgroundMusic() {
   const accumulatedBeatsRef = useRef(0);
   const timerIdRef = useRef(null);
 
-  const getCtx = useCallback(() => {
-    if (!audioCtxRef.current) {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      audioCtxRef.current = new AC();
-      masterGainRef.current = audioCtxRef.current.createGain();
-      masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
-      masterGainRef.current.connect(audioCtxRef.current.destination);
+  // Create our gain node and connect it to the shared master gain
+  const getMyGain = useCallback(() => {
+    if (!myGainRef.current) {
+      const ctx = getAudioContext();
+      myGainRef.current = ctx.createGain();
+      myGainRef.current.gain.setValueAtTime(volumeRef.current, ctx.currentTime);
+      myGainRef.current.connect(getMasterGain());
     }
-    return audioCtxRef.current;
+    return myGainRef.current;
+  }, []);
+
+  const setVolume = useCallback((vol) => {
+    volumeRef.current = Math.max(0, Math.min(1, vol));
+    const gain = myGainRef.current;
+    const ctx = getAudioContext();
+    if (gain) {
+      gain.gain.setValueAtTime(volumeRef.current, ctx.currentTime);
+    }
   }, []);
 
   // Expose a dedicated setter function to change speed on the fly (e.g., 0.5 for slow, 1.5 for fast)
@@ -67,20 +76,15 @@ export default function useBackgroundMusic() {
     }
   }, []);
 
-  const setVolume = useCallback((vol) => {
-    volumeRef.current = Math.max(0, Math.min(1, vol));
-    if (masterGainRef.current && audioCtxRef.current) {
-      masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
-    }
-  }, []);
-
   const scheduleNextEvents = useCallback(() => {
-    if (!isPlayingRef.current || !audioCtxRef.current) return;
-    const ctx = audioCtxRef.current;
+    const ctx = getAudioContext();
+    if (!isPlayingRef.current || !ctx) return;
     if (ctx.state === 'suspended') {
-      ctx.resume().then(() => scheduleNextEvents()).catch(() => {});
+      resumeAudioContext().then(() => scheduleNextEvents()).catch(() => {});
       return;
     }
+    // Ensure our gain node exists
+    getMyGain();
 
     // Adjust core timings based on the customized user playback speed
     const directEighthDur = (60 / bpmRef.current);
@@ -112,7 +116,7 @@ export default function useBackgroundMusic() {
               gain.gain.exponentialRampToValueAtTime(0.001, t + measureDur);
               
               osc.connect(gain);
-              gain.connect(masterGainRef.current || ctx.destination);
+              gain.connect(myGainRef.current || getMasterGain());
               osc.start(t);
               osc.stop(t + measureDur);
             } catch (_) {}
@@ -143,7 +147,7 @@ export default function useBackgroundMusic() {
             oscTri.connect(triGain);
             triGain.connect(gain);
             oscSine.connect(gain);
-            gain.connect(masterGainRef.current || ctx.destination);
+            gain.connect(myGainRef.current || getMasterGain());
 
             oscSine.start(t);
             oscSine.stop(t + durationSeconds);
@@ -167,12 +171,12 @@ export default function useBackgroundMusic() {
   }, []);
 
   const start = useCallback(() => {
-    const ctx = getCtx();
+    const ctx = getAudioContext();
     // iOS Safari: resume must be called in the same user gesture as creation
     const doStart = () => {
       if (isPlayingRef.current) return;
       isPlayingRef.current = true;
-      nextNoteTimeRef.current = (audioCtxRef.current?.currentTime || 0) + 0.05;
+      nextNoteTimeRef.current = (ctx?.currentTime || 0) + 0.05;
       melodyIdxRef.current = 0;
       accumulatedBeatsRef.current = 0;
       scheduleNextEvents();
@@ -182,7 +186,7 @@ export default function useBackgroundMusic() {
     } else {
       doStart();
     }
-  }, [getCtx, scheduleNextEvents]);
+  }, [scheduleNextEvents]);
 
   const stop = useCallback(() => {
     isPlayingRef.current = false;
@@ -200,18 +204,16 @@ export default function useBackgroundMusic() {
   useEffect(() => {
     // iOS Safari: AudioContext gets suspended when switching tabs/apps
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible' && audioCtxRef.current?.state === 'suspended') {
-        audioCtxRef.current.resume().then(() => {
+      if (document.visibilityState === 'visible') {
+        resumeAudioContext().then(() => {
           if (isPlayingRef.current) scheduleNextEvents();
         }).catch(() => {});
       }
     };
     const handleResume = () => {
-      if (audioCtxRef.current?.state === 'suspended') {
-        audioCtxRef.current.resume().then(() => {
-          if (isPlayingRef.current) scheduleNextEvents();
-        }).catch(() => {});
-      }
+      resumeAudioContext().then(() => {
+        if (isPlayingRef.current) scheduleNextEvents();
+      }).catch(() => {});
     };
     document.addEventListener('visibilitychange', handleVisibility);
     document.addEventListener('webkitresume', handleResume);
@@ -219,9 +221,6 @@ export default function useBackgroundMusic() {
       stop();
       document.removeEventListener('visibilitychange', handleVisibility);
       document.removeEventListener('webkitresume', handleResume);
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close().catch(() => {});
-      }
     };
   }, [stop, scheduleNextEvents]);
 
