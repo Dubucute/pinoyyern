@@ -76,18 +76,18 @@ export const calculatePps = (machinesByLocation, localUpgrades, speedMultiplier,
       if (def && def.type === 'multiply' && def.target === 'localIncome') locTotal *= def.value;
     });
 
+    // Diskarte upgrades (apply per location / vendo)
+    if (diskarteUpgrades.reinforcedAntenna) locTotal *= 1.12;
+    if (diskarteUpgrades.industrialCasing) locTotal *= 1.15;
+    if (diskarteUpgrades.fiberCable) locTotal *= 1.18;
+    if (diskarteUpgrades.backupPowerCell) locTotal *= 1.20;
+    if (diskarteUpgrades.coolingSystem) locTotal *= 1.18;
+    if (diskarteUpgrades.autoTuner) locTotal *= 1.22;
+    if (diskarteUpgrades.signalBooster) locTotal *= 1.25;
+    if (diskarteUpgrades.meshExtender) locTotal *= 1.35;
+
     globalTotal += locTotal;
   });
-
-  // Global part upgrades (DISKARTE)
-  if (diskarteUpgrades.reinforcedAntenna) globalTotal *= 1.25;
-  if (diskarteUpgrades.industrialCasing) globalTotal *= 1.30;
-  if (diskarteUpgrades.fiberCable) globalTotal *= 1.35;
-  if (diskarteUpgrades.backupPowerCell) globalTotal *= 1.40;
-  if (diskarteUpgrades.coolingSystem) globalTotal *= 1.35;
-  if (diskarteUpgrades.autoTuner) globalTotal *= 1.45;
-  if (diskarteUpgrades.signalBooster) globalTotal *= 1.50;
-  if (diskarteUpgrades.meshExtender) globalTotal *= 1.70;
 
   // Package/service plan multipliers
   let packageMult = 1;
