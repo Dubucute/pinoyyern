@@ -51,16 +51,14 @@ export default function useBackgroundMusic() {
 
   const getCtx = useCallback(() => {
     if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtxRef.current = new AC();
       masterGainRef.current = audioCtxRef.current.createGain();
       masterGainRef.current.gain.setValueAtTime(volumeRef.current, audioCtxRef.current.currentTime);
       masterGainRef.current.connect(audioCtxRef.current.destination);
     }
-    if (audioCtxRef.current.state === 'suspended') {
-      audioCtxRef.current.resume().catch(() => {});
-    }
     return audioCtxRef.current;
-  }, []);;
+  }, []);
 
   // Expose a dedicated setter function to change speed on the fly (e.g., 0.5 for slow, 1.5 for fast)
   const setPlaybackSpeed = useCallback((rate) => {
@@ -79,7 +77,10 @@ export default function useBackgroundMusic() {
   const scheduleNextEvents = useCallback(() => {
     if (!isPlayingRef.current || !audioCtxRef.current) return;
     const ctx = audioCtxRef.current;
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(() => scheduleNextEvents()).catch(() => {});
+      return;
+    }
 
     // Adjust core timings based on the customized user playback speed
     const directEighthDur = (60 / bpmRef.current);
@@ -167,14 +168,20 @@ export default function useBackgroundMusic() {
 
   const start = useCallback(() => {
     const ctx = getCtx();
-    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-    if (isPlayingRef.current) return;
-    
-    isPlayingRef.current = true;
-    nextNoteTimeRef.current = ctx.currentTime + 0.05;
-    melodyIdxRef.current = 0;
-    accumulatedBeatsRef.current = 0;
-    scheduleNextEvents();
+    // iOS Safari: resume must be called in the same user gesture as creation
+    const doStart = () => {
+      if (isPlayingRef.current) return;
+      isPlayingRef.current = true;
+      nextNoteTimeRef.current = (audioCtxRef.current?.currentTime || 0) + 0.05;
+      melodyIdxRef.current = 0;
+      accumulatedBeatsRef.current = 0;
+      scheduleNextEvents();
+    };
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(doStart).catch(() => {});
+    } else {
+      doStart();
+    }
   }, [getCtx, scheduleNextEvents]);
 
   const stop = useCallback(() => {
@@ -191,13 +198,32 @@ export default function useBackgroundMusic() {
   }, []);
 
   useEffect(() => {
+    // iOS Safari: AudioContext gets suspended when switching tabs/apps
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible' && audioCtxRef.current?.state === 'suspended') {
+        audioCtxRef.current.resume().then(() => {
+          if (isPlayingRef.current) scheduleNextEvents();
+        }).catch(() => {});
+      }
+    };
+    const handleResume = () => {
+      if (audioCtxRef.current?.state === 'suspended') {
+        audioCtxRef.current.resume().then(() => {
+          if (isPlayingRef.current) scheduleNextEvents();
+        }).catch(() => {});
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    document.addEventListener('webkitresume', handleResume);
     return () => {
       stop();
+      document.removeEventListener('visibilitychange', handleVisibility);
+      document.removeEventListener('webkitresume', handleResume);
       if (audioCtxRef.current) {
         audioCtxRef.current.close().catch(() => {});
       }
     };
-  }, [stop]);
+  }, [stop, scheduleNextEvents]);
 
   return { start, stop, toggleMute, setPlaybackSpeed, setVolume, isMuted: () => isMutedRef.current };
 }

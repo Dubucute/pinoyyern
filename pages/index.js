@@ -359,17 +359,10 @@ export default function Home() {
 
   // ===== Click Handler =====
   const handleClick = (e) => {
+    const isFirst = firstInteractionRef.current;
     // iOS requires AudioContext to be created & resumed inside a user gesture
-    if (firstInteractionRef.current) {
+    if (isFirst) {
       firstInteractionRef.current = false;
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) {
-          const tmp = new AC();
-          if (tmp.state === 'suspended') tmp.resume().catch(() => {});
-          tmp.close().catch(() => {});
-        }
-      } catch (_) {}
       bgMusic.start();
       setMusicOn(true);
     }
@@ -377,7 +370,9 @@ export default function Home() {
     setTotalEarned((t) => t + currentClickValue);
     setLifetimeEarned((t) => t + currentClickValue);
     setTotalClicks((c) => c + 1);
-    setIsPressed(true); playClick();
+    setIsPressed(true);
+    // Skip click sound on first interaction to avoid iOS AudioContext conflict
+    if (!isFirst) playClick();
     setTimeout(() => setIsPressed(false), 100);
     if (clickAreaRef.current) {
       const rect = clickAreaRef.current.getBoundingClientRect();
